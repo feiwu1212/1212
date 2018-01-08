@@ -29,7 +29,7 @@ public class LmOpenAccountParamDTO extends LmGatewayBaseParamDTO {
 	
 	protected String realName;//客户姓名
 	protected String idCardNo;//证件号
-	protected String bandCardNo;//银行卡号
+	protected String bankCardNo;//银行卡号
 	protected String mobile;//银行预留手机号
 	protected IDCardType idCardType;//证件类型
 	protected UserRoles userRole;//用户角色
@@ -49,11 +49,12 @@ public class LmOpenAccountParamDTO extends LmGatewayBaseParamDTO {
 	public void setIdCardNo(String idCardNo) {
 		this.idCardNo = idCardNo;
 	}
-	public String getBandCardNo() {
-		return bandCardNo;
+	
+	public String getBankCardNo() {
+		return bankCardNo;
 	}
-	public void setBandCardNo(String bandCardNo) {
-		this.bandCardNo = bandCardNo;
+	public void setBankCardNo(String bankCardNo) {
+		this.bankCardNo = bankCardNo;
 	}
 	public String getMobile() {
 		return mobile;

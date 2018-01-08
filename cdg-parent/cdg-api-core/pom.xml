@@ -37,6 +37,11 @@
 			<version>${cdg.basedb.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.crfchina</groupId>
+			<artifactId>cdg-service</artifactId>
+			<version>${cdg.service.version}</version>
+		</dependency>
 
 	</dependencies>
 
@@ -46,6 +51,7 @@
 		<java.version>1.8</java.version>
 		<cdg.common.version>0.0.1-SNAPSHOT</cdg.common.version>
 		<cdg.basedb.version>0.0.1-SNAPSHOT</cdg.basedb.version>
+		<cdg.service.version>0.0.1-SNAPSHOT</cdg.service.version>
 	</properties>
 
 	<profiles>

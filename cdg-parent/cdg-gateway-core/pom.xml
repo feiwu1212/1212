@@ -26,6 +26,7 @@
 		<springfox.version>2.6.1</springfox.version>
 		<cdg.common.version>0.0.1-SNAPSHOT</cdg.common.version>
 		<cdg.basedb.version>0.0.1-SNAPSHOT</cdg.basedb.version>
+        <cdg.service.version>0.0.1-SNAPSHOT</cdg.service.version>
 	</properties>
 
 	<dependencies>
@@ -64,6 +65,12 @@
 			<artifactId>cdg-base-db</artifactId>
 			<version>${cdg.basedb.version}</version>
 		</dependency>
+
+        <dependency>
+            <groupId>com.crfchina</groupId>
+            <artifactId>cdg-service</artifactId>
+            <version>${cdg.service.version}</version>
+        </dependency>
 	</dependencies>
 
 

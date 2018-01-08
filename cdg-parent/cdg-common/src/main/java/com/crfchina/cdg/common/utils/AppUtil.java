@@ -1,4 +1,4 @@
-package com.crfchina.cdg.common.enums.utils;
+package com.crfchina.cdg.common.utils;
 
 import com.alibaba.fastjson.JSON;
 import java.security.GeneralSecurityException;

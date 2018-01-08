@@ -1,6 +1,7 @@
 package com.crfchina.cdg.common.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.util.HashMap;

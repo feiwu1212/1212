@@ -1,5 +1,6 @@
 package com.crfchina.cdg.common.utils;
 
+import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +55,7 @@ public class SignatureUtils {
 	}
 	
 	public static byte[] sign(SignatureAlgorithm algorithm, PrivateKey privateKey,
-			String data)
+							  String data)
 			throws GeneralSecurityException {
 		return sign(algorithm, privateKey, data, DEFAULT_CHARSET);
 	}

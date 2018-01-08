@@ -1,4 +1,4 @@
-package com.crfchina.cdg.common.utils;
+package com.crfchina.cdg.common.enums.common;
 
 public enum SignatureAlgorithm {
 

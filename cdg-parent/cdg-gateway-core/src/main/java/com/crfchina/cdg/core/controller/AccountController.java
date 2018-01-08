@@ -7,8 +7,17 @@
  */
 package com.crfchina.cdg.core.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.crfchina.cdg.common.constants.Constants;
+import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**    
  * 
@@ -25,5 +34,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/account")
 public class AccountController {
-	
+
+	@RequestMapping("/personOpen")
+	public ModelAndView personOpen(HttpServletRequest request) {
+		LmOpenAccountParamDTO paramDto = getParamDto(request, LmOpenAccountParamDTO.class);
+
+		return null;
+	}
+
+	private Map<String, Object> getPersonOpenReqDataMap(LmOpenAccountParamDTO paramDto) {
+		System.out.println(JSONObject.toJSONString(paramDto));
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		reqDataMap.put("platformUserNo", paramDto.getPlatformUserNo());
+		reqDataMap.put("requestNo", Constants.TRX_PERFIX);
+
+//				realName
+//		idCardNo
+//				bankcardNo
+//		mobile
+//				idCardType
+//		userRole
+//				checkTyped
+//		redirectUrl
+//				userLimitType
+//		authList
+//				failTime
+//		amount
+		return null;
+	}
+
+	public <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
+		Enumeration<String> parameterNames = request.getParameterNames();
+		JSONObject paramObj = new JSONObject();
+		while (parameterNames.hasMoreElements()) {
+			String key = parameterNames.nextElement();
+			paramObj.put(key, request.getParameter(key));
+		}
+		T object = JSON.parseObject(paramObj.toJSONString(), clazz);
+		return object;
+	}
 }

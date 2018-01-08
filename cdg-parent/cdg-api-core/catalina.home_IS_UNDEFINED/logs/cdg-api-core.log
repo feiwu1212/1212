@@ -1,0 +1,35 @@
+[ INFO ] [background-preinit] [2018-01-06 17:54:16] org.hibernate.validator.internal.util.Version [30] - HV000001: Hibernate Validator 5.3.5.Final
+[ INFO ] [main] [2018-01-06 17:54:20] com.crfchina.cdg.api.CdgAPICoreApplication [48] - Starting CdgAPICoreApplication on William-WangdeMacBook-Pro.local with PID 28888 (/Users/WilliamWang/crfchina/workspace_lanmao/cdg-parent/cdg-api-core/target/classes started by WilliamWang in /Users/WilliamWang/crfchina/workspace_lanmao/cdg-parent/cdg-api-core)
+[ INFO ] [main] [2018-01-06 17:54:20] com.crfchina.cdg.api.CdgAPICoreApplication [641] - The following profiles are active: ci
+[ INFO ] [main] [2018-01-06 17:54:20] org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext [582] - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@27ae2fd0: startup date [Sat Jan 06 17:54:20 CST 2018]; root of context hierarchy
+[ WARN ] [main] [2018-01-06 17:54:21] org.mybatis.spring.mapper.ClassPathMapperScanner [166] - No MyBatis mapper was found in '[com.crfchina.cdg.api]' package. Please check your configuration.
+[ INFO ] [main] [2018-01-06 17:54:21] org.springframework.data.repository.config.RepositoryConfigurationDelegate [165] - Multiple Spring Data modules found, entering strict repository configuration mode!
+[ INFO ] [main] [2018-01-06 17:54:22] org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer [89] - Tomcat initialized with port(s): 8080 (http)
+[ INFO ] [main] [2018-01-06 17:54:22] org.apache.catalina.core.StandardService [179] - Starting service Tomcat
+[ INFO ] [main] [2018-01-06 17:54:22] org.apache.catalina.core.StandardEngine [179] - Starting Servlet Engine: Apache Tomcat/8.5.14
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/cdg-api] [179] - Initializing Spring embedded WebApplicationContext
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.web.context.ContextLoader [276] - Root WebApplicationContext: initialization completed in 1705 ms
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.ServletRegistrationBean [190] - Mapping servlet: 'statViewServlet' to [/druid/*]
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.ServletRegistrationBean [190] - Mapping servlet: 'dispatcherServlet' to [/]
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.FilterRegistrationBean [258] - Mapping filter: 'characterEncodingFilter' to: [/*]
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.FilterRegistrationBean [258] - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.FilterRegistrationBean [258] - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.FilterRegistrationBean [258] - Mapping filter: 'requestContextFilter' to: [/*]
+[ INFO ] [localhost-startStop-1] [2018-01-06 17:54:22] org.springframework.boot.web.servlet.FilterRegistrationBean [271] - Mapping filter: 'webStatFilter' to urls: [/*]
+[ INFO ] [main] [2018-01-06 17:54:23] org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter [534] - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@27ae2fd0: startup date [Sat Jan 06 17:54:20 CST 2018]; root of context hierarchy
+[ INFO ] [main] [2018-01-06 17:54:23] org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [543] - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+[ INFO ] [main] [2018-01-06 17:54:23] org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [543] - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+[ INFO ] [main] [2018-01-06 17:54:23] org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [362] - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+[ INFO ] [main] [2018-01-06 17:54:23] org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [362] - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+[ INFO ] [main] [2018-01-06 17:54:23] org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [362] - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+[ INFO ] [main] [2018-01-06 17:54:29] org.springframework.jmx.export.annotation.AnnotationMBeanExporter [431] - Registering beans for JMX exposure on startup
+[ INFO ] [main] [2018-01-06 17:54:29] org.springframework.jmx.export.annotation.AnnotationMBeanExporter [916] - Bean with name 'dataSource' has been autodetected for JMX exposure
+[ INFO ] [main] [2018-01-06 17:54:29] org.springframework.jmx.export.annotation.AnnotationMBeanExporter [671] - Located MBean 'dataSource': registering with JMX server as MBean [com.alibaba.druid.pool:name=dataSource,type=DruidDataSource]
+[ INFO ] [main] [2018-01-06 17:54:29] org.apache.coyote.http11.Http11NioProtocol [179] - Initializing ProtocolHandler ["http-nio-8080"]
+[ INFO ] [main] [2018-01-06 17:54:29] org.apache.coyote.http11.Http11NioProtocol [179] - Starting ProtocolHandler ["http-nio-8080"]
+[ INFO ] [main] [2018-01-06 17:54:29] org.apache.tomcat.util.net.NioSelectorPool [179] - Using a shared selector for servlet write/read
+[ INFO ] [main] [2018-01-06 17:54:29] org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer [198] - Tomcat started on port(s): 8080 (http)
+[ INFO ] [main] [2018-01-06 17:54:29] com.crfchina.cdg.api.CdgAPICoreApplication [57] - Started CdgAPICoreApplication in 24.191 seconds (JVM running for 24.681)
+[ INFO ] [Thread-5] [2018-01-06 17:55:09] org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext [987] - Closing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@27ae2fd0: startup date [Sat Jan 06 17:54:20 CST 2018]; root of context hierarchy
+[ INFO ] [Thread-5] [2018-01-06 17:55:09] org.springframework.jmx.export.annotation.AnnotationMBeanExporter [449] - Unregistering JMX-exposed beans on shutdown
+[ INFO ] [Thread-5] [2018-01-06 17:55:09] org.springframework.jmx.export.annotation.AnnotationMBeanExporter [241] - Unregistering JMX-exposed beans

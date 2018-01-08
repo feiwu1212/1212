@@ -7,9 +7,9 @@
  */
 package com.crfchina.cdg.core.dto.base;
 
-import com.crfchina.csf.enums.SystemNo;
+import com.crfchina.cdg.common.enums.common.SystemNo;
 
-/**    
+/**
  * 
  * @ProjectName：cdg-service
  * @ClassName：BaseParamDTO 

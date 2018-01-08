@@ -59,13 +59,6 @@
 			<version>${cdg.common.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.crfchina.csf</groupId>
-			<artifactId>csf-common</artifactId>
-			<version>${csf.common.version}</version>
-		</dependency>
-
-
 	</dependencies>
 
 

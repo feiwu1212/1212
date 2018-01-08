@@ -9,6 +9,7 @@ package com.crfchina.cdg.core.dto.param;
 
 import java.util.List;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.crfchina.cdg.common.enums.business.IDCardType;
 import com.crfchina.cdg.common.enums.business.UserAuthType;
 import com.crfchina.cdg.common.enums.business.UserRoles;
@@ -43,10 +44,11 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	protected UserRoles userRole;//用户角色
 	protected String bandCardNo;//银行卡号
 	protected String bankcode;//银行编码
-	protected List<UserAuthType> userAuthList;//用户授权集合
+	
+	protected List<UserAuthType> authList;//用户授权集合
 	
 	protected String failTime;//授权期限
-	protected String authAmount;//授权金额
+	protected String amount;//授权金额
 	
 	
 	public String getEnterpriseName() {
@@ -127,6 +129,7 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	public void setUserRole(UserRoles userRole) {
 		this.userRole = userRole;
 	}
+	@JSONField(name = "bankcardNo")
 	public String getBandCardNo() {
 		return bandCardNo;
 	}
@@ -139,11 +142,11 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	public void setBankcode(String bankcode) {
 		this.bankcode = bankcode;
 	}
-	public List<UserAuthType> getUserAuthList() {
-		return userAuthList;
+	public List<UserAuthType> getAuthList() {
+		return authList;
 	}
-	public void setUserAuthList(List<UserAuthType> userAuthList) {
-		this.userAuthList = userAuthList;
+	public void setAuthList(List<UserAuthType> authList) {
+		this.authList = authList;
 	}
 	public String getFailTime() {
 		return failTime;
@@ -151,11 +154,11 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	public void setFailTime(String failTime) {
 		this.failTime = failTime;
 	}
-	public String getAuthAmount() {
-		return authAmount;
+	public String getAmount() {
+		return amount;
 	}
-	public void setAuthAmount(String authAmount) {
-		this.authAmount = authAmount;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 
 }

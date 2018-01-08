@@ -13,9 +13,11 @@ import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
+import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import java.security.GeneralSecurityException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +57,27 @@ public class AccountController {
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
+	
+	@RequestMapping("/enterpriseOpen")
+	public ModelAndView enterpriseOpen(HttpServletRequest request) {
+		LmOpenAccountCompanyParamDTO paramDto = getParamDto(request, LmOpenAccountCompanyParamDTO.class);
+		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(paramDto));
+		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo("OC"));
+		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));
+		
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.ENTERPRISE_REGISTER.getCode(), reqDataMap);
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+			result = new HashMap<>();
+		}
+		
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
 
 	private Map<String, Object> getPersonOpenReqDataMap(LmOpenAccountParamDTO paramDto) {
 		System.out.println(JSONObject.toJSONString(paramDto));
@@ -71,7 +94,7 @@ public class AccountController {
 		//TODO 配置本地回调地址
 		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
 		reqDataMap.put("userLimitType", Constants.ID_CARD_NO_UNIQUE);
-		reqDataMap.put("authList", StringUtils.join(paramDto.getUserAuthList(), ","));
+		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));
 		reqDataMap.put("failTime", paramDto.getFailTime());
 		reqDataMap.put("amount", paramDto.getAuthAmount());
 		return reqDataMap;
@@ -83,7 +106,7 @@ public class AccountController {
 		while (parameterNames.hasMoreElements()) {
 			String key = parameterNames.nextElement();
 			String value = request.getParameter(key);
-			if (value.contains(",")) {
+			if (value.contains(",") || "authList".equals(key)) {
 				paramObj.put(key, value.split(","));
 			} else {
 				paramObj.put(key, value);

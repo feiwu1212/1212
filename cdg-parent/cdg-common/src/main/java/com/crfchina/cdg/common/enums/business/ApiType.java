@@ -18,7 +18,10 @@ package com.crfchina.cdg.common.enums.business;
  */
 public enum ApiType {
 
-	PERSONAL_REGISTER_EXPAND("PERSONAL_REGISTER_EXPAND", "个人绑卡注册");
+	PERSONAL_REGISTER_EXPAND("PERSONAL_REGISTER_EXPAND", "个人绑卡注册"),
+	ENTERPRISE_REGISTER("ENTERPRISE_REGISTER", "企业绑卡注册")
+	
+	;
 	private String code;
 
 	private String desc;

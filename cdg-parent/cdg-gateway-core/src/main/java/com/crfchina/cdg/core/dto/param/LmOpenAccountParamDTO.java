@@ -33,7 +33,7 @@ public class LmOpenAccountParamDTO extends LmGatewayBaseParamDTO {
 	protected String mobile;//银行预留手机号
 	protected IDCardType idCardType;//证件类型
 	protected UserRoles userRole;//用户角色
-	protected List<UserAuthType> userAuthList;//用户授权集合
+	protected List<UserAuthType> authList;//用户授权集合
 	protected String failTime;//授权期限
 	protected String authAmount;//授权金额
 	
@@ -74,11 +74,11 @@ public class LmOpenAccountParamDTO extends LmGatewayBaseParamDTO {
 	public void setUserRole(UserRoles userRole) {
 		this.userRole = userRole;
 	}
-	public List<UserAuthType> getUserAuthList() {
-		return userAuthList;
+	public List<UserAuthType> getAuthList() {
+		return authList;
 	}
-	public void setUserAuthList(List<UserAuthType> userAuthList) {
-		this.userAuthList = userAuthList;
+	public void setAuthList(List<UserAuthType> authList) {
+		this.authList = authList;
 	}
 	public String getFailTime() {
 		return failTime;

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crfchina.cdg.basedb.dao.LmChangeCardmobileFlowinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="fcp_trx_no" property="fcpTrxNo" jdbcType="VARCHAR" />
+    <result column="request_ref_no" property="requestRefNo" jdbcType="VARCHAR" />
+    <result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
+    <result column="system_no" property="systemNo" jdbcType="VARCHAR" />
+    <result column="platform_user_id" property="platformUserId" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="id_no" property="idNo" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="bank_card_no" property="bankCardNo" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="check_type" property="checkType" jdbcType="BIT" />
+    <result column="bind_type" property="bindType" jdbcType="BIT" />
+    <result column="access_type" property="accessType" jdbcType="BIT" />
+    <result column="audit_status" property="auditStatus" jdbcType="BIT" />
+    <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
+    <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="fail_code" property="failCode" jdbcType="VARCHAR" />
+    <result column="fail_reason" property="failReason" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="change_type" property="changeType" jdbcType="BIT" />
+    <result column="partition_date" property="partitionDate" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, fcp_trx_no, request_ref_no, request_time, system_no, platform_user_id, real_name, 
+    id_no, mobile, bank_card_no, bank_code, remark, check_type, bind_type, access_type, 
+    audit_status, callback_url, notify_url, result, fail_code, fail_reason, create_time, 
+    update_time, change_type, partition_date
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from lm_change_cardmobile_flowinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from lm_change_cardmobile_flowinfo
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from lm_change_cardmobile_flowinfo
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo" >
+    insert into lm_change_cardmobile_flowinfo (id, fcp_trx_no, request_ref_no, 
+      request_time, system_no, platform_user_id, 
+      real_name, id_no, mobile, 
+      bank_card_no, bank_code, remark, 
+      check_type, bind_type, access_type, 
+      audit_status, callback_url, notify_url, 
+      result, fail_code, fail_reason, 
+      create_time, update_time, change_type, 
+      partition_date)
+    values (#{id,jdbcType=BIGINT}, #{fcpTrxNo,jdbcType=VARCHAR}, #{requestRefNo,jdbcType=VARCHAR}, 
+      #{requestTime,jdbcType=TIMESTAMP}, #{systemNo,jdbcType=VARCHAR}, #{platformUserId,jdbcType=VARCHAR}, 
+      #{realName,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{bankCardNo,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{checkType,jdbcType=BIT}, #{bindType,jdbcType=BIT}, #{accessType,jdbcType=BIT}, 
+      #{auditStatus,jdbcType=BIT}, #{callbackUrl,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, 
+      #{result,jdbcType=VARCHAR}, #{failCode,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{changeType,jdbcType=BIT}, 
+      #{partitionDate,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo" >
+    insert into lm_change_cardmobile_flowinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fcpTrxNo != null" >
+        fcp_trx_no,
+      </if>
+      <if test="requestRefNo != null" >
+        request_ref_no,
+      </if>
+      <if test="requestTime != null" >
+        request_time,
+      </if>
+      <if test="systemNo != null" >
+        system_no,
+      </if>
+      <if test="platformUserId != null" >
+        platform_user_id,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="idNo != null" >
+        id_no,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="bankCardNo != null" >
+        bank_card_no,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="checkType != null" >
+        check_type,
+      </if>
+      <if test="bindType != null" >
+        bind_type,
+      </if>
+      <if test="accessType != null" >
+        access_type,
+      </if>
+      <if test="auditStatus != null" >
+        audit_status,
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url,
+      </if>
+      <if test="notifyUrl != null" >
+        notify_url,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="failCode != null" >
+        fail_code,
+      </if>
+      <if test="failReason != null" >
+        fail_reason,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="changeType != null" >
+        change_type,
+      </if>
+      <if test="partitionDate != null" >
+        partition_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fcpTrxNo != null" >
+        #{fcpTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="requestRefNo != null" >
+        #{requestRefNo,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="systemNo != null" >
+        #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="platformUserId != null" >
+        #{platformUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNo != null" >
+        #{bankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="checkType != null" >
+        #{checkType,jdbcType=BIT},
+      </if>
+      <if test="bindType != null" >
+        #{bindType,jdbcType=BIT},
+      </if>
+      <if test="accessType != null" >
+        #{accessType,jdbcType=BIT},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=BIT},
+      </if>
+      <if test="callbackUrl != null" >
+        #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null" >
+        #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="failCode != null" >
+        #{failCode,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeType != null" >
+        #{changeType,jdbcType=BIT},
+      </if>
+      <if test="partitionDate != null" >
+        #{partitionDate,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfoExample" resultType="java.lang.Integer" >
+    select count(*) from lm_change_cardmobile_flowinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo" >
+    update lm_change_cardmobile_flowinfo
+    <set >
+      <if test="fcpTrxNo != null" >
+        fcp_trx_no = #{fcpTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="requestRefNo != null" >
+        request_ref_no = #{requestRefNo,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        request_time = #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="systemNo != null" >
+        system_no = #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="platformUserId != null" >
+        platform_user_id = #{platformUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        id_no = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNo != null" >
+        bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="checkType != null" >
+        check_type = #{checkType,jdbcType=BIT},
+      </if>
+      <if test="bindType != null" >
+        bind_type = #{bindType,jdbcType=BIT},
+      </if>
+      <if test="accessType != null" >
+        access_type = #{accessType,jdbcType=BIT},
+      </if>
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=BIT},
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url = #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null" >
+        notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="failCode != null" >
+        fail_code = #{failCode,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        fail_reason = #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeType != null" >
+        change_type = #{changeType,jdbcType=BIT},
+      </if>
+      <if test="partitionDate != null" >
+        partition_date = #{partitionDate,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo" >
+    update lm_change_cardmobile_flowinfo
+    set fcp_trx_no = #{fcpTrxNo,jdbcType=VARCHAR},
+      request_ref_no = #{requestRefNo,jdbcType=VARCHAR},
+      request_time = #{requestTime,jdbcType=TIMESTAMP},
+      system_no = #{systemNo,jdbcType=VARCHAR},
+      platform_user_id = #{platformUserId,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      id_no = #{idNo,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      check_type = #{checkType,jdbcType=BIT},
+      bind_type = #{bindType,jdbcType=BIT},
+      access_type = #{accessType,jdbcType=BIT},
+      audit_status = #{auditStatus,jdbcType=BIT},
+      callback_url = #{callbackUrl,jdbcType=VARCHAR},
+      notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      fail_code = #{failCode,jdbcType=VARCHAR},
+      fail_reason = #{failReason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      change_type = #{changeType,jdbcType=BIT},
+      partition_date = #{partitionDate,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

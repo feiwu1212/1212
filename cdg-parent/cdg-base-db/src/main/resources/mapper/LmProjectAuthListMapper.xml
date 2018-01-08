@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crfchina.cdg.basedb.dao.LmProjectAuthListMapper" >
+  <resultMap id="BaseResultMap" type="com.crfchina.cdg.basedb.entity.LmProjectAuthList" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="request_ref_no" property="requestRefNo" jdbcType="VARCHAR" />
+    <result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
+    <result column="fcp_trx_no" property="fcpTrxNo" jdbcType="VARCHAR" />
+    <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+    <result column="check_type" property="checkType" jdbcType="BIT" />
+    <result column="entrusted_type" property="entrustedType" jdbcType="BIT" />
+    <result column="platform_user_id" property="platformUserId" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="fail_code" property="failCode" jdbcType="VARCHAR" />
+    <result column="fail_reason" property="failReason" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, request_ref_no, request_time, fcp_trx_no, project_no, check_type, entrusted_type, 
+    platform_user_id, result, fail_code, fail_reason, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crfchina.cdg.basedb.entity.LmProjectAuthListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from lm_project_auth_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from lm_project_auth_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from lm_project_auth_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmProjectAuthList" >
+    insert into lm_project_auth_list (id, request_ref_no, request_time, 
+      fcp_trx_no, project_no, check_type, 
+      entrusted_type, platform_user_id, result, 
+      fail_code, fail_reason, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{requestRefNo,jdbcType=VARCHAR}, #{requestTime,jdbcType=TIMESTAMP}, 
+      #{fcpTrxNo,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, #{checkType,jdbcType=BIT}, 
+      #{entrustedType,jdbcType=BIT}, #{platformUserId,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, 
+      #{failCode,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.LmProjectAuthList" >
+    insert into lm_project_auth_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="requestRefNo != null" >
+        request_ref_no,
+      </if>
+      <if test="requestTime != null" >
+        request_time,
+      </if>
+      <if test="fcpTrxNo != null" >
+        fcp_trx_no,
+      </if>
+      <if test="projectNo != null" >
+        project_no,
+      </if>
+      <if test="checkType != null" >
+        check_type,
+      </if>
+      <if test="entrustedType != null" >
+        entrusted_type,
+      </if>
+      <if test="platformUserId != null" >
+        platform_user_id,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="failCode != null" >
+        fail_code,
+      </if>
+      <if test="failReason != null" >
+        fail_reason,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="requestRefNo != null" >
+        #{requestRefNo,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fcpTrxNo != null" >
+        #{fcpTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkType != null" >
+        #{checkType,jdbcType=BIT},
+      </if>
+      <if test="entrustedType != null" >
+        #{entrustedType,jdbcType=BIT},
+      </if>
+      <if test="platformUserId != null" >
+        #{platformUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="failCode != null" >
+        #{failCode,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crfchina.cdg.basedb.entity.LmProjectAuthListExample" resultType="java.lang.Integer" >
+    select count(*) from lm_project_auth_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crfchina.cdg.basedb.entity.LmProjectAuthList" >
+    update lm_project_auth_list
+    <set >
+      <if test="requestRefNo != null" >
+        request_ref_no = #{requestRefNo,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        request_time = #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fcpTrxNo != null" >
+        fcp_trx_no = #{fcpTrxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkType != null" >
+        check_type = #{checkType,jdbcType=BIT},
+      </if>
+      <if test="entrustedType != null" >
+        entrusted_type = #{entrustedType,jdbcType=BIT},
+      </if>
+      <if test="platformUserId != null" >
+        platform_user_id = #{platformUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="failCode != null" >
+        fail_code = #{failCode,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        fail_reason = #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crfchina.cdg.basedb.entity.LmProjectAuthList" >
+    update lm_project_auth_list
+    set request_ref_no = #{requestRefNo,jdbcType=VARCHAR},
+      request_time = #{requestTime,jdbcType=TIMESTAMP},
+      fcp_trx_no = #{fcpTrxNo,jdbcType=VARCHAR},
+      project_no = #{projectNo,jdbcType=VARCHAR},
+      check_type = #{checkType,jdbcType=BIT},
+      entrusted_type = #{entrustedType,jdbcType=BIT},
+      platform_user_id = #{platformUserId,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      fail_code = #{failCode,jdbcType=VARCHAR},
+      fail_reason = #{failReason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

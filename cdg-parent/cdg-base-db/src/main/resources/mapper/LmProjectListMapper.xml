@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crfchina.cdg.basedb.dao.LmProjectListMapper" >
+  <resultMap id="BaseResultMap" type="com.crfchina.cdg.basedb.entity.LmProjectList" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="platform_user_id" property="platformUserId" jdbcType="VARCHAR" />
+    <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+    <result column="project_amount" property="projectAmount" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="project_desc" property="projectDesc" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="BIT" />
+    <result column="project_period" property="projectPeriod" jdbcType="INTEGER" />
+    <result column="interest_rate" property="interestRate" jdbcType="VARCHAR" />
+    <result column="repayment_way" property="repaymentWay" jdbcType="BIT" />
+    <result column="extend" property="extend" jdbcType="VARCHAR" />
+    <result column="project_status" property="projectStatus" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, platform_user_id, project_no, project_amount, project_name, project_desc, project_type, 
+    project_period, interest_rate, repayment_way, extend, project_status, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crfchina.cdg.basedb.entity.LmProjectListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from lm_project_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from lm_project_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from lm_project_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmProjectList" >
+    insert into lm_project_list (id, platform_user_id, project_no, 
+      project_amount, project_name, project_desc, 
+      project_type, project_period, interest_rate, 
+      repayment_way, extend, project_status, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{platformUserId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
+      #{projectAmount,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{projectDesc,jdbcType=VARCHAR}, 
+      #{projectType,jdbcType=BIT}, #{projectPeriod,jdbcType=INTEGER}, #{interestRate,jdbcType=VARCHAR}, 
+      #{repaymentWay,jdbcType=BIT}, #{extend,jdbcType=VARCHAR}, #{projectStatus,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.LmProjectList" >
+    insert into lm_project_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="platformUserId != null" >
+        platform_user_id,
+      </if>
+      <if test="projectNo != null" >
+        project_no,
+      </if>
+      <if test="projectAmount != null" >
+        project_amount,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="projectDesc != null" >
+        project_desc,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="projectPeriod != null" >
+        project_period,
+      </if>
+      <if test="interestRate != null" >
+        interest_rate,
+      </if>
+      <if test="repaymentWay != null" >
+        repayment_way,
+      </if>
+      <if test="extend != null" >
+        extend,
+      </if>
+      <if test="projectStatus != null" >
+        project_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="platformUserId != null" >
+        #{platformUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectAmount != null" >
+        #{projectAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDesc != null" >
+        #{projectDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=BIT},
+      </if>
+      <if test="projectPeriod != null" >
+        #{projectPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="interestRate != null" >
+        #{interestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="repaymentWay != null" >
+        #{repaymentWay,jdbcType=BIT},
+      </if>
+      <if test="extend != null" >
+        #{extend,jdbcType=VARCHAR},
+      </if>
+      <if test="projectStatus != null" >
+        #{projectStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crfchina.cdg.basedb.entity.LmProjectListExample" resultType="java.lang.Integer" >
+    select count(*) from lm_project_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crfchina.cdg.basedb.entity.LmProjectList" >
+    update lm_project_list
+    <set >
+      <if test="platformUserId != null" >
+        platform_user_id = #{platformUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectAmount != null" >
+        project_amount = #{projectAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDesc != null" >
+        project_desc = #{projectDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=BIT},
+      </if>
+      <if test="projectPeriod != null" >
+        project_period = #{projectPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="interestRate != null" >
+        interest_rate = #{interestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="repaymentWay != null" >
+        repayment_way = #{repaymentWay,jdbcType=BIT},
+      </if>
+      <if test="extend != null" >
+        extend = #{extend,jdbcType=VARCHAR},
+      </if>
+      <if test="projectStatus != null" >
+        project_status = #{projectStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crfchina.cdg.basedb.entity.LmProjectList" >
+    update lm_project_list
+    set platform_user_id = #{platformUserId,jdbcType=VARCHAR},
+      project_no = #{projectNo,jdbcType=VARCHAR},
+      project_amount = #{projectAmount,jdbcType=VARCHAR},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      project_desc = #{projectDesc,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=BIT},
+      project_period = #{projectPeriod,jdbcType=INTEGER},
+      interest_rate = #{interestRate,jdbcType=VARCHAR},
+      repayment_way = #{repaymentWay,jdbcType=BIT},
+      extend = #{extend,jdbcType=VARCHAR},
+      project_status = #{projectStatus,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

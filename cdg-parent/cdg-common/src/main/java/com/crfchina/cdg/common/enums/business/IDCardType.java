@@ -19,8 +19,8 @@ package com.crfchina.cdg.common.enums.business;
  * @remarks：
  */
 public enum IDCardType {
-	
-	IDENTITYCARD("PRC_ID","身份证"),
+
+	PRC_ID("PRC_ID","身份证"),
 	PASSPORT("PASSPORT","护照"),
 	COMPATRIOTS_CARD("COMPATRIOTS_CARD","港澳台同胞回乡证"),
 	PERMANENT_RESIDENCE("PERMANENT_RESIDENCE","外国人永久居留证"),

@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
@@ -20,6 +23,8 @@ public class AppUtil {
 
 	private final static Logger logger = LoggerFactory.getLogger(AppUtil.class);
 
+	private static final DateFormat format = new SimpleDateFormat(
+			"yyyyMMddHHmmss");
 	/**
 	 * 生成参数<br>
 	 * 签名加密
@@ -30,7 +35,7 @@ public class AppUtil {
 
 		AppConfig config = AppConfig.getConfig();
 		String privateStr = config.getPrivateKey();
-
+		reqDataMap.put("timestamp", format.format(new Date()));
 		String reqData = JSON.toJSONString(reqDataMap);
 		logger.debug("请求参数reqData:" + reqData);
 		PrivateKey privateKey = SignatureUtils.getRsaPkcs8PrivateKey(Base64

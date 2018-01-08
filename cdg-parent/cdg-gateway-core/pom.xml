@@ -25,7 +25,6 @@
 		<java.version>1.8</java.version>
 		<springfox.version>2.6.1</springfox.version>
 		<cdg.common.version>0.0.1-SNAPSHOT</cdg.common.version>
-		<csf.common.version>1.0.20-SNAPSHOT</csf.common.version>
 	</properties>
 
 	<dependencies>

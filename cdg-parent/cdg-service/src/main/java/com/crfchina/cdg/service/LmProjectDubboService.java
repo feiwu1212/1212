@@ -7,7 +7,10 @@
  */
 package com.crfchina.cdg.service;
 
-/**    
+import com.crfchina.cdg.dto.base.BaseParamDTO;
+import com.crfchina.cdg.dto.base.BaseResultDTO;
+
+/**
  * 
  * @ProjectName：cdg-service
  * @ClassName：LmProjectDubboService 
@@ -19,5 +22,7 @@ package com.crfchina.cdg.service;
  * @remarks：
  */
 public interface LmProjectDubboService {
+
+	BaseResultDTO test(BaseParamDTO dto);
 
 }

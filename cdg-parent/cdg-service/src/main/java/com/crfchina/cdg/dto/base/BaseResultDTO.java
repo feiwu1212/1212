@@ -22,7 +22,7 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
  * @updateDate：2018年1月5日 下午4:07:05
  * @remarks：
  */
-public class BaseResultDTO implements Serializable{
+public class BaseResultDTO implements Serializable {
 	
 	private static final long serialVersionUID = -1412416545350234317L;
 

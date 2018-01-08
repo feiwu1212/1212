@@ -9,6 +9,7 @@ package com.crfchina.cdg.dto.base;
 
 
 import com.crfchina.cdg.common.enums.common.SystemNo;
+import java.io.Serializable;
 
 /**
  * 
@@ -21,7 +22,7 @@ import com.crfchina.cdg.common.enums.common.SystemNo;
  * @updateDate：2018年1月5日 下午3:38:13
  * @remarks：
  */
-public class BaseParamDTO {
+public class BaseParamDTO implements Serializable{
 	private SystemNo systemNo;//系统编号
 	private String requestRefNo;//请求参考号
 	

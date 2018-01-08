@@ -25,6 +25,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  */
 @SpringBootApplication
 public class CdgGeteWayApplication extends SpringBootServletInitializer {
+	
 	public static void main(String[] args) {
 		SpringApplication.run(CdgGeteWayApplication.class, args);
 	}

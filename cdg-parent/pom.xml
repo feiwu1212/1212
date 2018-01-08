@@ -57,13 +57,13 @@
             <version>1.0.19</version>
         </dependency>
         
-        <!-- CRFLOG -->
+        <!-- CRFLOG 
 		<dependency>
 		  <groupId>com.crfchina</groupId>
 		  <artifactId>CrfLog4j</artifactId>
 		  <version>0.0.9</version>
 		</dependency>
-        
+        -->
   	
   </dependencies>
   

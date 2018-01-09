@@ -1,3 +1,11 @@
 .metadata/
 /target/
+/.settings/
 cdg-parent/cdg-service/.settings/
+cdg-parent/cdg-api-core/.settings/
+cdg-parent/cdg-base-db/.settings/
+cdg-parent/cdg-common/.settings/
+cdg-parent/cdg-gateway-core/.settings/
+cdg-parent/cdg-notify/.settings/
+cdg-parent/cdg-recon-task/.settings/
+

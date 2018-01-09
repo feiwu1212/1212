@@ -4,6 +4,9 @@ import com.crfchina.cdg.basedb.entity.LmBindCardList;
 import com.crfchina.cdg.basedb.entity.LmBindCardListExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
 public interface LmBindCardListMapper {
     int countByExample(LmBindCardListExample example);
 

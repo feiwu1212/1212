@@ -1,6 +1,6 @@
 .metadata/
 /target/
-/.settings/
+cdg-parent/.settings/
 cdg-parent/cdg-service/.settings/
 cdg-parent/cdg-api-core/.settings/
 cdg-parent/cdg-base-db/.settings/

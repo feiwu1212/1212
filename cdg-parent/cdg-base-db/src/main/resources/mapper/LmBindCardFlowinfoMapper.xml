@@ -18,9 +18,9 @@
     <result column="user_role" property="userRole" jdbcType="VARCHAR" />
     <result column="auth_list" property="authList" jdbcType="VARCHAR" />
     <result column="check_type" property="checkType" jdbcType="BIT" />
-    <result column="user_limit_type" property="userLimitType" jdbcType="BIT" />
-    <result column="access_type" property="accessType" jdbcType="BIT" />
-    <result column="audit_status" property="auditStatus" jdbcType="BIT" />
+    <result column="user_limit_type" property="userLimitType" jdbcType="TINYINT" />
+    <result column="access_type" property="accessType" jdbcType="TINYINT" />
+    <result column="audit_status" property="auditStatus" jdbcType="TINYINT" />
     <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
     <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR" />
     <result column="result" property="result" jdbcType="VARCHAR" />
@@ -107,8 +107,8 @@
       #{userRealName,jdbcType=VARCHAR}, #{bankcardNo,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, #{idType,jdbcType=TINYINT}, 
       #{bindcardTime,jdbcType=TIMESTAMP}, #{userRole,jdbcType=VARCHAR}, #{authList,jdbcType=VARCHAR}, 
-      #{checkType,jdbcType=BIT}, #{userLimitType,jdbcType=BIT}, #{accessType,jdbcType=BIT}, 
-      #{auditStatus,jdbcType=BIT}, #{callbackUrl,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, 
+      #{checkType,jdbcType=TINYINT}, #{userLimitType,jdbcType=TINYINT}, #{accessType,jdbcType=TINYINT},
+      #{auditStatus,jdbcType=TINYINT}, #{callbackUrl,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR},
       #{result,jdbcType=VARCHAR}, #{failCode,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, 
       #{finishTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{partitionDate,jdbcType=INTEGER})
@@ -248,16 +248,16 @@
         #{authList,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        #{checkType,jdbcType=BIT},
+        #{checkType,jdbcType=TINYINT},
       </if>
       <if test="userLimitType != null" >
-        #{userLimitType,jdbcType=BIT},
+        #{userLimitType,jdbcType=TINYINT},
       </if>
       <if test="accessType != null" >
-        #{accessType,jdbcType=BIT},
+        #{accessType,jdbcType=TINYINT},
       </if>
       <if test="auditStatus != null" >
-        #{auditStatus,jdbcType=BIT},
+        #{auditStatus,jdbcType=TINYINT},
       </if>
       <if test="callbackUrl != null" >
         #{callbackUrl,jdbcType=VARCHAR},
@@ -340,16 +340,16 @@
         auth_list = #{authList,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        check_type = #{checkType,jdbcType=BIT},
+        check_type = #{checkType,jdbcType=TINYINT},
       </if>
       <if test="userLimitType != null" >
-        user_limit_type = #{userLimitType,jdbcType=BIT},
+        user_limit_type = #{userLimitType,jdbcType=TINYINT},
       </if>
       <if test="accessType != null" >
-        access_type = #{accessType,jdbcType=BIT},
+        access_type = #{accessType,jdbcType=TINYINT},
       </if>
       <if test="auditStatus != null" >
-        audit_status = #{auditStatus,jdbcType=BIT},
+        audit_status = #{auditStatus,jdbcType=TINYINT},
       </if>
       <if test="callbackUrl != null" >
         callback_url = #{callbackUrl,jdbcType=VARCHAR},
@@ -397,10 +397,10 @@
       bindcard_time = #{bindcardTime,jdbcType=TIMESTAMP},
       user_role = #{userRole,jdbcType=VARCHAR},
       auth_list = #{authList,jdbcType=VARCHAR},
-      check_type = #{checkType,jdbcType=BIT},
-      user_limit_type = #{userLimitType,jdbcType=BIT},
-      access_type = #{accessType,jdbcType=BIT},
-      audit_status = #{auditStatus,jdbcType=BIT},
+      check_type = #{checkType,jdbcType=TINYINT},
+      user_limit_type = #{userLimitType,jdbcType=TINYINT},
+      access_type = #{accessType,jdbcType=TINYINT},
+      audit_status = #{auditStatus,jdbcType=TINYINT},
       callback_url = #{callbackUrl,jdbcType=VARCHAR},
       notify_url = #{notifyUrl,jdbcType=VARCHAR},
       result = #{result,jdbcType=VARCHAR},

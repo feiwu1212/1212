@@ -2,8 +2,8 @@
 	<body>
 		<form id="form" name="form" th:action="${url}" >
 			<div th:each="field : ${myparam}">
-				<span th:text="${field}"></span>
-				<input th:id="${field}" th:name="${field}"/>
+				<span th:text="${field.key}"></span>
+				<input th:id="${field.key}" th:name="${field.key}" th:value="${field.value}"/>
 			</div>
 			<button type="submit" value="submit">submit</button>
 		</form>

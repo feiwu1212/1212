@@ -15,13 +15,14 @@ import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
+import com.crfchina.cdg.core.service.LmAccountService;
 import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,10 +43,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/account")
 public class AccountController {
 
+	@Autowired
+	LmAccountService lmAccountService;
+
 	@RequestMapping("/personOpen")
 	public ModelAndView personOpen(HttpServletRequest request) {
 		LmOpenAccountParamDTO paramDto = getParamDto(request, LmOpenAccountParamDTO.class);
-		Map<String, Object> personOpenReqDataMap = getPersonOpenReqDataMap(paramDto);
+
+		Map<String, Object> personOpenReqDataMap = lmAccountService.personBindCard(paramDto);
 		// 获取properties参数
 		AppConfig config = AppConfig.getConfig();
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
@@ -62,7 +67,7 @@ public class AccountController {
 	public ModelAndView enterpriseOpen(HttpServletRequest request) {
 		LmOpenAccountCompanyParamDTO paramDto = getParamDto(request, LmOpenAccountCompanyParamDTO.class);
 		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(paramDto));
-		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo("OC"));
+		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo(Constants.COMPANY_OPEN_ACCOUNT));
 		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
 		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));
 		
@@ -77,27 +82,6 @@ public class AccountController {
 		}
 		
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
-	}
-
-	private Map<String, Object> getPersonOpenReqDataMap(LmOpenAccountParamDTO paramDto) {
-		System.out.println(JSONObject.toJSONString(paramDto));
-		Map<String, Object> reqDataMap = new LinkedHashMap<>();
-		reqDataMap.put("platformUserNo", paramDto.getPlatformUserNo());
-		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo("OC"));
-		reqDataMap.put("realName", paramDto.getRealName());
-		reqDataMap.put("idCardNo", paramDto.getIdCardNo());
-		reqDataMap.put("bankcardNo", paramDto.getBankCardNo());
-		reqDataMap.put("mobile", paramDto.getMobile());
-		reqDataMap.put("idCardType", paramDto.getIdCardType());
-		reqDataMap.put("userRole", paramDto.getUserRole());
-		reqDataMap.put("checkType", Constants.CHECK_TYPE);
-		//TODO 配置本地回调地址
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
-		reqDataMap.put("userLimitType", Constants.ID_CARD_NO_UNIQUE);
-		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));
-		reqDataMap.put("failTime", paramDto.getFailTime());
-		reqDataMap.put("amount", paramDto.getAuthAmount());
-		return reqDataMap;
 	}
 
 	public <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {

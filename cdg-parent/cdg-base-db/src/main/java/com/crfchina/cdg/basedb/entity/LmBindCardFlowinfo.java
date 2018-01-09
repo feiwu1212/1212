@@ -25,7 +25,7 @@ public class LmBindCardFlowinfo {
 
     private String idNo;
 
-    private Byte idType;
+    private Integer idType;
 
     private Date bindcardTime;
 
@@ -33,13 +33,13 @@ public class LmBindCardFlowinfo {
 
     private String authList;
 
-    private Boolean checkType;
+    private Integer checkType;
 
-    private Boolean userLimitType;
+    private Integer userLimitType;
 
-    private Boolean accessType;
+    private Integer accessType;
 
-    private Boolean auditStatus;
+    private Integer auditStatus;
 
     private String callbackUrl;
 
@@ -72,7 +72,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setFcpTrxNo(String fcpTrxNo) {
-        this.fcpTrxNo = fcpTrxNo == null ? null : fcpTrxNo.trim();
+        this.fcpTrxNo = fcpTrxNo;
     }
 
     public String getRequestRefNo() {
@@ -80,7 +80,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setRequestRefNo(String requestRefNo) {
-        this.requestRefNo = requestRefNo == null ? null : requestRefNo.trim();
+        this.requestRefNo = requestRefNo;
     }
 
     public Date getRequestTime() {
@@ -96,7 +96,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setSystemNo(String systemNo) {
-        this.systemNo = systemNo == null ? null : systemNo.trim();
+        this.systemNo = systemNo;
     }
 
     public String getPlatformUserId() {
@@ -104,7 +104,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setPlatformUserId(String platformUserId) {
-        this.platformUserId = platformUserId == null ? null : platformUserId.trim();
+        this.platformUserId = platformUserId;
     }
 
     public String getUserRealName() {
@@ -112,7 +112,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setUserRealName(String userRealName) {
-        this.userRealName = userRealName == null ? null : userRealName.trim();
+        this.userRealName = userRealName;
     }
 
     public String getBankcardNo() {
@@ -120,7 +120,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setBankcardNo(String bankcardNo) {
-        this.bankcardNo = bankcardNo == null ? null : bankcardNo.trim();
+        this.bankcardNo = bankcardNo;
     }
 
     public String getBankCode() {
@@ -128,7 +128,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setBankCode(String bankCode) {
-        this.bankCode = bankCode == null ? null : bankCode.trim();
+        this.bankCode = bankCode;
     }
 
     public String getMobile() {
@@ -136,7 +136,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setMobile(String mobile) {
-        this.mobile = mobile == null ? null : mobile.trim();
+        this.mobile = mobile;
     }
 
     public String getIdNo() {
@@ -144,14 +144,14 @@ public class LmBindCardFlowinfo {
     }
 
     public void setIdNo(String idNo) {
-        this.idNo = idNo == null ? null : idNo.trim();
+        this.idNo = idNo;
     }
 
-    public Byte getIdType() {
+    public Integer getIdType() {
         return idType;
     }
 
-    public void setIdType(Byte idType) {
+    public void setIdType(Integer idType) {
         this.idType = idType;
     }
 
@@ -168,7 +168,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setUserRole(String userRole) {
-        this.userRole = userRole == null ? null : userRole.trim();
+        this.userRole = userRole;
     }
 
     public String getAuthList() {
@@ -176,38 +176,38 @@ public class LmBindCardFlowinfo {
     }
 
     public void setAuthList(String authList) {
-        this.authList = authList == null ? null : authList.trim();
+        this.authList = authList;
     }
 
-    public Boolean getCheckType() {
+    public Integer getCheckType() {
         return checkType;
     }
 
-    public void setCheckType(Boolean checkType) {
+    public void setCheckType(Integer checkType) {
         this.checkType = checkType;
     }
 
-    public Boolean getUserLimitType() {
+    public Integer getUserLimitType() {
         return userLimitType;
     }
 
-    public void setUserLimitType(Boolean userLimitType) {
+    public void setUserLimitType(Integer userLimitType) {
         this.userLimitType = userLimitType;
     }
 
-    public Boolean getAccessType() {
+    public Integer getAccessType() {
         return accessType;
     }
 
-    public void setAccessType(Boolean accessType) {
+    public void setAccessType(Integer accessType) {
         this.accessType = accessType;
     }
 
-    public Boolean getAuditStatus() {
+    public Integer getAuditStatus() {
         return auditStatus;
     }
 
-    public void setAuditStatus(Boolean auditStatus) {
+    public void setAuditStatus(Integer auditStatus) {
         this.auditStatus = auditStatus;
     }
 
@@ -216,7 +216,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setCallbackUrl(String callbackUrl) {
-        this.callbackUrl = callbackUrl == null ? null : callbackUrl.trim();
+        this.callbackUrl = callbackUrl;
     }
 
     public String getNotifyUrl() {
@@ -224,7 +224,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setNotifyUrl(String notifyUrl) {
-        this.notifyUrl = notifyUrl == null ? null : notifyUrl.trim();
+        this.notifyUrl = notifyUrl;
     }
 
     public String getResult() {
@@ -232,7 +232,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setResult(String result) {
-        this.result = result == null ? null : result.trim();
+        this.result = result;
     }
 
     public String getFailCode() {
@@ -240,7 +240,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setFailCode(String failCode) {
-        this.failCode = failCode == null ? null : failCode.trim();
+        this.failCode = failCode;
     }
 
     public String getFailReason() {
@@ -248,7 +248,7 @@ public class LmBindCardFlowinfo {
     }
 
     public void setFailReason(String failReason) {
-        this.failReason = failReason == null ? null : failReason.trim();
+        this.failReason = failReason;
     }
 
     public Date getFinishTime() {

@@ -4,6 +4,16 @@ package com.crfchina.cdg.common.constants;
 public class Constants {
 
 	/**
+	 * 操作类型:个人开户
+	 */
+	public static final String PERSON_OPEN_ACCOUNT = "POA";
+
+	/**
+	 * 操作类型:企业绑卡
+	 */
+	public static final String COMPANY_OPEN_ACCOUNT = "COA";
+
+	/**
 	 * 网关地址后缀
 	 */
 	public static final String GATEWAY_SUFFIX = "/gateway";

@@ -14,11 +14,13 @@ import com.crfchina.cdg.common.enums.business.Terminal;
 import com.crfchina.cdg.common.enums.business.UserAuthType;
 import com.crfchina.cdg.common.enums.business.UserRoles;
 import com.crfchina.cdg.common.enums.common.SystemNo;
+import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
-
 import java.util.Arrays;
-import java.util.Set;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,11 +46,27 @@ public class TestController {
 
 	@RequestMapping("/toPersonOpen")
 	public ModelAndView toPersonOpen() {
-		String s = JSONObject.toJSONString(new LmOpenAccountParamDTO(), SerializerFeature.WriteMapNullValue);
-		System.out.println(s);
+		LmOpenAccountParamDTO loapDto = new LmOpenAccountParamDTO();
+		loapDto.setSystemNo(SystemNo.crfxjd);
+		loapDto.setRequestRefNo(DateUtils.dateToString(new Date(), "yyyyMMddHHmmss"));
+		loapDto.setPlatformUserNo("CRF" + DateUtils.dateToString(new Date(), "yyyyMMddHHmmss"));
+		loapDto.setCallbackUrl("http://baidu.com");
+		loapDto.setNotifyUrl("http://baidu.com");
+		loapDto.setRealName("但锐轩" + DateUtils.dateToString(new Date(), "yyyyMMddHHmmss"));
+		loapDto.setIdCardNo("650102199106220731");
+		loapDto.setMobile("18168408959");
+		loapDto.setBankCardNo("6217002180000447799");
+		loapDto.setIdCardType(IDCardType.PRC_ID);
+		loapDto.setUserRole(UserRoles.INVESTOR);
+		List<UserAuthType> authTypeList = new LinkedList<>();
+		authTypeList.add(UserAuthType.TENDER);
+		loapDto.setAuthList(authTypeList);
+		loapDto.setFailTime("20181231");
+		loapDto.setAuthAmount("9999999");
+		loapDto.setUserDevice(Terminal.PC);
+		String s = JSONObject.toJSONString(loapDto, SerializerFeature.WriteMapNullValue);
 		JSONObject jsonObject = JSON.parseObject(s);
-		Set<String> keySet = jsonObject.keySet();
-		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/personOpen").addObject("myparam",keySet);
+		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/personOpen").addObject("myparam", jsonObject);
 	}
 	
 	@RequestMapping("/toEnterpriseOpen")
@@ -81,8 +99,7 @@ public class TestController {
 		String s = JSONObject.toJSONString(oacParam, SerializerFeature.WriteMapNullValue);
 		System.out.println(s);
 		JSONObject jsonObject = JSON.parseObject(s);
-		Set<String> keySet = jsonObject.keySet();
-		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/enterpriseOpen").addObject("myparam",keySet);
+		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/enterpriseOpen").addObject("myparam",jsonObject);
 	}
 
 }

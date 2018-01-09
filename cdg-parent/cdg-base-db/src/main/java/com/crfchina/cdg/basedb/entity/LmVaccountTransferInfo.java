@@ -19,7 +19,7 @@ public class LmVaccountTransferInfo {
 
     private String channelFeeAmount;
 
-    private Boolean currency;
+    private int currency;
 
     private String outRealName;
 
@@ -131,11 +131,11 @@ public class LmVaccountTransferInfo {
         this.channelFeeAmount = channelFeeAmount == null ? null : channelFeeAmount.trim();
     }
 
-    public Boolean getCurrency() {
+    public int getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Boolean currency) {
+    public void setCurrency(int currency) {
         this.currency = currency;
     }
 

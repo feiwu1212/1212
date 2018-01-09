@@ -34,6 +34,14 @@ public class LmRechargeParamDTO extends LmGatewayBaseParamDTO {
 	protected String projectNo;//标的号
 	protected Date expired;//页面过期时间
 	protected String callbackMode;//快捷充值回调模式，如传入 DIRECT_CALLBACK，则订单支付不论成功、失败、 处理中均直接同步、异步通知商户
+	protected String expectPayCompany;//偏好支付公司
+	
+	public String getExpectPayCompany() {
+		return expectPayCompany;
+	}
+	public void setExpectPayCompany(String expectPayCompany) {
+		this.expectPayCompany = expectPayCompany;
+	}
 	public Long getAmount() {
 		return amount;
 	}

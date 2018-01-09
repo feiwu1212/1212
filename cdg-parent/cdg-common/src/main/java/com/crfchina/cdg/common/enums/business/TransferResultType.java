@@ -16,11 +16,12 @@ package com.crfchina.cdg.common.enums.business;
  * @updateDate：2018/1/8 22:16
  * @remarks：
  */
-public enum ApiType {
+public enum TransferResultType {
 
-	PERSONAL_REGISTER_EXPAND("PERSONAL_REGISTER_EXPAND", "个人绑卡注册"),
-	ENTERPRISE_REGISTER("ENTERPRISE_REGISTER", "企业绑卡注册"),
-	RECHARGE("RECHARGE","提现")
+	SUCCESS("SUCCESS", "成功确认"),
+	FAIL("FAIL", "失败确认"),
+	UNKNOW("UNKNOW","未知状态(受理中)"),
+	ACCEPTED("ACCEPTED","受理成功")
 	;
 	private String code;
 
@@ -46,7 +47,7 @@ public enum ApiType {
 	}
 
 
-	private ApiType(String code, String desc) {
+	private TransferResultType(String code, String desc) {
 		this.code = code;
 		this.desc = desc;
 	}

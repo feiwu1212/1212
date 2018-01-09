@@ -37,7 +37,7 @@ public class AppUtil {
 		String privateStr = config.getPrivateKey();
 		reqDataMap.put("timestamp", format.format(new Date()));
 		String reqData = JSON.toJSONString(reqDataMap);
-		logger.info("请求参数reqData:" + reqData);
+		logger.info("请求服务:"+serviceName+",请求参数reqData:" + reqData);
 		PrivateKey privateKey = SignatureUtils.getRsaPkcs8PrivateKey(Base64
 				.decodeBase64(privateStr));
 		byte[] sign = SignatureUtils.sign(SignatureAlgorithm.SHA1WithRSA,

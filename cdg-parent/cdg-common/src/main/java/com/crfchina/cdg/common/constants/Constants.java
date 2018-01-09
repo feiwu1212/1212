@@ -14,6 +14,10 @@ public class Constants {
 	public static final String COMPANY_OPEN_ACCOUNT = "COA";
 
 	/**
+	 * 操作类型：提现
+	 */
+	public static final String RECHARGE = "TX";
+	/**
 	 * 网关地址后缀
 	 */
 	public static final String GATEWAY_SUFFIX = "/gateway";

@@ -13,6 +13,7 @@
     <module>cdg-gateway-core</module>
     <module>cdg-notify</module>
     <module>cdg-api-core</module>
+    <module>cdg-recon-task</module>
   </modules>
   
   <parent>

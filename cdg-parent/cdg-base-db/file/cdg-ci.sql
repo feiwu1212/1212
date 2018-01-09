@@ -1,30 +1,3 @@
-SET SESSION FOREIGN_KEY_CHECKS=0;
-
-/* Drop Indexes */
-
-DROP INDEX inx_bindcard_flowinfo ON lm_bind_card_flowinfo;
-
-
-
-/* Drop Tables */
-
-DROP TABLE IF EXISTS bank_info;
-DROP TABLE IF EXISTS lm_bind_card_flowinfo;
-DROP TABLE IF EXISTS lm_bind_card_list;
-DROP TABLE IF EXISTS lm_change_cardmobile_flowinfo;
-DROP TABLE IF EXISTS lm_project_auth_list;
-DROP TABLE IF EXISTS lm_project_flowinfo;
-DROP TABLE IF EXISTS lm_project_list;
-DROP TABLE IF EXISTS lm_user_operation_flowinfo;
-DROP TABLE IF EXISTS lm_vaccount_transfer_batch;
-DROP TABLE IF EXISTS lm_vaccount_transfer_detail;
-DROP TABLE IF EXISTS lm_vaccount_transfer_info;
-DROP TABLE IF EXISTS system_config;
-DROP TABLE IF EXISTS system_status_code;
-DROP TABLE IF EXISTS system_status_code_metadata;
-
-
-
 
 /* Create Tables */
 
@@ -41,7 +14,6 @@ CREATE TABLE bank_info
 	update_time datetime COMMENT '更新时间',
 	PRIMARY KEY (id)
 ) COMMENT = '银行编码配置表';
-
 
 -- 懒猫绑卡流水表
 CREATE TABLE lm_bind_card_flowinfo
@@ -134,9 +106,23 @@ RECHARGE  自动充值',
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
 	partition_date int(6) NOT NULL COMMENT '分区信息列，request time的年*100+月',
-	PRIMARY KEY (id)
-) COMMENT = '懒猫绑卡流水表';
-
+	PRIMARY KEY (id,partition_date),
+	KEY idx_cardflow_fcpno (fcp_trx_no),
+	KEY idx_cardflow_requestno(request_ref_no)
+) COMMENT = '懒猫绑卡流水表'
+ PARTITION BY RANGE (partition_date)
+(PARTITION bind_cardflow_p201802 VALUES LESS THAN (201802) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201803 VALUES LESS THAN (201803) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201804 VALUES LESS THAN (201804) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201805 VALUES LESS THAN (201805) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201806 VALUES LESS THAN (201806) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201807 VALUES LESS THAN (201807) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201808 VALUES LESS THAN (201808) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201809 VALUES LESS THAN (201809) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201810 VALUES LESS THAN (201810) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201811 VALUES LESS THAN (201811) ENGINE = InnoDB,
+ PARTITION bind_cardflow_p201812 VALUES LESS THAN (201812) ENGINE = InnoDB
+ ) 
 
 -- 懒猫绑卡记录表
 CREATE TABLE lm_bind_card_list
@@ -220,7 +206,9 @@ RECHARGE  自动充值',
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
 	partition_date int(6) NOT NULL COMMENT '分区信息列，request time的年*100+月',
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	KEY idx_cardinfo_userid (platform_user_id),
+	KEY idx_cardinfo_idno(id_no)
 ) COMMENT = '懒猫绑卡记录表';
 
 
@@ -274,8 +262,24 @@ CREATE TABLE lm_change_cardmobile_flowinfo
 	change_type tinyint(1) COMMENT '变更信息字段 : 1:变更银行卡
 2:变更预留手机号',
 	partition_date int(6) NOT NULL COMMENT '分区信息列，request time的年*100+月',
-	PRIMARY KEY (id)
-) COMMENT = '懒猫存管-换卡/手机号流水表';
+	PRIMARY KEY (id,partition_date),
+	KEY idx_change_cardmobile_fcpno(fcp_trx_no),
+	KEY idx_change_cardmobile_request_no(request_ref_no),
+	KEY idx_change_cardmobile_userid(platform_user_id)
+) COMMENT = '懒猫存管-换卡/手机号流水表'
+PARTITION BY RANGE (partition_date)
+(PARTITION change_cardflow_p201802 VALUES LESS THAN (201802) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201803 VALUES LESS THAN (201803) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201804 VALUES LESS THAN (201804) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201805 VALUES LESS THAN (201805) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201806 VALUES LESS THAN (201806) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201807 VALUES LESS THAN (201807) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201808 VALUES LESS THAN (201808) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201809 VALUES LESS THAN (201809) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201810 VALUES LESS THAN (201810) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201811 VALUES LESS THAN (201811) ENGINE = InnoDB,
+ PARTITION change_cardflow_p201812 VALUES LESS THAN (201812) ENGINE = InnoDB
+ ) 
 
 
 -- 懒猫标的-委托支付授权清单
@@ -301,7 +305,9 @@ CREATE TABLE lm_project_auth_list
 	fail_reason varchar(100) COMMENT '失败原因',
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	KEY idx_project_auth_requestno(request_ref_no),
+	KEY idx_project_auth_fcpno(fcp_trx_no)
 ) COMMENT = '懒猫标的-委托支付授权清单';
 
 
@@ -334,9 +340,24 @@ CREATE TABLE lm_project_flowinfo
 	fail_code varchar(20) COMMENT '失败code',
 	fail_reason varchar(100) COMMENT '失败原因',
 	partition_date int(6) NOT NULL COMMENT '分区信息列，request time的年*100+月',
-	PRIMARY KEY (id)
-) COMMENT = '懒猫-标的流水记录表';
-
+	PRIMARY KEY (id,partition_date),
+	KEY idx_project_flowinfo_requestno(request_ref_no),
+	KEY idx_project_flowinfo_fcpno(fcp_trx_no),
+	key idx_project_flowinfo_userid(platform_user_id)
+) COMMENT = '懒猫-标的流水记录表'
+PARTITION BY RANGE (partition_date)
+(PARTITION project_flowinfo_p201802 VALUES LESS THAN (201802) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201803 VALUES LESS THAN (201803) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201804 VALUES LESS THAN (201804) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201805 VALUES LESS THAN (201805) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201806 VALUES LESS THAN (201806) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201807 VALUES LESS THAN (201807) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201808 VALUES LESS THAN (201808) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201809 VALUES LESS THAN (201809) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201810 VALUES LESS THAN (201810) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201811 VALUES LESS THAN (201811) ENGINE = InnoDB,
+ PARTITION project_flowinfo_p201812 VALUES LESS THAN (201812) ENGINE = InnoDB
+ ) ;
 
 -- 懒猫-标的信息表
 CREATE TABLE lm_project_list
@@ -358,7 +379,8 @@ CREATE TABLE lm_project_list
 	project_status tinyint(2) COMMENT '标的状态 : 1:募集中,2:还款中,3:已截标,4:流标',
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	KEY idx_projectlist_projectno(project_no)
 ) COMMENT = '懒猫-标的信息表';
 
 
@@ -418,8 +440,24 @@ RECHARGE  自动充值',
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
 	partition_date int(6) NOT NULL COMMENT '分区信息列，request time的年*100+月',
-	PRIMARY KEY (id)
-) COMMENT = '懒猫存管-个人操作流水表';
+	PRIMARY KEY (id,partition_date),
+	KEY idx_useroper_flow_requestno(request_ref_no),
+	KEY idx_useroper_flow_fcpno(fcp_trx_no),
+	key idx_useroper_flow_userid(platform_user_id)
+) COMMENT = '懒猫存管-个人操作流水表'
+ PARTITION BY RANGE (partition_date)
+(PARTITION useroper_flow_p201802 VALUES LESS THAN (201802) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201803 VALUES LESS THAN (201803) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201804 VALUES LESS THAN (201804) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201805 VALUES LESS THAN (201805) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201806 VALUES LESS THAN (201806) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201807 VALUES LESS THAN (201807) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201808 VALUES LESS THAN (201808) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201809 VALUES LESS THAN (201809) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201810 VALUES LESS THAN (201810) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201811 VALUES LESS THAN (201811) ENGINE = InnoDB,
+ PARTITION useroper_flow_p201812 VALUES LESS THAN (201812) ENGINE = InnoDB
+ );
 
 
 -- 批量交易主表
@@ -462,9 +500,24 @@ CREATE TABLE lm_vaccount_transfer_detail
 	fail_reason varchar(100) COMMENT '失败原因',
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
-	partition_date int(6) NOT NULL COMMENT '分区信息列，request_time*100+月',
-	PRIMARY KEY (id)
-) COMMENT = '懒猫存管-交易明细表';
+	partition_date int(6) NOT NULL COMMENT '分区信息列，request time的年*100+月',
+	PRIMARY KEY (id,partition_date),
+	KEY idx_transferdetail_flow_requestno(request_ref_no),
+	KEY idx_transferdetail_flow_fcpno(fcp_trx_no)
+	) COMMENT = '懒猫存管-交易明细表'
+	 PARTITION BY RANGE (partition_date)
+(PARTITION transferinfo_detail_p201802 VALUES LESS THAN (201802) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201803 VALUES LESS THAN (201803) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201804 VALUES LESS THAN (201804) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201805 VALUES LESS THAN (201805) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201806 VALUES LESS THAN (201806) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201807 VALUES LESS THAN (201807) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201808 VALUES LESS THAN (201808) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201809 VALUES LESS THAN (201809) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201810 VALUES LESS THAN (201810) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201811 VALUES LESS THAN (201811) ENGINE = InnoDB,
+ PARTITION transferinfo_detail_p201812 VALUES LESS THAN (201812) ENGINE = InnoDB
+ ) ;
 
 
 -- 懒猫存管-交易流水表[与业务系统间]
@@ -505,8 +558,23 @@ CREATE TABLE lm_vaccount_transfer_info
 	create_time datetime COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
 	partition_date int(6) NOT NULL COMMENT '分区信息列，request_time*100+月',
-	PRIMARY KEY (id)
-) COMMENT = '懒猫存管-交易流水表[与业务系统间]';
+	PRIMARY KEY (id,partition_date),
+	KEY idx_transferinfo_flow_requestno(request_ref_no),
+	KEY idx_transferinfo_flow_fcpno(fcp_trx_no)
+	) COMMENT = '懒猫存管-交易流水表'
+	 PARTITION BY RANGE (partition_date)
+(PARTITION transferinfo_p201802 VALUES LESS THAN (201802) ENGINE = InnoDB,
+ PARTITION transferinfo_p201803 VALUES LESS THAN (201803) ENGINE = InnoDB,
+ PARTITION transferinfo_p201804 VALUES LESS THAN (201804) ENGINE = InnoDB,
+ PARTITION transferinfo_p201805 VALUES LESS THAN (201805) ENGINE = InnoDB,
+ PARTITION transferinfo_p201806 VALUES LESS THAN (201806) ENGINE = InnoDB,
+ PARTITION transferinfo_p201807 VALUES LESS THAN (201807) ENGINE = InnoDB,
+ PARTITION transferinfo_p201808 VALUES LESS THAN (201808) ENGINE = InnoDB,
+ PARTITION transferinfo_p201809 VALUES LESS THAN (201809) ENGINE = InnoDB,
+ PARTITION transferinfo_p201810 VALUES LESS THAN (201810) ENGINE = InnoDB,
+ PARTITION transferinfo_p201811 VALUES LESS THAN (201811) ENGINE = InnoDB,
+ PARTITION transferinfo_p201812 VALUES LESS THAN (201812) ENGINE = InnoDB
+ );
 
 
 -- 系统配置表
@@ -537,7 +605,7 @@ CREATE TABLE system_status_code
 
 
 -- 各第三方通道状态代码表
-CREATE TABLE system_status_code_metadata
+CREATE TABLE system_status_code_metadata 
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
 	code_no varchar(50) COMMENT 'CDG通道Code',
@@ -549,12 +617,4 @@ CREATE TABLE system_status_code_metadata
 	update_time datetime COMMENT '更新时间',
 	PRIMARY KEY (id)
 ) COMMENT = '各第三方通道状态代码表';
-
-
-
-/* Create Indexes */
-
-CREATE INDEX inx_bindcard_flowinfo USING BTREE ON lm_bind_card_flowinfo (fcp_trx_no ASC, request_ref_no ASC, partition_date ASC);
-
-
 

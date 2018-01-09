@@ -22,7 +22,7 @@ public enum PayMode {
 	WEB("WEB","网银"),
 	SWIFT("SWIFT","快捷支付"),
 	BANK("BANK","转账充值，仅适用迁移场景调单笔充订查询接口返回"),
-	BACKROLL("SWIFT","资金回退充值"),
+	BACKROLL("BACKROLL","资金回退充值"),
 	PROXY("PROXY","自动充值"),
 	;
 	

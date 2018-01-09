@@ -7,10 +7,11 @@
 package com.crfchina.cdg.core.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.crfchina.cdg.common.enums.business.Terminal;
+import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
+import com.crfchina.cdg.core.service.LmCallBackService;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,15 +30,23 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/callBack")
 public class CallBackController {
 
+	@Autowired
+	LmCallBackService callBackService;
+
 	@RequestMapping("/pageCallBack")
 	public ModelAndView pageCallBack(HttpServletRequest request) {
-		Enumeration<String> parameterNames = request.getParameterNames();
-		Map<String, String> returnResult = new LinkedHashMap<String, String>();
-		while (parameterNames.hasMoreElements()) {
-			String s = parameterNames.nextElement();
-			returnResult.put(s, request.getParameter(s));
-		}
-		String message = JSONObject.toJSONString(returnResult);
-		return new ModelAndView("success").addObject("message", message);
+		LmGatewayPageCallbackResult resultFromRequest = getResultFromRequest(request);
+		return callBackService.dealCallBack(resultFromRequest);
+	}
+
+	private LmGatewayPageCallbackResult getResultFromRequest(HttpServletRequest  request) {
+		LmGatewayPageCallbackResult result = new LmGatewayPageCallbackResult();
+		result.setServiceName(request.getParameter("serviceName"));
+		result.setPlatformNo(request.getParameter("platformNo"));
+		result.setUserDevice(Terminal.valueOf(request.getParameter("userDevice")));
+		result.setRespData(JSONObject.parseObject(request.getParameter("respData")));
+		result.setKeySerial(request.getParameter("keySerial"));
+		result.setSign(request.getParameter("sign"));
+		return result;
 	}
 }

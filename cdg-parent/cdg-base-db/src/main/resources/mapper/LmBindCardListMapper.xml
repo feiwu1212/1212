@@ -13,11 +13,11 @@
     <result column="bindcard_time" property="bindcardTime" jdbcType="TIMESTAMP" />
     <result column="user_role" property="userRole" jdbcType="VARCHAR" />
     <result column="auth_list" property="authList" jdbcType="VARCHAR" />
-    <result column="check_type" property="checkType" jdbcType="BIT" />
-    <result column="user_limit_type" property="userLimitType" jdbcType="BIT" />
-    <result column="access_type" property="accessType" jdbcType="BIT" />
-    <result column="audit_status" property="auditStatus" jdbcType="BIT" />
-    <result column="status" property="status" jdbcType="BIT" />
+    <result column="check_type" property="checkType" jdbcType="TINYINT" />
+    <result column="user_limit_type" property="userLimitType" jdbcType="TINYINT" />
+    <result column="access_type" property="accessType" jdbcType="TINYINT" />
+    <result column="audit_status" property="auditStatus" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="partition_date" property="partitionDate" jdbcType="INTEGER" />
@@ -92,9 +92,9 @@
     values (#{id,jdbcType=BIGINT}, #{platformUserId,jdbcType=VARCHAR}, #{userRealName,jdbcType=VARCHAR}, 
       #{bankcardNo,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{idNo,jdbcType=VARCHAR}, #{idType,jdbcType=TINYINT}, #{bindcardTime,jdbcType=TIMESTAMP}, 
-      #{userRole,jdbcType=VARCHAR}, #{authList,jdbcType=VARCHAR}, #{checkType,jdbcType=BIT}, 
-      #{userLimitType,jdbcType=BIT}, #{accessType,jdbcType=BIT}, #{auditStatus,jdbcType=BIT}, 
-      #{status,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{userRole,jdbcType=VARCHAR}, #{authList,jdbcType=VARCHAR}, #{checkType,jdbcType=TINYINT},
+      #{userLimitType,jdbcType=TINYINT}, #{accessType,jdbcType=TINYINT}, #{auditStatus,jdbcType=TINYINT},
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{partitionDate,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.LmBindCardList" >
@@ -193,19 +193,19 @@
         #{authList,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        #{checkType,jdbcType=BIT},
+        #{checkType,jdbcType=TINYINT},
       </if>
       <if test="userLimitType != null" >
-        #{userLimitType,jdbcType=BIT},
+        #{userLimitType,jdbcType=TINYINT},
       </if>
       <if test="accessType != null" >
-        #{accessType,jdbcType=BIT},
+        #{accessType,jdbcType=TINYINT},
       </if>
       <if test="auditStatus != null" >
-        #{auditStatus,jdbcType=BIT},
+        #{auditStatus,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=BIT},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -258,19 +258,19 @@
         auth_list = #{authList,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        check_type = #{checkType,jdbcType=BIT},
+        check_type = #{checkType,jdbcType=TINYINT},
       </if>
       <if test="userLimitType != null" >
-        user_limit_type = #{userLimitType,jdbcType=BIT},
+        user_limit_type = #{userLimitType,jdbcType=TINYINT},
       </if>
       <if test="accessType != null" >
-        access_type = #{accessType,jdbcType=BIT},
+        access_type = #{accessType,jdbcType=TINYINT},
       </if>
       <if test="auditStatus != null" >
-        audit_status = #{auditStatus,jdbcType=BIT},
+        audit_status = #{auditStatus,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        status = #{status,jdbcType=BIT},
+        status = #{status,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -296,11 +296,11 @@
       bindcard_time = #{bindcardTime,jdbcType=TIMESTAMP},
       user_role = #{userRole,jdbcType=VARCHAR},
       auth_list = #{authList,jdbcType=VARCHAR},
-      check_type = #{checkType,jdbcType=BIT},
-      user_limit_type = #{userLimitType,jdbcType=BIT},
-      access_type = #{accessType,jdbcType=BIT},
-      audit_status = #{auditStatus,jdbcType=BIT},
-      status = #{status,jdbcType=BIT},
+      check_type = #{checkType,jdbcType=TINYINT},
+      user_limit_type = #{userLimitType,jdbcType=TINYINT},
+      access_type = #{accessType,jdbcType=TINYINT},
+      audit_status = #{auditStatus,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       partition_date = #{partitionDate,jdbcType=INTEGER}

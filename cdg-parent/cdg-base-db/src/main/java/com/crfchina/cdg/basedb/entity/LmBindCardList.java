@@ -17,7 +17,7 @@ public class LmBindCardList {
 
     private String idNo;
 
-    private Byte idType;
+    private Integer idType;
 
     private Date bindcardTime;
 
@@ -25,15 +25,15 @@ public class LmBindCardList {
 
     private String authList;
 
-    private Boolean checkType;
+    private Integer checkType;
 
-    private Boolean userLimitType;
+    private Integer userLimitType;
 
-    private Boolean accessType;
+    private Integer accessType;
 
-    private Boolean auditStatus;
+    private Integer auditStatus;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -97,14 +97,6 @@ public class LmBindCardList {
         this.idNo = idNo == null ? null : idNo.trim();
     }
 
-    public Byte getIdType() {
-        return idType;
-    }
-
-    public void setIdType(Byte idType) {
-        this.idType = idType;
-    }
-
     public Date getBindcardTime() {
         return bindcardTime;
     }
@@ -127,46 +119,6 @@ public class LmBindCardList {
 
     public void setAuthList(String authList) {
         this.authList = authList == null ? null : authList.trim();
-    }
-
-    public Boolean getCheckType() {
-        return checkType;
-    }
-
-    public void setCheckType(Boolean checkType) {
-        this.checkType = checkType;
-    }
-
-    public Boolean getUserLimitType() {
-        return userLimitType;
-    }
-
-    public void setUserLimitType(Boolean userLimitType) {
-        this.userLimitType = userLimitType;
-    }
-
-    public Boolean getAccessType() {
-        return accessType;
-    }
-
-    public void setAccessType(Boolean accessType) {
-        this.accessType = accessType;
-    }
-
-    public Boolean getAuditStatus() {
-        return auditStatus;
-    }
-
-    public void setAuditStatus(Boolean auditStatus) {
-        this.auditStatus = auditStatus;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
     }
 
     public Date getCreateTime() {

@@ -19,6 +19,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -157,4 +158,26 @@ public class SignatureUtils {
 		} while (c != -1);
 	}
 
+	public static boolean checkSign(String sign, String signData) {
+		//验签
+		AppConfig config = AppConfig.getConfig();
+		PublicKey publicKey = null;
+		try {
+			publicKey = SignatureUtils.getRsaX509PublicKey(Base64
+					.decodeBase64(config.getLmPublicKey()));
+			boolean verify = SignatureUtils.verify(
+					SignatureAlgorithm.SHA1WithRSA, publicKey, signData,
+					Base64.decodeBase64(sign));
+			return verify;
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

@@ -1,0 +1,17 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<form id="form" name="form" method="post" th:action="${url}">
+    <input type="hidden" class="form-control" id="requestRefNo" name="requestRefNo" th:value="${param.requestRefNo}"></input>
+    <input type="hidden" class="form-control" id="result" name="result" th:value="${param.result}"></input>
+    <input type="hidden" class="form-control" id="failCode" name="failCode" th:value="${param.failCode}"></input>
+    <input type="hidden" class="form-control" id="failReason" name="failReason" th:value="${param.failReason}"></input>
+    <input type="hidden" class="form-control" id="data" name="data" th:value="${param.data}"></input>
+</form>
+<script language="JavaScript">
+    function sub() {
+        document.form.submit()
+    }
+//    setTimeout(sub,0);
+</script>
+</body>
+</html>

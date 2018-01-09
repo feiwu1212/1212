@@ -3,7 +3,9 @@ package com.crfchina.cdg.basedb.dao;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferBatch;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferBatchExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface LmVaccountTransferBatchMapper {
     int countByExample(LmVaccountTransferBatchExample example);
 

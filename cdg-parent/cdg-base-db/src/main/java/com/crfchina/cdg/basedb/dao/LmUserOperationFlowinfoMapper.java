@@ -3,7 +3,9 @@ package com.crfchina.cdg.basedb.dao;
 import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfoExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface LmUserOperationFlowinfoMapper {
     int countByExample(LmUserOperationFlowinfoExample example);
 

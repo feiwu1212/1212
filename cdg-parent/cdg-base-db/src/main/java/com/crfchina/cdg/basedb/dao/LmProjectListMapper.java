@@ -3,7 +3,9 @@ package com.crfchina.cdg.basedb.dao;
 import com.crfchina.cdg.basedb.entity.LmProjectList;
 import com.crfchina.cdg.basedb.entity.LmProjectListExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface LmProjectListMapper {
     int countByExample(LmProjectListExample example);
 

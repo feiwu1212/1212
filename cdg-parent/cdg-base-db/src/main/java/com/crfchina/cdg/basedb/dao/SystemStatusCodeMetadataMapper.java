@@ -3,7 +3,9 @@ package com.crfchina.cdg.basedb.dao;
 import com.crfchina.cdg.basedb.entity.SystemStatusCodeMetadata;
 import com.crfchina.cdg.basedb.entity.SystemStatusCodeMetadataExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface SystemStatusCodeMetadataMapper {
     int countByExample(SystemStatusCodeMetadataExample example);
 

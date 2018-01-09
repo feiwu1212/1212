@@ -3,7 +3,9 @@ package com.crfchina.cdg.basedb.dao;
 import com.crfchina.cdg.basedb.entity.SystemConfig;
 import com.crfchina.cdg.basedb.entity.SystemConfigExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface SystemConfigMapper {
     int countByExample(SystemConfigExample example);
 

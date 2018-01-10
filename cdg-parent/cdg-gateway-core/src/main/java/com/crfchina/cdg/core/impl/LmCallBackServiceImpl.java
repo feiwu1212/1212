@@ -6,14 +6,6 @@
  */
 package com.crfchina.cdg.core.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmBindCardListMapper;
@@ -32,10 +24,15 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
-import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.core.dto.base.CallBackParam;
 import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.service.LmCallBackService;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @ProjectName：cdg-parent
@@ -114,7 +111,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -127,7 +124,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				callBackParam.setFailCode(respData.getString("errorCode"));
 				callBackParam.setFailReason(respData.getString("errorMessage"));
-				return new ModelAndView("callback").addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("paramDto", callBackParam);
 			}
 		} else {
 			//TODO 根据流水号查询流水信息有误返回
@@ -167,7 +164,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(fcpTrxNo);
 				callBackParam.setFailCode("99");
 				callBackParam.setFailReason("未找到原始交易明细记录");
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			}
 			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 				//更新交易主表
@@ -191,7 +188,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -212,7 +209,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				callBackParam.setFailCode(respData.getString("errorCode"));
 				callBackParam.setFailReason(respData.getString("errorMessage"));
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			}
 		} else {
 			CallBackParam callBackParam = new CallBackParam();
@@ -220,7 +217,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			callBackParam.setRequestRefNo(fcpTrxNo);
 			callBackParam.setFailCode("99");
 			callBackParam.setFailReason("未找到原始交易记录");
-			return new ModelAndView("callback").addObject("param", callBackParam);
+			return new ModelAndView("callback").addObject("paramDto", callBackParam);
 		}
 	}
 
@@ -264,13 +261,13 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				flow.setResult(ResultCode.SUCCESS.getCode());
 				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 				flow.setUpdateTime(now);
-				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
 				flow.setSettleDate(now);
 
 				txnDtl.setResult(ResultCode.SUCCESS.getCode());
 				txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 				txnDtl.setUpdateTime(now);
-				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
 				txnDtl.setSettleDate(now);
 
 				txnInfoMapper.updateByPrimaryKey(flow);
@@ -281,7 +278,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -302,7 +299,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				callBackParam.setFailCode(respData.getString("errorCode"));
 				callBackParam.setFailReason(respData.getString("errorMessage"));
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			}
 		} else {
 			CallBackParam callBackParam = new CallBackParam();
@@ -310,7 +307,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			callBackParam.setRequestRefNo(fcpTrxNo);
 			callBackParam.setFailCode("99");
 			callBackParam.setFailReason("未找到原始交易记录");
-			return new ModelAndView("callback").addObject("param", callBackParam);
+			return new ModelAndView("callback").addObject("paramDto", callBackParam);
 		}
 	}
 

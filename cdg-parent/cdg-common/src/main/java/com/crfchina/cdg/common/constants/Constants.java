@@ -14,9 +14,14 @@ public class Constants {
 	public static final String COMPANY_OPEN_ACCOUNT = "COA";
 
 	/**
+	 * 操作类型：充值
+	 */
+	public static final String RECHARGE = "CZ";
+	
+	/**
 	 * 操作类型：提现
 	 */
-	public static final String RECHARGE = "TX";
+	public static final String WITHDRAW = "TX";
 	/**
 	 * 网关地址后缀
 	 */

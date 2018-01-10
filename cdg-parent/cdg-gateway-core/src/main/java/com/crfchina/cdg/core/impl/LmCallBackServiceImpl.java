@@ -6,6 +6,14 @@
  */
 package com.crfchina.cdg.core.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmBindCardListMapper;
@@ -24,15 +32,10 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
+import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.core.dto.base.CallBackParam;
 import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.service.LmCallBackService;
-import java.util.Date;
-import java.util.List;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @ProjectName：cdg-parent
@@ -111,7 +114,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -159,8 +162,12 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				 txnDtl = txnDtlList.get(0);
 			}
 			else{
-				//TODO 根据流水信息查询明细表信息有误
-				return null;
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult("系统异常");
+				callBackParam.setRequestRefNo(fcpTrxNo);
+				callBackParam.setFailCode("99");
+				callBackParam.setFailReason("未找到原始交易明细记录");
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
 			}
 			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 				//更新交易主表
@@ -184,7 +191,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -205,11 +212,106 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				callBackParam.setFailCode(respData.getString("errorCode"));
 				callBackParam.setFailReason(respData.getString("errorMessage"));
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
 			}
 		} else {
-			//TODO 根据流水号查询流水信息有误返回
-			return null;
+			CallBackParam callBackParam = new CallBackParam();
+			callBackParam.setResult("系统异常");
+			callBackParam.setRequestRefNo(fcpTrxNo);
+			callBackParam.setFailCode("99");
+			callBackParam.setFailReason("未找到原始交易记录");
+			return new ModelAndView("callback").addObject("param", callBackParam);
 		}
 	}
+
+	/**
+	 *
+	 * @Title: dealRechargeCallBack
+	 * @Description: 处理提现回掉业务
+	 * @param respData
+	 * @return
+	 * ModelAndView
+	 * @throws
+	 */
+	private ModelAndView dealWithdrawCallBack(JSONObject respData) {
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
+		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
+		if (flowInfoList != null || flowInfoList.size() == 1) {
+			LmVaccountTransferInfo flow = flowInfoList.get(0);
+			LmVaccountTransferDetail txnDtl = null;
+			//获取交易明细表
+			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
+			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
+			if (txnDtlList != null || txnDtlList.size() == 1) {
+				 txnDtl = txnDtlList.get(0);
+			}
+			else{
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult("系统异常");
+				callBackParam.setRequestRefNo(fcpTrxNo);
+				callBackParam.setFailCode("99");
+				callBackParam.setFailReason("未找到原始交易明细记录");
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+			}
+			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+				//更新交易主表
+				flow.setResult(ResultCode.SUCCESS.getCode());
+				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+				flow.setUpdateTime(now);
+				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+				flow.setSettleDate(now);
+
+				txnDtl.setResult(ResultCode.SUCCESS.getCode());
+				txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+				txnDtl.setUpdateTime(now);
+				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+				txnDtl.setSettleDate(now);
+
+				txnInfoMapper.updateByPrimaryKey(flow);
+				txnDetailMapper.updateByPrimaryKey(txnDtl);
+
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult(ResultCode.SUCCESS.getCode());
+				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+				respData.put("fcpTrxNo", flow.getFcpTrxNo());
+				callBackParam.setData(respData.toJSONString());
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+			} else {
+				flow.setResult(ResultCode.FAIL.getCode());
+				flow.setFailCode(respData.getString("errorCode"));
+				flow.setFailReason(respData.getString("errorMessage"));
+				flow.setUpdateTime(now);
+
+				txnDtl.setResult(ResultCode.FAIL.getCode());
+				txnDtl.setFailCode(respData.getString("errorCode"));
+				txnDtl.setFailReason(respData.getString("errorCode"));
+				txnDtl.setUpdateTime(now);
+
+				txnInfoMapper.updateByPrimaryKey(flow);
+				txnDetailMapper.updateByPrimaryKey(txnDtl);
+
+
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult(ResultCode.FAIL.getCode());
+				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+				callBackParam.setFailCode(respData.getString("errorCode"));
+				callBackParam.setFailReason(respData.getString("errorMessage"));
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+			}
+		} else {
+			CallBackParam callBackParam = new CallBackParam();
+			callBackParam.setResult("系统异常");
+			callBackParam.setRequestRefNo(fcpTrxNo);
+			callBackParam.setFailCode("99");
+			callBackParam.setFailReason("未找到原始交易记录");
+			return new ModelAndView("callback").addObject("param", callBackParam);
+		}
+	}
+
 }

@@ -20,7 +20,8 @@ public enum ApiType {
 
 	PERSONAL_REGISTER_EXPAND("PERSONAL_REGISTER_EXPAND", "个人绑卡注册"),
 	ENTERPRISE_REGISTER("ENTERPRISE_REGISTER", "企业绑卡注册"),
-	RECHARGE("RECHARGE","提现")
+	RECHARGE("RECHARGE","充值"),
+	WITHDRAW("WITHDRAW","提现")
 	;
 	private String code;
 

@@ -32,6 +32,7 @@ import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
+import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCallBackService;
 import com.crfchina.cdg.core.service.LmCapitalService;
 
@@ -49,7 +50,7 @@ import com.crfchina.cdg.core.service.LmCapitalService;
  */
 @RestController
 @RequestMapping("/account")
-public class RechargeController {
+public class CaptialController {
 
 	@Autowired
     LmCapitalService lmCapitalService;
@@ -79,6 +80,35 @@ public class RechargeController {
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
+	
+	/**
+	 * 
+	 * @Title: withdraw   
+	 * @Description: 用户在 P2P 平台发起提现请求，平台调用此接口引导用户跳转至存管页面完成充值
+	 * @param request
+	 * @return
+	 * ModelAndView
+	 * @throws
+	 */
+	@RequestMapping("/withdraw")
+	public ModelAndView withdraw(HttpServletRequest request) {
+		LmWithdrawParamDTO paramDto = getParamDto(request, LmWithdrawParamDTO.class);
+		Map<String, Object> rechargeReqDataMap = lmCapitalService.withdraw(paramDto);
+		// 获取properties参数
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), rechargeReqDataMap);
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
+
+	
+	
+	
 	public <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
 		Enumeration<String> parameterNames = request.getParameterNames();
 		JSONObject paramObj = new JSONObject();

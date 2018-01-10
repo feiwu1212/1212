@@ -159,7 +159,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 	    //reqDataMap.put("projectNo",);//暂无此应用场景
 
 		//TODO 配置本地回调地址
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/account/CaptailCallBack");//需要配置
+		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
 		reqDataMap.put("expired", df.format(lmrpDto.getExpired()) );
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
@@ -179,98 +179,5 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		return date;	
 		
 	}
-	
-	@Override
-	public ModelAndView dealCallBack(LmGatewayPageCallbackResult result) {
-		//验签
-		boolean verify = SignatureUtils.checkSign(result.getSign(), result.getRespData().toJSONString());
-		if (verify) {
-			ApiType apiType = ApiType.valueOf(result.getServiceName());
-			if (apiType.equals(ApiType.RECHARGE)) {
-				return dealRechargeCallBack(result.getRespData());
-			}
-		} else {
-			System.out.println("验签不通过");
-		}
-		return null;
-	}
-	
-	private ModelAndView dealRechargeCallBack(JSONObject respData) {
-		Date now = new Date();
-		String fcpTrxNo = respData.getString("requestNo");
-		String code = respData.getString("code");
-		String status = respData.getString("status");
-		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
-		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
-		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
-		if (flowInfoList != null || flowInfoList.size() == 1) {
-			LmVaccountTransferInfo flow = flowInfoList.get(0);
-			LmVaccountTransferDetail txnDtl = null;
-			//获取交易明细表
-			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
-			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
-			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
-			if (txnDtlList != null || txnDtlList.size() == 1) {
-				 txnDtl = txnDtlList.get(0);
-			}
-			else{
-				//TODO 根据流水信息查询明细表信息有误
-				return null;
-			}
-			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
-				//更新交易主表
-				flow.setResult(ResultCode.SUCCESS.getCode());
-				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
-				flow.setUpdateTime(now);
-				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
-				flow.setSettleDate(now);
-			
-				txnDtl.setResult(ResultCode.SUCCESS.getCode());
-				txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
-				txnDtl.setUpdateTime(now);
-				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
-				txnDtl.setSettleDate(now);
-				
-				txnInfoMapper.updateByPrimaryKey(flow);
-				txnDetailMapper.updateByPrimaryKey(txnDtl);
-				
-				CallBackParam callBackParam = new CallBackParam();
-				callBackParam.setResult(ResultCode.SUCCESS.getCode());
-				callBackParam.setRequestRefNo(flow.getRequestRefNo());
-				respData.put("fcpTrxNo", flow.getFcpTrxNo());
-				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
-			} else {
-				flow.setResult(ResultCode.FAIL.getCode());
-				flow.setFailCode(respData.getString("errorCode"));
-				flow.setFailReason(respData.getString("errorMessage"));
-				flow.setUpdateTime(now);
-				
-				txnDtl.setResult(ResultCode.FAIL.getCode());
-				txnDtl.setFailCode(respData.getString("errorCode"));
-				txnDtl.setFailReason(respData.getString("errorCode"));
-				txnDtl.setUpdateTime(now);
-				
-				txnInfoMapper.updateByPrimaryKey(flow);
-				txnDetailMapper.updateByPrimaryKey(txnDtl);
-
-				
-				CallBackParam callBackParam = new CallBackParam();
-				callBackParam.setResult(ResultCode.FAIL.getCode());
-				callBackParam.setRequestRefNo(flow.getRequestRefNo());
-				callBackParam.setFailCode(respData.getString("errorCode"));
-				callBackParam.setFailReason(respData.getString("errorMessage"));
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
-			}
-		} else {
-			//TODO 根据流水号查询流水信息有误返回
-			return null;
-		}
-	}
-	
-	
-	
-	
-	
 	
 }

@@ -28,16 +28,5 @@ public interface LmCapitalService {
 	Map<String, Object> recharge(LmRechargeParamDTO paramDto);
 	
 	
-	/**
-	 * 
-	 * @Title: dealCallBack  
-	 * @Description: 处理资金类callback信息
-	 * @param result
-	 * @return
-	 * ModelAndView
-	 * @throws
-	 */
-	ModelAndView dealCallBack(LmGatewayPageCallbackResult result);
-
 
 }

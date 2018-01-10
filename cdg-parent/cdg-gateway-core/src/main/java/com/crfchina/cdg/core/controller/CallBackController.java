@@ -8,6 +8,7 @@ package com.crfchina.cdg.core.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.business.Terminal;
+import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.service.LmCallBackService;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +36,16 @@ public class CallBackController {
 
 	@RequestMapping("/pageCallBack")
 	public ModelAndView pageCallBack(HttpServletRequest request) {
-		LmGatewayPageCallbackResult resultFromRequest = getResultFromRequest(request);
-		return callBackService.dealCallBack(resultFromRequest);
+		boolean verify = SignatureUtils.checkSign(request.getParameter("sign"), request.getParameter("respData"));
+		LmGatewayPageCallbackResult resultFromRequest = null;
+		ModelAndView mav = null;
+		if (verify) {
+			resultFromRequest = getResultFromRequest(request);
+			mav = callBackService.dealCallBack(resultFromRequest);
+		} else {
+			//TODO 验签不通过
+		}
+		return mav;
 	}
 
 	private LmGatewayPageCallbackResult getResultFromRequest(HttpServletRequest  request) {

@@ -6,14 +6,6 @@
  */
 package com.crfchina.cdg.core.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmBindCardListMapper;
@@ -32,10 +24,15 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
-import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.core.dto.base.CallBackParam;
 import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.service.LmCallBackService;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @ProjectName：cdg-parent
@@ -68,20 +65,13 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 	
 	@Override
 	public ModelAndView dealCallBack(LmGatewayPageCallbackResult result) {
-		//验签
-		boolean verify = SignatureUtils.checkSign(result.getSign(), result.getRespData().toJSONString());
-		if (verify) {
-			ApiType apiType = ApiType.valueOf(result.getServiceName());
-			if (apiType.equals(ApiType.PERSONAL_REGISTER_EXPAND)) {
-				return dealPersonOpenAccount(result.getRespData());
-			}
-			else if (apiType.equals(ApiType.RECHARGE)) { //充值业务回调入口
-				return dealPersonOpenAccount(result.getRespData());
-			}
-		} else {
-			System.out.println("验签不通过");
+		ApiType apiType = ApiType.valueOf(result.getServiceName());
+		if (apiType.equals(ApiType.PERSONAL_REGISTER_EXPAND)) {
+			return dealPersonOpenAccount(result.getRespData());
 		}
-
+		else if (apiType.equals(ApiType.RECHARGE)) { //充值业务回调入口
+			return dealPersonOpenAccount(result.getRespData());
+		}
 		return null;
 	}
 
@@ -121,7 +111,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -194,7 +184,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -215,7 +205,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				callBackParam.setFailCode(respData.getString("errorCode"));
 				callBackParam.setFailReason(respData.getString("errorMessage"));
-				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("param", callBackParam);
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
 			}
 		} else {
 			//TODO 根据流水号查询流水信息有误返回

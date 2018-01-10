@@ -7,7 +7,7 @@ package com.crfchina.cdg.common.exception;
  * @author Administrator
  *
  */
-public enum BIZExceptionCode{
+public enum CdgExceptionCode{
 	
 	SUCCESS("0000","成功");
 	
@@ -31,7 +31,7 @@ public enum BIZExceptionCode{
 		this.code = code;
 	}
 
-	private BIZExceptionCode(String code, String msg) {
+	private CdgExceptionCode(String code, String msg) {
 		this.code = code;
 		this.msg = msg;
 	}

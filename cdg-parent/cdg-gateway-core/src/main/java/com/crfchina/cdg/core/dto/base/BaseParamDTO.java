@@ -9,6 +9,7 @@ package com.crfchina.cdg.core.dto.base;
 
 import com.crfchina.cdg.common.enums.common.SystemNo;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -24,6 +25,7 @@ import java.io.Serializable;
 public class BaseParamDTO implements Serializable{
 	private SystemNo systemNo;//系统编号
 	private String requestRefNo;//请求参考号
+	protected String requestTime;//请求时间
 	
 	public SystemNo getSystemNo() {
 		return systemNo;
@@ -36,6 +38,12 @@ public class BaseParamDTO implements Serializable{
 	}
 	public void setRequestRefNo(String requestRefNo) {
 		this.requestRefNo = requestRefNo;
+	}
+	public String getRequestTime() {
+		return requestTime;
+	}
+	public void setRequestTime(String requestTime) {
+		this.requestTime = requestTime;
 	}
 	
 	

@@ -23,9 +23,41 @@ import com.crfchina.cdg.dto.base.LmAPIBaseParamDTO;
  * @remarks：
  */
 public class LmAutoPreTransactionParamDTO extends LmAPIBaseParamDTO {
-	protected String originalRechargeNo;//关联充值请求流水号(原充值成功请求流水号)
+	/**    
+	 * serialVersionUID:TODO    
+	 *  
+	 */    
+	
+	private static final long serialVersionUID = 1L;
+	protected String originFcpTrxNo;//关联充值请求流水号(原充值成功请求流水号)
 	protected PreBusinessType bizType;//预处理业务类型 通常用于还款资金冻结
 	protected Long amount;//冻结金额（分）
 	protected String projectNo;//标的号, 若传入关联充值请求流水号，则标的号固定为充值请求传入的标的号
+	public String getOriginFcpTrxNo() {
+		return originFcpTrxNo;
+	}
+	public void setOriginFcpTrxNo(String originFcpTrxNo) {
+		this.originFcpTrxNo = originFcpTrxNo;
+	}
+	public PreBusinessType getBizType() {
+		return bizType;
+	}
+	public void setBizType(PreBusinessType bizType) {
+		this.bizType = bizType;
+	}
+	public Long getAmount() {
+		return amount;
+	}
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
+	public String getProjectNo() {
+		return projectNo;
+	}
+	public void setProjectNo(String projectNo) {
+		this.projectNo = projectNo;
+	}
+	
+	
 	
 }

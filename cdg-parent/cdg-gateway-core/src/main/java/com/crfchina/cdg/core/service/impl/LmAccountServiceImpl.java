@@ -4,7 +4,7 @@
  * @date 2018/1/8 15:29
  * @version V1.0
  */
-package com.crfchina.cdg.core.impl;
+package com.crfchina.cdg.core.service.impl;
 
 import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmBindCardListMapper;

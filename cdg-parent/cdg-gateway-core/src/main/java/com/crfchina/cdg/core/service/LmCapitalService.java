@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
+import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 
 /**
@@ -38,5 +39,15 @@ public interface LmCapitalService {
 	 * @throws
 	 */
 	Map<String,Object> withdraw(LmWithdrawParamDTO paramDto);
+    /**
+     * 
+     * @Title: userPreTransaction  
+     * @Description: TODO
+     * @param paramDto
+     * @return
+     * Map<String,Object>
+     * @throws
+     */
+	Map<String, Object> userPreTransaction(LmUserPreTransactionParamDTO paramDto);
     
 }

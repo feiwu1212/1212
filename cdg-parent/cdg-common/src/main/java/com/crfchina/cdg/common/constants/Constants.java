@@ -22,6 +22,11 @@ public class Constants {
 	 * 操作类型：提现
 	 */
 	public static final String WITHDRAW = "TX";
+	
+	/**
+	 * 操作类型：用户预处理
+	 */
+	public static final String USERPRETRANSACTION = "YHYCL";
 	/**
 	 * 网关地址后缀
 	 */

@@ -73,7 +73,7 @@ public class TestController {
 	public ModelAndView toEnterpriseOpen() {
 		LmOpenAccountCompanyParamDTO oacParam = new LmOpenAccountCompanyParamDTO();
 		oacParam.setBusinessLicense("796678464654"); // 营业执照编号 
-		oacParam.setAmount("1000.12");
+		oacParam.setAuthAmount("1000.12");
 		oacParam.setBankLicense("13464635443");  
 		oacParam.setFailTime("20190101101010");
 		oacParam.setIdCardType(IDCardType.PRC_ID);  
@@ -95,7 +95,7 @@ public class TestController {
 		oacParam.setTaxNo("dsfdsrfwe541321");  
 		oacParam.setUserRole(UserRoles.INVESTOR);  
 		oacParam.setEnterpriseName("企业1231213");  
-		oacParam.setBankcode("ABOC");
+		oacParam.setBankCode("ABOC");
 		String s = JSONObject.toJSONString(oacParam, SerializerFeature.WriteMapNullValue);
 		System.out.println(s);
 		JSONObject jsonObject = JSON.parseObject(s);

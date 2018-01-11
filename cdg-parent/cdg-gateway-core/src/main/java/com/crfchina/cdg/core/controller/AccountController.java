@@ -13,6 +13,7 @@ import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
+import com.crfchina.cdg.core.dto.param.LmEnterpriseOpenAccountDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.service.LmAccountService;
@@ -66,7 +67,8 @@ public class AccountController {
 	@RequestMapping("/enterpriseOpen")
 	public ModelAndView enterpriseOpen(HttpServletRequest request) {
 		LmOpenAccountCompanyParamDTO paramDto = getParamDto(request, LmOpenAccountCompanyParamDTO.class);
-		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(paramDto));
+		LmEnterpriseOpenAccountDTO reqDto = JSONObject.parseObject(JSONObject.toJSONString(paramDto), LmEnterpriseOpenAccountDTO.class);
+		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(reqDto));
 		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo(Constants.COMPANY_OPEN_ACCOUNT));
 		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
 		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));

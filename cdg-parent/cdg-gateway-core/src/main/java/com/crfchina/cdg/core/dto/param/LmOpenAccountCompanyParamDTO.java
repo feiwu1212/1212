@@ -43,12 +43,12 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	protected String contactPhone;//联系人手机号
 	protected UserRoles userRole;//用户角色
 	protected String bandCardNo;//银行卡号
-	protected String bankcode;//银行编码
+	protected String bankCode;//银行编码
 	
 	protected List<UserAuthType> authList;//用户授权集合
 	
 	protected String failTime;//授权期限
-	protected String amount;//授权金额
+	protected String authAmount;//授权金额
 	
 	
 	public String getEnterpriseName() {
@@ -136,11 +136,19 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	public void setBandCardNo(String bandCardNo) {
 		this.bandCardNo = bandCardNo;
 	}
-	public String getBankcode() {
-		return bankcode;
+	@JSONField(name = "bankcode")
+	public String getBankCode() {
+		return bankCode;
 	}
-	public void setBankcode(String bankcode) {
-		this.bankcode = bankcode;
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
+	@JSONField(name = "amount")
+	public String getAuthAmount() {
+		return authAmount;
+	}
+	public void setAuthAmount(String authAmount) {
+		this.authAmount = authAmount;
 	}
 	public List<UserAuthType> getAuthList() {
 		return authList;
@@ -153,12 +161,6 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	}
 	public void setFailTime(String failTime) {
 		this.failTime = failTime;
-	}
-	public String getAmount() {
-		return amount;
-	}
-	public void setAmount(String amount) {
-		this.amount = amount;
 	}
 
 }

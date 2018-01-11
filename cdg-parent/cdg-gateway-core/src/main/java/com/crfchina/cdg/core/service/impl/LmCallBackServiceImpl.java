@@ -4,7 +4,7 @@
  * @date 2018/1/9 15:09
  * @version V1.0
  */
-package com.crfchina.cdg.core.impl;
+package com.crfchina.cdg.core.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
@@ -127,8 +127,12 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				return new ModelAndView("callback").addObject("paramDto", callBackParam);
 			}
 		} else {
-			//TODO 根据流水号查询流水信息有误返回
-			return null;
+			CallBackParam callBackParam = new CallBackParam();
+			callBackParam.setResult("系统异常");
+			callBackParam.setRequestRefNo(fcpTrxNo);
+			callBackParam.setFailCode("99");
+			callBackParam.setFailReason("未找到原始交易记录");
+			return new ModelAndView("callback").addObject("paramDto", callBackParam);
 		}
 	}
 	/**

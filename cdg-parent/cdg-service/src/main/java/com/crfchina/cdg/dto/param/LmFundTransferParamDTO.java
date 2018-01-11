@@ -25,62 +25,48 @@ import com.crfchina.cdg.dto.base.BaseParamDTO;
  */
 public class LmFundTransferParamDTO extends BaseParamDTO{
 	
-	protected TransactionType tradeType;//交易类型
-	protected String fromPlatformUserNo;//付款方用户号
-	protected String toPlatformUserNo;//收款方用户号
-	protected String projectNo;//标的号
-	protected Long amount;//划拨金额（分）
+	/**    
+	 * serialVersionUID:TODO    
+	 *  
+	 */    
 	
-	protected List<FundTransferDetailDTO> transferDetailList;
-
+	private static final long serialVersionUID = 1L;
+	protected TransactionType tradeType;//交易主业务类型（比如：放款、还款、代偿、债权认购等）
+	protected String projectNo;//标的号
+	protected Long totalAmount;//所有明细总金额（分）
+	
+	protected List<FundTransferDetailDTO> mainTransferList;//主业务必须（通常指投标放款、还款）
+	protected List<FundTransferDetailDTO> subTransferDetailList;//副业务非必须（通常指佣金、分润）
+	
 	public TransactionType getTradeType() {
 		return tradeType;
 	}
-
 	public void setTradeType(TransactionType tradeType) {
 		this.tradeType = tradeType;
 	}
-
-	public String getFromPlatformUserNo() {
-		return fromPlatformUserNo;
-	}
-
-	public void setFromPlatformUserNo(String fromPlatformUserNo) {
-		this.fromPlatformUserNo = fromPlatformUserNo;
-	}
-
-	public String getToPlatformUserNo() {
-		return toPlatformUserNo;
-	}
-
-	public void setToPlatformUserNo(String toPlatformUserNo) {
-		this.toPlatformUserNo = toPlatformUserNo;
-	}
-
 	public String getProjectNo() {
 		return projectNo;
 	}
-
 	public void setProjectNo(String projectNo) {
 		this.projectNo = projectNo;
 	}
-
-	public Long getAmount() {
-		return amount;
+	public Long getTotalAmount() {
+		return totalAmount;
 	}
-
-	public void setAmount(Long amount) {
-		this.amount = amount;
+	public void setTotalAmount(Long totalAmount) {
+		this.totalAmount = totalAmount;
 	}
-
-	public List<FundTransferDetailDTO> getTransferDetailList() {
-		return transferDetailList;
+	public List<FundTransferDetailDTO> getMainTransferList() {
+		return mainTransferList;
 	}
-
-	public void setTransferDetailList(List<FundTransferDetailDTO> transferDetailList) {
-		this.transferDetailList = transferDetailList;
+	public void setMainTransferList(List<FundTransferDetailDTO> mainTransferList) {
+		this.mainTransferList = mainTransferList;
 	}
-	
-	
+	public List<FundTransferDetailDTO> getSubTransferDetailList() {
+		return subTransferDetailList;
+	}
+	public void setSubTransferDetailList(List<FundTransferDetailDTO> subTransferDetailList) {
+		this.subTransferDetailList = subTransferDetailList;
+	}
 
 }

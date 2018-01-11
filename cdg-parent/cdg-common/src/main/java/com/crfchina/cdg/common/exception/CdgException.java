@@ -12,6 +12,12 @@ public class CdgException extends RuntimeException {
 		this.msg = codeMsgMap.getMsg();
 	}
 	
+	public CdgException(CdgExceptionCode codeMsgMap, Throwable cause) {
+		super(codeMsgMap.getMsg(),cause);
+		this.code = codeMsgMap.getCode();
+		this.msg = codeMsgMap.getMsg();
+	}
+	
 
 	public CdgException() {
 		super();

@@ -7,35 +7,24 @@
  */
 package com.crfchina.cdg.core.controller;
 
-import java.security.GeneralSecurityException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
-import com.crfchina.cdg.common.enums.business.Terminal;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
-import com.crfchina.cdg.common.utils.TrxNoUtils;
-import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
-import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
 import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
-import com.crfchina.cdg.core.service.LmCallBackService;
 import com.crfchina.cdg.core.service.LmCapitalService;
+import java.security.GeneralSecurityException;
+import java.util.Enumeration;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**    
  * 
@@ -50,7 +39,7 @@ import com.crfchina.cdg.core.service.LmCapitalService;
  * @remarks：
  */
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/ca")
 public class CaptialController {
 
 	@Autowired

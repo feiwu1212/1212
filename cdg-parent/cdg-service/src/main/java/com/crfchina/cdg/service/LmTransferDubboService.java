@@ -7,7 +7,10 @@
  */
 package com.crfchina.cdg.service;
 
-/**    
+import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
+
+/**
  * 
  * @ProjectName：cdg-service
  * @ClassName：LmTransferDubboService
@@ -19,6 +22,6 @@ package com.crfchina.cdg.service;
  * @remarks：交易相关 Dubbo Service定义
  */
 public interface LmTransferDubboService {
-	
-	
+
+	LmFreezePreTransactionResultDTO freezePreTransaction(LmFreezePreTransactionParamDTO paramDTO);
 }

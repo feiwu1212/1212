@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.crfchina.cdg.common.enums.business.IDCardType;
+import com.crfchina.cdg.common.enums.business.PayMode;
 import com.crfchina.cdg.common.enums.business.Terminal;
 import com.crfchina.cdg.common.enums.business.UserAuthType;
 import com.crfchina.cdg.common.enums.business.UserRoles;
@@ -17,6 +18,7 @@ import com.crfchina.cdg.common.enums.common.SystemNo;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
+import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -102,4 +104,22 @@ public class TestController {
 		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/enterpriseOpen").addObject("myparam",jsonObject);
 	}
 
+	@RequestMapping("/toRecharge")
+	public ModelAndView toRecharge() {
+		LmRechargeParamDTO rp = new LmRechargeParamDTO();
+		rp.setSystemNo(SystemNo.crfxjd);
+		rp.setRequestRefNo(DateUtils.dateToString(new Date(), "yyyyMMddHHmmss"));
+		rp.setPlatformUserNo("CRF20180111162517");
+		rp.setCallbackUrl("http://baidu.com");
+		rp.setNotifyUrl("http://baidu.com");
+		rp.setUserDevice(Terminal.PC);
+		rp.setAmount(200000L);
+		rp.setCommissionAmount(100L);
+		rp.setRechargeWay(PayMode.SWIFT);
+		rp.setBankCode("PCBC");
+		String s = JSONObject.toJSONString(rp, SerializerFeature.WriteMapNullValue);
+		System.out.println(s);
+		JSONObject jsonObject = JSON.parseObject(s);
+		return new ModelAndView("test").addObject("url", "/cdg-geteway/capital/recharge").addObject("myparam",jsonObject);
+	}
 }

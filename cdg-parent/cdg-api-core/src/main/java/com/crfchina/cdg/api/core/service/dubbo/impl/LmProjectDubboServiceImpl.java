@@ -4,7 +4,7 @@
  * @date 2018/1/8 15:00
  * @version V1.0
  */
-package com.crfchina.cdg.api.core.service.dubbo;
+package com.crfchina.cdg.api.core.service.dubbo.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.common.ResultCode;

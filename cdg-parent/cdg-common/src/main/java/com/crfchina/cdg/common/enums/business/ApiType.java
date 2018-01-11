@@ -23,6 +23,7 @@ public enum ApiType {
 	RECHARGE("RECHARGE","充值"),
 	WITHDRAW("WITHDRAW","提现"),
 	USERPRETRANSACTION("USER_PRE_TRANSACTION","用户预处理"),
+	FREEZE_PRE_TRANSACTION("FREEZE_PRE_TRANSACTION","冻结预处理")
 	;
 	private String code;
 

@@ -22,7 +22,12 @@ public class Constants {
 	 * 操作类型：提现
 	 */
 	public static final String WITHDRAW = "TX";
-	
+
+	/**
+	 * 操作类型：冻结预处理
+	 */
+	public static final String PRE_FREEZE_TRANSACTION = "DJYCL";
+
 	/**
 	 * 操作类型：用户预处理
 	 */

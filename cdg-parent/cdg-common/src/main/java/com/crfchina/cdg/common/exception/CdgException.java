@@ -3,8 +3,8 @@ package com.crfchina.cdg.common.exception;
 public class CdgException extends RuntimeException {
 	
 	private static final long serialVersionUID = -1827198664611457387L;
-	private String code = "0000";
-	private String msg;
+	protected String code = "0000";//CDG异常错误编码
+	protected String msg;//异常错误消息
 
 	public CdgException(CdgExceptionCode codeMsgMap) {
 		super(codeMsgMap.getMsg());
@@ -16,6 +16,12 @@ public class CdgException extends RuntimeException {
 		super(codeMsgMap.getMsg(),cause);
 		this.code = codeMsgMap.getCode();
 		this.msg = codeMsgMap.getMsg();
+	}
+	
+	public CdgException(String errorCode ,String message, Throwable cause) {
+		super(message, cause);
+		this.msg = message;
+		this.code = errorCode;
 	}
 	
 

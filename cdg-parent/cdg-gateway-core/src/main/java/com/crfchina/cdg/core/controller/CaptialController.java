@@ -32,6 +32,7 @@ import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
+import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCallBackService;
 import com.crfchina.cdg.core.service.LmCapitalService;
@@ -93,20 +94,43 @@ public class CaptialController {
 	@RequestMapping("/withdraw")
 	public ModelAndView withdraw(HttpServletRequest request) {
 		LmWithdrawParamDTO paramDto = getParamDto(request, LmWithdrawParamDTO.class);
-		Map<String, Object> rechargeReqDataMap = lmCapitalService.withdraw(paramDto);
+		Map<String, Object> withdrawReqDataMap = lmCapitalService.withdraw(paramDto);
 		// 获取properties参数
 		AppConfig config = AppConfig.getConfig();
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), rechargeReqDataMap);
+			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), withdrawReqDataMap);
 		}catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
-	
+	/**
+	 * 
+	 * @Title: userPreTransaction   
+	 * @Description: 用户在 P2P 平台资金预处理请求
+	 * @param request
+	 * @return
+	 * ModelAndView
+	 * @throws
+	 */
+	@RequestMapping("/userPreTransaction")
+	public ModelAndView userPreTransaction(HttpServletRequest request) {
+		LmUserPreTransactionParamDTO paramDto = getParamDto(request, LmUserPreTransactionParamDTO.class);
+		Map<String, Object> userPreTransactionReqDataMap = lmCapitalService.userPreTransaction(paramDto);
+		// 获取properties参数
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.USERPRETRANSACTION.getCode(), userPreTransactionReqDataMap);
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
 	
 	
 	public <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
@@ -127,14 +151,7 @@ public class CaptialController {
 		return object;
 	}
 
-	
-	
-	
-	
 	public static void main(String[] args) {
-//		LmOpenAccountParamDTO a = new LmOpenAccountParamDTO();
-//		a.setIdCardType(IDCardType.COMPATRIOTS_CARD);
-//		a.setAuthAmount("11111");
 		String a = "{\"authAmount\":\"9999999\",\"bankCardNo\":\"6226660404352422\",\"callbackUrl\":\"\",\"failTime\":\"20180602\",\"idCardNo\":\"650102199106220732\",\"idCardType\":\"PRC_ID\",\"mobile\":\"181684089854\",\"notifyUrl\":\"\",\"platformUserNo\":\"CRF0009\",\"realName\":\"但锐轩\",\"requestRefNo\":\"123\",\"systemNo\":\"website\",\"userAuthList\":[\"TENDER\"]}";
 		System.out.println();
 		LmOpenAccountParamDTO jsonObject = JSONObject.parseObject(a, LmOpenAccountParamDTO.class);

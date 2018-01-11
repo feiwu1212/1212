@@ -53,14 +53,11 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 	@Autowired
 	LmBindCardListMapper lmBindCardListMapper;
 
-
 	@Autowired
 	LmVaccountTransferInfoMapper txnInfoMapper;
 
 	@Autowired
 	LmVaccountTransferDetailMapper txnDetailMapper;
-
-	
 	
 	
 	@Override
@@ -70,7 +67,13 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			return dealPersonOpenAccount(result.getRespData());
 		}
 		else if (apiType.equals(ApiType.RECHARGE)) { //充值业务回调入口
-			return dealPersonOpenAccount(result.getRespData());
+			return dealRechargeCallBack(result.getRespData());
+		}
+		else if (apiType.equals(ApiType.WITHDRAW)) { //充值业务回调入口
+			return dealWithdrawCallBack(result.getRespData());
+		}
+		else if (apiType.equals(ApiType.USERPRETRANSACTION)) { //用户预处理业务回调入口
+			return dealUserPreTransactionCallBack(result.getRespData());
 		}
 		return null;
 	}
@@ -138,7 +141,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 	/**
 	 * 
 	 * @Title: dealRechargeCallBack  
-	 * @Description: 处理充值回掉业务
+	 * @Description: 处理充值回调业务
 	 * @param respData
 	 * @return
 	 * ModelAndView
@@ -152,14 +155,14 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
 		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
-		if (flowInfoList != null || flowInfoList.size() == 1) {
+		if (flowInfoList != null && flowInfoList.size() == 1) {
 			LmVaccountTransferInfo flow = flowInfoList.get(0);
 			LmVaccountTransferDetail txnDtl = null;
 			//获取交易明细表
 			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
 			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
-			if (txnDtlList != null || txnDtlList.size() == 1) {
+			if (txnDtlList != null && txnDtlList.size() == 1) {
 				 txnDtl = txnDtlList.get(0);
 			}
 			else{
@@ -172,13 +175,13 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			}
 			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 				//更新交易主表
-				flow.setResult(ResultCode.SUCCESS.getCode());
+				flow.setResult(ResultCode.ACCEPTED.getCode());
 				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 				flow.setUpdateTime(now);
 				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 				flow.setSettleDate(now);
 			
-				txnDtl.setResult(ResultCode.SUCCESS.getCode());
+				txnDtl.setResult(ResultCode.ACCEPTED.getCode());
 				txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 				txnDtl.setUpdateTime(now);
 				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
@@ -206,7 +209,6 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				
 				txnInfoMapper.updateByPrimaryKey(flow);
 				txnDetailMapper.updateByPrimaryKey(txnDtl);
-
 				
 				CallBackParam callBackParam = new CallBackParam();
 				callBackParam.setResult(ResultCode.FAIL.getCode());
@@ -228,7 +230,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 	/**
 	 *
 	 * @Title: dealRechargeCallBack
-	 * @Description: 处理提现回掉业务
+	 * @Description: 处理提现回调业务
 	 * @param respData
 	 * @return
 	 * ModelAndView
@@ -242,17 +244,13 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
 		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
-		if (flowInfoList != null || flowInfoList.size() == 1) {
+		if (flowInfoList != null && flowInfoList.size() == 1) {
 			LmVaccountTransferInfo flow = flowInfoList.get(0);
-			LmVaccountTransferDetail txnDtl = null;
 			//获取交易明细表
 			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
 			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
-			if (txnDtlList != null || txnDtlList.size() == 1) {
-				 txnDtl = txnDtlList.get(0);
-			}
-			else{
+			if (null == txnDtlList   || txnDtlList.size() == 0) {
 				CallBackParam callBackParam = new CallBackParam();
 				callBackParam.setResult("系统异常");
 				callBackParam.setRequestRefNo(fcpTrxNo);
@@ -262,21 +260,23 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			}
 			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 				//更新交易主表
-				flow.setResult(ResultCode.SUCCESS.getCode());
+				flow.setResult(ResultCode.ACCEPTED.getCode());
 				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 				flow.setUpdateTime(now);
 				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
 				flow.setSettleDate(now);
-
-				txnDtl.setResult(ResultCode.SUCCESS.getCode());
-				txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
-				txnDtl.setUpdateTime(now);
-				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
-				txnDtl.setSettleDate(now);
-
 				txnInfoMapper.updateByPrimaryKey(flow);
-				txnDetailMapper.updateByPrimaryKey(txnDtl);
 
+				//更新交易明细表
+				for(LmVaccountTransferDetail txnDtl : txnDtlList){
+					txnDtl.setResult(ResultCode.ACCEPTED.getCode());
+					txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+					txnDtl.setUpdateTime(now);
+					txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
+					txnDtl.setSettleDate(now);
+					txnDetailMapper.updateByPrimaryKey(txnDtl);
+				}
+				
 				CallBackParam callBackParam = new CallBackParam();
 				callBackParam.setResult(ResultCode.SUCCESS.getCode());
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
@@ -288,15 +288,17 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				flow.setFailCode(respData.getString("errorCode"));
 				flow.setFailReason(respData.getString("errorMessage"));
 				flow.setUpdateTime(now);
-
-				txnDtl.setResult(ResultCode.FAIL.getCode());
-				txnDtl.setFailCode(respData.getString("errorCode"));
-				txnDtl.setFailReason(respData.getString("errorCode"));
-				txnDtl.setUpdateTime(now);
-
 				txnInfoMapper.updateByPrimaryKey(flow);
-				txnDetailMapper.updateByPrimaryKey(txnDtl);
 
+				//更新交易明细表
+				for(LmVaccountTransferDetail txnDtl : txnDtlList){
+					txnDtl.setResult(ResultCode.ACCEPTED.getCode());
+					txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+					txnDtl.setUpdateTime(now);
+					txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
+					txnDtl.setSettleDate(now);
+					txnDetailMapper.updateByPrimaryKey(txnDtl);
+				}
 
 				CallBackParam callBackParam = new CallBackParam();
 				callBackParam.setResult(ResultCode.FAIL.getCode());
@@ -315,4 +317,89 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 		}
 	}
 
+	
+	/**
+	 * 
+	 * @Title: dealUserPreTransactionCallBack  
+	 * @Description: 处理用户预处理回调业务
+	 * @param respData
+	 * @return
+	 * ModelAndView
+	 * @throws
+	 */
+	private ModelAndView dealUserPreTransactionCallBack(JSONObject respData) {
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
+		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
+		if (flowInfoList != null && flowInfoList.size() == 1) {
+			LmVaccountTransferInfo flow = flowInfoList.get(0);
+			LmVaccountTransferDetail txnDtl = null;
+			//获取交易明细表
+			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
+			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
+			if (txnDtlList != null && txnDtlList.size() == 1) {
+				 txnDtl = txnDtlList.get(0);
+			}
+			else{
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult("系统异常");
+				callBackParam.setRequestRefNo(fcpTrxNo);
+				callBackParam.setFailCode("99");
+				callBackParam.setFailReason("未找到原始交易明细记录");
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+			}
+			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+				//更新交易主表
+				flow.setResult(ResultCode.ACCEPTED.getCode());
+				flow.setUpdateTime(now);
+				flow.setSettleDate(now);
+			
+				txnDtl.setResult(ResultCode.ACCEPTED.getCode());
+				txnDtl.setUpdateTime(now);
+				txnDtl.setSettleDate(now);
+				
+				txnInfoMapper.updateByPrimaryKey(flow);
+				txnDetailMapper.updateByPrimaryKey(txnDtl);
+				
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult(ResultCode.SUCCESS.getCode());
+				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+				respData.put("fcpTrxNo", flow.getFcpTrxNo());
+				callBackParam.setData(respData.toJSONString());
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+			} else {
+				flow.setResult(ResultCode.FAIL.getCode());
+				flow.setFailCode(respData.getString("errorCode"));
+				flow.setFailReason(respData.getString("errorMessage"));
+				flow.setUpdateTime(now);
+				
+				txnDtl.setResult(ResultCode.FAIL.getCode());
+				txnDtl.setFailCode(respData.getString("errorCode"));
+				txnDtl.setFailReason(respData.getString("errorCode"));
+				txnDtl.setUpdateTime(now);
+				
+				txnInfoMapper.updateByPrimaryKey(flow);
+				txnDetailMapper.updateByPrimaryKey(txnDtl);
+				
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult(ResultCode.FAIL.getCode());
+				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+				callBackParam.setFailCode(respData.getString("errorCode"));
+				callBackParam.setFailReason(respData.getString("errorMessage"));
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+			}
+		} else {
+			CallBackParam callBackParam = new CallBackParam();
+			callBackParam.setResult("系统异常");
+			callBackParam.setRequestRefNo(fcpTrxNo);
+			callBackParam.setFailCode("99");
+			callBackParam.setFailReason("未找到原始交易记录");
+			return new ModelAndView("callback").addObject("paramDto", callBackParam);
+		}
+	}
 }

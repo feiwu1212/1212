@@ -8,27 +8,27 @@ DROP INDEX inx_bindcard_flowinfo ON lm_bind_card_flowinfo;
 
 /* Drop Tables */
 
-DROP TABLE IF EXISTS bank_info;
-DROP TABLE IF EXISTS lm_bind_card_flowinfo;
-DROP TABLE IF EXISTS lm_bind_card_list;
-DROP TABLE IF EXISTS lm_change_cardmobile_flowinfo;
-DROP TABLE IF EXISTS lm_project_auth_list;
-DROP TABLE IF EXISTS lm_project_flowinfo;
-DROP TABLE IF EXISTS lm_project_list;
-DROP TABLE IF EXISTS lm_user_operation_flowinfo;
-DROP TABLE IF EXISTS lm_vaccount_transfer_batch;
-DROP TABLE IF EXISTS lm_vaccount_transfer_detail;
-DROP TABLE IF EXISTS lm_vaccount_transfer_info;
-DROP TABLE IF EXISTS system_config;
-DROP TABLE IF EXISTS system_status_code;
-DROP TABLE IF EXISTS system_status_code_metadata;
+DROP TABLE bank_info;
+DROP TABLE lm_bind_card_flowinfo;
+DROP TABLE lm_bind_card_list;
+DROP TABLE lm_change_cardmobile_flowinfo;
+DROP TABLE lm_project_auth_list;
+DROP TABLE lm_project_flowinfo;
+DROP TABLE lm_project_list;
+DROP TABLE lm_user_operation_flowinfo;
+DROP TABLE lm_vaccount_notify_txtp;
+DROP TABLE lm_vaccount_transfer_batch;
+DROP TABLE lm_vaccount_transfer_detail;
+DROP TABLE lm_vaccount_transfer_info;
+DROP TABLE system_config;
+DROP TABLE system_status_code;
+DROP TABLE system_status_code_metadata;
 
 
 
 
 /* Create Tables */
 
--- 银行编码配置表
 CREATE TABLE bank_info
 (
 	id bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -43,7 +43,6 @@ CREATE TABLE bank_info
 ) COMMENT = '银行编码配置表';
 
 
--- 懒猫绑卡流水表
 CREATE TABLE lm_bind_card_flowinfo
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -62,68 +61,24 @@ CREATE TABLE lm_bind_card_flowinfo
 	id_type tinyint(2) COMMENT '证件类型 : [1 身份证 2 护照 3 港澳台通行证 4 外国人永久居住证 9其他]',
 	bindcard_time datetime COMMENT '绑卡时间',
 	-- [
-	-- GUARANTEECORP 担保机构
-	-- INVESTOR 投资人
-	-- BORROWERS 借款人
-	-- COLLABORATOR 合作机构
-	-- SUPPLIER 供应商
-	-- PLATFORM_MARKETING 平台营销款账户
-	-- PLATFORM_PROFIT 平台分润账户
-	-- PLATFORM_INCOME 平台收入账户
-	-- PLATFORM_INTEREST 平台派息账户
-	-- PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户
-	-- PLATFORM_FUNDS_TRANSFER 平台总账户
-	--  PLATFORM_URGENT 垫资账户
+	-- GUARANTEECORP 担保机构INVESTOR 投资人BORROWERS 借款人COLLABORATOR 合作机构SUPPLIER 供应商PLATFORM_MARKETING 平台营销款账户PLATFORM_PROFIT 平台分润账户PLATFORM_INCOME 平台收入账户PLATFORM_INTEREST 平台派息账户PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户PLATFORM_FUNDS_TRANSFER 平台总账户 PLATFORM_URGENT 垫资账户
 	-- ]
 	user_role varchar(30) COMMENT '用户角色 : [
-GUARANTEECORP 担保机构
-INVESTOR 投资人
-BORROWERS 借款人
-COLLABORATOR 合作机构
-SUPPLIER 供应商
-PLATFORM_MARKETING 平台营销款账户
-PLATFORM_PROFIT 平台分润账户
-PLATFORM_INCOME 平台收入账户
-PLATFORM_INTEREST 平台派息账户
-PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户
-PLATFORM_FUNDS_TRANSFER 平台总账户
- PL',
+GUARANTEECORP 担保机构INVESTOR 投资人BORROWERS 借款人COLLABORATOR 合作机构SUPPLIER 供应商PLATFORM_MARKETING 平台营销款账户PLATFORM_PROFIT 平台分润账户PLATFORM_INCOME 平台收入账户PLATFORM_INTEREST 平台派息账户PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户PLATFORM_FUNDS_TRANSFER 平台总账户 PL',
 	-- 多个以,分割
-	-- TENDER 自动投标
-	-- REPAYMENT 自动还款
-	-- CREDIT_ASSIGNMENT 自动债权认购
-	-- COMPENSATORY 自动代偿
-	-- WITHDRAW 自动提现
-	-- RECHARGE  自动充值
+	-- TENDER 自动投标REPAYMENT 自动还款CREDIT_ASSIGNMENT 自动债权认购COMPENSATORY 自动代偿WITHDRAW 自动提现RECHARGE  自动充值
 	auth_list varchar(100) COMMENT '用户授权组 : 多个以,分割
-TENDER 自动投标
-REPAYMENT 自动还款
-CREDIT_ASSIGNMENT 自动债权认购
-COMPENSATORY 自动代偿
-WITHDRAW 自动提现
-RECHARGE  自动充值',
+TENDER 自动投标REPAYMENT 自动还款CREDIT_ASSIGNMENT 自动债权认购COMPENSATORY 自动代偿WITHDRAW 自动提现RECHARGE  自动充值',
 	-- 1：四要素鉴权（对外：LIMIT）
 	-- 2：三要素鉴权
 	check_type tinyint(1) DEFAULT 1 COMMENT '鉴权类型 : 1：四要素鉴权（对外：LIMIT）
 2：三要素鉴权',
 	-- 对外默认填： ID_CARD_NO_UNIQUE
 	user_limit_type tinyint(1) DEFAULT 1 COMMENT '验证身份证唯一性 : 对外默认填： ID_CARD_NO_UNIQUE',
-	-- 1: 四要素验证通过
-	-- 2: 未鉴权
-	-- 3: 特殊用户认证
-	-- 4: 企业用户认证
-	access_type tinyint(1) COMMENT '鉴权通过类型 : 1: 四要素验证通过
-2: 未鉴权
-3: 特殊用户认证
-4: 企业用户认证',
-	-- 1: 审核中
-	-- 2:审核通过
-	-- 3: 审核回退
-	-- 4:审核拒绝
-	audit_status tinyint(1) COMMENT '审核状态 : 1: 审核中
-2:审核通过
-3: 审核回退
-4:审核拒绝',
+	-- 1: 四要素验证通过2: 未鉴权3: 特殊用户认证4: 企业用户认证
+	access_type tinyint(1) COMMENT '鉴权通过类型 : 1: 四要素验证通过2: 未鉴权3: 特殊用户认证4: 企业用户认证',
+	-- 1: 审核中2:审核通过3: 审核回退4:审核拒绝
+	audit_status tinyint(1) COMMENT '审核状态 : 1: 审核中2:审核通过3: 审核回退4:审核拒绝',
 	callback_url varchar(200) COMMENT '回调地址',
 	notify_url varchar(200) COMMENT '异步通知地址',
 	-- SUCCESS为确认成功，FAIL为确认失败, UNKNOW未知, ACCEPTED受理成功
@@ -138,7 +93,6 @@ RECHARGE  自动充值',
 ) COMMENT = '懒猫绑卡流水表';
 
 
--- 懒猫绑卡记录表
 CREATE TABLE lm_bind_card_list
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -153,68 +107,24 @@ CREATE TABLE lm_bind_card_list
 	id_type tinyint(2) COMMENT '证件类型 : [1 身份证 2 护照 3 港澳台通行证 4 外国人永久居住证 9其他]',
 	bindcard_time datetime COMMENT '绑卡时间',
 	-- [
-	-- GUARANTEECORP 担保机构
-	-- INVESTOR 投资人
-	-- BORROWERS 借款人
-	-- COLLABORATOR 合作机构
-	-- SUPPLIER 供应商
-	-- PLATFORM_MARKETING 平台营销款账户
-	-- PLATFORM_PROFIT 平台分润账户
-	-- PLATFORM_INCOME 平台收入账户
-	-- PLATFORM_INTEREST 平台派息账户
-	-- PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户
-	-- PLATFORM_FUNDS_TRANSFER 平台总账户
-	--  PLATFORM_URGENT 垫资账户
+	-- GUARANTEECORP 担保机构INVESTOR 投资人BORROWERS 借款人COLLABORATOR 合作机构SUPPLIER 供应商PLATFORM_MARKETING 平台营销款账户PLATFORM_PROFIT 平台分润账户PLATFORM_INCOME 平台收入账户PLATFORM_INTEREST 平台派息账户PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户PLATFORM_FUNDS_TRANSFER 平台总账户 PLATFORM_URGENT 垫资账户
 	-- ]
 	user_role varchar(30) COMMENT '用户角色 : [
-GUARANTEECORP 担保机构
-INVESTOR 投资人
-BORROWERS 借款人
-COLLABORATOR 合作机构
-SUPPLIER 供应商
-PLATFORM_MARKETING 平台营销款账户
-PLATFORM_PROFIT 平台分润账户
-PLATFORM_INCOME 平台收入账户
-PLATFORM_INTEREST 平台派息账户
-PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户
-PLATFORM_FUNDS_TRANSFER 平台总账户
- PL',
+GUARANTEECORP 担保机构INVESTOR 投资人BORROWERS 借款人COLLABORATOR 合作机构SUPPLIER 供应商PLATFORM_MARKETING 平台营销款账户PLATFORM_PROFIT 平台分润账户PLATFORM_INCOME 平台收入账户PLATFORM_INTEREST 平台派息账户PLATFORM_ALTERNATIVE_RECHARGE 平台代充值账户PLATFORM_FUNDS_TRANSFER 平台总账户 PL',
 	-- 多个以,分割
-	-- TENDER 自动投标
-	-- REPAYMENT 自动还款
-	-- CREDIT_ASSIGNMENT 自动债权认购
-	-- COMPENSATORY 自动代偿
-	-- WITHDRAW 自动提现
-	-- RECHARGE  自动充值
+	-- TENDER 自动投标REPAYMENT 自动还款CREDIT_ASSIGNMENT 自动债权认购COMPENSATORY 自动代偿WITHDRAW 自动提现RECHARGE  自动充值
 	auth_list varchar(100) COMMENT '用户授权组 : 多个以,分割
-TENDER 自动投标
-REPAYMENT 自动还款
-CREDIT_ASSIGNMENT 自动债权认购
-COMPENSATORY 自动代偿
-WITHDRAW 自动提现
-RECHARGE  自动充值',
+TENDER 自动投标REPAYMENT 自动还款CREDIT_ASSIGNMENT 自动债权认购COMPENSATORY 自动代偿WITHDRAW 自动提现RECHARGE  自动充值',
 	-- 1：四要素鉴权（对外：LIMIT）
 	-- 2：三要素鉴权
 	check_type tinyint(1) DEFAULT 1 COMMENT '鉴权类型 : 1：四要素鉴权（对外：LIMIT）
 2：三要素鉴权',
 	-- 对外默认填： ID_CARD_NO_UNIQUE
 	user_limit_type tinyint(1) DEFAULT 1 COMMENT '验证身份证唯一性 : 对外默认填： ID_CARD_NO_UNIQUE',
-	-- 1: 四要素验证通过
-	-- 2: 未鉴权
-	-- 3: 特殊用户认证
-	-- 4: 企业用户认证
-	access_type tinyint(1) COMMENT '鉴权通过类型 : 1: 四要素验证通过
-2: 未鉴权
-3: 特殊用户认证
-4: 企业用户认证',
-	-- 1: 审核中
-	-- 2:审核通过
-	-- 3: 审核回退
-	-- 4:审核拒绝
-	audit_status tinyint(1) COMMENT '审核状态 : 1: 审核中
-2:审核通过
-3: 审核回退
-4:审核拒绝',
+	-- 1: 四要素验证通过2: 未鉴权3: 特殊用户认证4: 企业用户认证
+	access_type tinyint(1) COMMENT '鉴权通过类型 : 1: 四要素验证通过2: 未鉴权3: 特殊用户认证4: 企业用户认证',
+	-- 1: 审核中2:审核通过3: 审核回退4:审核拒绝
+	audit_status tinyint(1) COMMENT '审核状态 : 1: 审核中2:审核通过3: 审核回退4:审核拒绝',
 	-- [0 失效 1生效]
 	status tinyint(1) DEFAULT 1 COMMENT '状态 : [0 失效 1生效]',
 	create_time datetime COMMENT '创建时间',
@@ -224,7 +134,6 @@ RECHARGE  自动充值',
 ) COMMENT = '懒猫绑卡记录表';
 
 
--- 懒猫存管-换卡/手机号流水表
 CREATE TABLE lm_change_cardmobile_flowinfo
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -245,22 +154,10 @@ CREATE TABLE lm_change_cardmobile_flowinfo
 2：三要素鉴权',
 	-- 1 ：更改银行卡；对外：【固定值】UPDATE_BANKCARD
 	bind_type tinyint(1) DEFAULT 1 COMMENT '绑卡类型 : 1 ：更改银行卡；对外：【固定值】UPDATE_BANKCARD',
-	-- 1: 四要素验证通过
-	-- 2: 未鉴权
-	-- 3: 特殊用户认证
-	-- 4: 企业用户认证
-	access_type tinyint(1) COMMENT '鉴权通过类型 : 1: 四要素验证通过
-2: 未鉴权
-3: 特殊用户认证
-4: 企业用户认证',
-	-- 1: 审核中
-	-- 2:审核通过
-	-- 3: 审核回退
-	-- 4:审核拒绝
-	audit_status tinyint(1) COMMENT '审核状态 : 1: 审核中
-2:审核通过
-3: 审核回退
-4:审核拒绝',
+	-- 1: 四要素验证通过2: 未鉴权3: 特殊用户认证4: 企业用户认证
+	access_type tinyint(1) COMMENT '鉴权通过类型 : 1: 四要素验证通过2: 未鉴权3: 特殊用户认证4: 企业用户认证',
+	-- 1: 审核中2:审核通过3: 审核回退4:审核拒绝
+	audit_status tinyint(1) COMMENT '审核状态 : 1: 审核中2:审核通过3: 审核回退4:审核拒绝',
 	callback_url varchar(200) COMMENT '回调地址',
 	notify_url varchar(200) COMMENT '通知地址',
 	-- SUCCESS为确认成功，FAIL为确认失败, UNKNOW未知, ACCEPTED受理成功
@@ -278,7 +175,6 @@ CREATE TABLE lm_change_cardmobile_flowinfo
 ) COMMENT = '懒猫存管-换卡/手机号流水表';
 
 
--- 懒猫标的-委托支付授权清单
 CREATE TABLE lm_project_auth_list
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -305,7 +201,6 @@ CREATE TABLE lm_project_auth_list
 ) COMMENT = '懒猫标的-委托支付授权清单';
 
 
--- 懒猫-标的流水记录表
 CREATE TABLE lm_project_flowinfo
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -338,7 +233,6 @@ CREATE TABLE lm_project_flowinfo
 ) COMMENT = '懒猫-标的流水记录表';
 
 
--- 懒猫-标的信息表
 CREATE TABLE lm_project_list
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -362,7 +256,6 @@ CREATE TABLE lm_project_list
 ) COMMENT = '懒猫-标的信息表';
 
 
--- 懒猫存管-个人操作流水表
 CREATE TABLE lm_user_operation_flowinfo
 (
 	id tinyint(1) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -392,19 +285,9 @@ CREATE TABLE lm_user_operation_flowinfo
 	biz_type_desc varchar(500) COMMENT '平台业务类型描述 : 仅限验证交易密码场景的描述文字
 oper_type=3',
 	-- 多个以,分割
-	-- TENDER 自动投标
-	-- REPAYMENT 自动还款
-	-- CREDIT_ASSIGNMENT 自动债权认购
-	-- COMPENSATORY 自动代偿
-	-- WITHDRAW 自动提现
-	-- RECHARGE  自动充值
+	-- TENDER 自动投标REPAYMENT 自动还款CREDIT_ASSIGNMENT 自动债权认购COMPENSATORY 自动代偿WITHDRAW 自动提现RECHARGE  自动充值
 	auth_list varchar(100) COMMENT '用户授权集合 : 多个以,分割
-TENDER 自动投标
-REPAYMENT 自动还款
-CREDIT_ASSIGNMENT 自动债权认购
-COMPENSATORY 自动代偿
-WITHDRAW 自动提现
-RECHARGE  自动充值',
+TENDER 自动投标REPAYMENT 自动还款CREDIT_ASSIGNMENT 自动债权认购COMPENSATORY 自动代偿WITHDRAW 自动提现RECHARGE  自动充值',
 	-- 1：四要素鉴权（对外：LIMIT）
 	-- 2：三要素鉴权
 	check_type tinyint(1) COMMENT '鉴权类型 : 1：四要素鉴权（对外：LIMIT）
@@ -422,7 +305,26 @@ RECHARGE  自动充值',
 ) COMMENT = '懒猫存管-个人操作流水表';
 
 
--- 批量交易主表
+CREATE TABLE lm_vaccount_notify_txtp
+(
+	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+	lm_return_trx_no varchar(50) COMMENT '懒猫回退充值流水号',
+	fcp_trx_no varchar(50) COMMENT '源提现交易流水号',
+	rollback_amount varchar(20) COMMENT '提现到账金额',
+	rollback_comm_amount varchar(20) COMMENT '提现回退佣金',
+	completed_time datetime COMMENT '资金回退完成时间',
+	rollback_status varchar(10) COMMENT '回退充值状态',
+	-- INTERCEPT  提现拦截以后系统发起的回充；REMITFAIL：系统提现失败回充
+	rollback_type varchar(50) COMMENT '回退类型 : INTERCEPT  提现拦截以后系统发起的回充；REMITFAIL：系统提现失败回充',
+	-- 1:待处理 2处理中 3:已处理
+	status tinyint(1) COMMENT '处理状态 : 1:待处理 2处理中 3:已处理',
+	done_time datetime COMMENT '处理完成时间',
+	create_time datetime COMMENT '创建时间',
+	update_time datetime COMMENT '更新时间',
+	PRIMARY KEY (id)
+) COMMENT = '懒猫存管-提现退票通知接收表';
+
+
 CREATE TABLE lm_vaccount_transfer_batch
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -433,7 +335,6 @@ CREATE TABLE lm_vaccount_transfer_batch
 ) COMMENT = '批量交易主表';
 
 
--- 懒猫存管-交易明细表
 CREATE TABLE lm_vaccount_transfer_detail
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -467,7 +368,6 @@ CREATE TABLE lm_vaccount_transfer_detail
 ) COMMENT = '懒猫存管-交易明细表';
 
 
--- 懒猫存管-交易流水表[与业务系统间]
 CREATE TABLE lm_vaccount_transfer_info
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -509,7 +409,6 @@ CREATE TABLE lm_vaccount_transfer_info
 ) COMMENT = '懒猫存管-交易流水表[与业务系统间]';
 
 
--- 系统配置表
 CREATE TABLE system_config
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -522,7 +421,6 @@ CREATE TABLE system_config
 ) COMMENT = '系统配置表';
 
 
--- CDG系统内部状态码表
 CREATE TABLE system_status_code
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -536,7 +434,6 @@ CREATE TABLE system_status_code
 ) COMMENT = 'CDG系统内部状态码表';
 
 
--- 各第三方通道状态代码表
 CREATE TABLE system_status_code_metadata
 (
 	id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',

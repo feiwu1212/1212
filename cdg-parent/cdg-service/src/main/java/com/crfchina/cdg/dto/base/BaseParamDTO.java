@@ -24,6 +24,12 @@ import java.util.Date;
  * @remarks：
  */
 public class BaseParamDTO implements Serializable{
+	/**    
+	 * serialVersionUID:TODO    
+	 *  
+	 */    
+	
+	private static final long serialVersionUID = 1L;
 	private SystemNo systemNo;//系统编号
 	private String requestRefNo;//请求参考号
 	protected Date requestTime;//请求时间

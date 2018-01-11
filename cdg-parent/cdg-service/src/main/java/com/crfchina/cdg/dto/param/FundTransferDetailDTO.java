@@ -25,45 +25,87 @@ public class FundTransferDetailDTO {
 	protected AccountSubject accountSubject;//交易科目
 	protected String originFcpTrxNo;//原交易冻结流水号(通常是投资申请时预冻结流水号/还款时冻结流水号)
 	protected String fromPlatformUserNo;//付款方用户号
+	protected String fromUserName;//付款方用户姓名
 	protected String toPlatformUserNo;//收款方用户号
+	protected String toUserName;//收款方用户姓名
+	
 	protected Long amount;//划拨金额（分）
+	protected Long share;//债权转让份额（债权转让时填写）
 	protected String remark;//备注
+
 	public AccountSubject getAccountSubject() {
 		return accountSubject;
 	}
+
 	public void setAccountSubject(AccountSubject accountSubject) {
 		this.accountSubject = accountSubject;
 	}
+
 	public String getOriginFcpTrxNo() {
 		return originFcpTrxNo;
 	}
+
 	public void setOriginFcpTrxNo(String originFcpTrxNo) {
 		this.originFcpTrxNo = originFcpTrxNo;
 	}
+
 	public String getFromPlatformUserNo() {
 		return fromPlatformUserNo;
 	}
+
 	public void setFromPlatformUserNo(String fromPlatformUserNo) {
 		this.fromPlatformUserNo = fromPlatformUserNo;
 	}
+
+	public String getFromUserName() {
+		return fromUserName;
+	}
+
+	public void setFromUserName(String fromUserName) {
+		this.fromUserName = fromUserName;
+	}
+
 	public String getToPlatformUserNo() {
 		return toPlatformUserNo;
 	}
+
 	public void setToPlatformUserNo(String toPlatformUserNo) {
 		this.toPlatformUserNo = toPlatformUserNo;
 	}
+
+	public String getToUserName() {
+		return toUserName;
+	}
+
+	public void setToUserName(String toUserName) {
+		this.toUserName = toUserName;
+	}
+
 	public Long getAmount() {
 		return amount;
 	}
+
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
+
+	public Long getShare() {
+		return share;
+	}
+
+	public void setShare(Long share) {
+		this.share = share;
+	}
+
 	public String getRemark() {
 		return remark;
 	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+	
 	
 	
 	

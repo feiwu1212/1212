@@ -8,8 +8,10 @@
 package com.crfchina.cdg.service;
 
 import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
+import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
+import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 
 /**
@@ -31,5 +33,16 @@ public interface LmTransferDubboService {
 	 * 自动充值
 	 */
 	LmAutoRechargeResultDTO autoRecharge(LmAutoRechargeParamDTO paramDTO);
+	/**
+	 * 自动提现
+	 * @Title: autoRecharge  
+	 * @Description: TODO
+	 * @param paramDTO
+	 * @return
+	 * LmAutoRechargeResultDTO
+	 * @throws
+	 */
+	LmAutoWithdrawResultDTO autoWithdraw(LmAutoWithdrawParamDTO paramDTO);
+
 	
 }

@@ -34,6 +34,11 @@ public class Constants {
 	public static final String DIRECT_RECHARGE = "ZDCZ";
 	
 	/**
+	 * 操作类型：自动提现
+	 */
+	public static final String AUTO_WITHDRAW = "ZDTX";
+	
+	/**
 	 * 操作类型：用户预处理
 	 */
 	public static final String USERPRETRANSACTION = "YHYCL";

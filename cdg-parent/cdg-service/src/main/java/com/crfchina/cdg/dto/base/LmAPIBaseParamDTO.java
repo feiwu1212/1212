@@ -20,6 +20,15 @@ package com.crfchina.cdg.dto.base;
  */
 public class LmAPIBaseParamDTO extends BaseParamDTO{
 	protected String platformUserNo;//平台用户编号
+    protected String notifyUrl; // 异步通知地址 
+	
+	public String getNotifyUrl() {
+		return notifyUrl;
+	}
+
+	public void setNotifyUrl(String notifyUrl) {
+		this.notifyUrl = notifyUrl;
+	}
 
 	public String getPlatformUserNo() {
 		return platformUserNo;

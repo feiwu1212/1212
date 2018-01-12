@@ -17,10 +17,13 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.baidu.disconf.client.common.annotations.DisconfFile;
 
 /**
  * 
@@ -32,7 +35,9 @@ import com.alibaba.druid.support.http.WebStatFilter;
  * @updateBy：qwb
  * @updateDate：2017年6月26日 下午2:55:13 @remarks：
  */
-@Configuration
+@Component()
+@Scope("singleton")
+@DisconfFile(filename = "jdbc.properties")
 public class DruidConfiguration {
 	
 	@Value("${spring.datasource.url}")

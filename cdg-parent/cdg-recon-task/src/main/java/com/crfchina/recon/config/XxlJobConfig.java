@@ -1,18 +1,20 @@
 package com.crfchina.recon.config;
 
-import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.baidu.disconf.client.common.annotations.DisconfFile;
+import com.xxl.job.core.executor.XxlJobExecutor;
 
 
-
-@Configuration
-@PropertySource("classpath:xxl-job.properties")
+@Component()
+@Scope("singleton")
+@DisconfFile(filename = "xxl-job.properties")
 @ComponentScan(basePackages = "com.crfchina.jobhandler")
 public class XxlJobConfig {
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);

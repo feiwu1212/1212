@@ -65,24 +65,34 @@
 	
 	<profiles>
 		<profile>
+			<id>local</id>
+			<properties>
+				<environment>local</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
+			</properties>
+		</profile>
+		<profile>
 			<id>ci</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<environment>ci</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
 			</properties>
 		</profile>
 		<profile>
 			<id>uat</id>
 			<properties>
 				<environment>uat</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
 			</properties>
 		</profile>
 		<profile>
 			<id>pro</id>
 			<properties>
 				<environment>pro</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
 			</properties>
 		</profile>
 	</profiles>
@@ -134,6 +144,9 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources/config/${environment}</directory>
+				<includes>
+					<include>**</include>
+				</includes>
 				<!-- <directory>src/main/resources/config/${environment}/</directory> -->
 				<!-- <excludes> -->
 				<!-- <exclude>ci/*</exclude> -->

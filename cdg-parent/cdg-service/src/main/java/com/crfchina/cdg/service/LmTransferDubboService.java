@@ -10,9 +10,11 @@ package com.crfchina.cdg.service;
 import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.param.LmUnFreezePreTransactionParamDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
+import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
 
 /**
  * 
@@ -27,6 +29,15 @@ import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
  */
 public interface LmTransferDubboService {
 
+	/**
+	 * 
+	 * @Title: freezePreTransaction  
+	 * @Description: 冻结预处理
+	 * @param paramDTO
+	 * @return
+	 * LmFreezePreTransactionResultDTO
+	 * @throws
+	 */
 	LmFreezePreTransactionResultDTO freezePreTransaction(LmFreezePreTransactionParamDTO paramDTO);
 	
 	/**
@@ -43,6 +54,17 @@ public interface LmTransferDubboService {
 	 * @throws
 	 */
 	LmAutoWithdrawResultDTO autoWithdraw(LmAutoWithdrawParamDTO paramDTO);
-
+	
+	/**
+	 * 
+	 * @Title: freezePreTransaction  
+	 * @Description: 冻结预处理取消
+	 * @param paramDTO
+	 * @return
+	 * LmFreezePreTransactionResultDTO
+	 * @throws
+	 */
+	LmUnFreezePreTransactionResultDTO cancelPreTransaction(LmUnFreezePreTransactionParamDTO paramDTO);
+	
 	
 }

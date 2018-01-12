@@ -29,9 +29,11 @@ import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.param.LmUnFreezePreTransactionParamDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
+import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
 import com.crfchina.cdg.service.LmTransferDubboService;
 
 import java.util.Date;
@@ -422,5 +424,112 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		}
 		return rsp;
 	}
+
+	/**
+	 *预处理取消
+	 */
+	public LmUnFreezePreTransactionResultDTO cancelPreTransaction(
+			LmUnFreezePreTransactionParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
+		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.CANCEL_PRE_TRANSACTION);
+		Date now = new Date();
+		// 新增info
+		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
+		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
+		transferInfo.setRequestTime(new Date());
+		transferInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		transferInfo.setFcpTrxNo(fcpTrxNo);
+		transferInfo.setTransferAmount(String.valueOf(paramDTO.getAmount()));
+		transferInfo.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
+		transferInfo.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		transferInfo.setTransferType(Constants.CANCEL_PRE_TRANSACTION);
+		transferInfo.setLmBizType(ApiType.CANCEL_PRE_TRANSACTION.getCode());
+		transferInfo.setCrfBizType(Constants.CANCEL_PRE_TRANSACTION);
+		transferInfo.setCreateTime(now);
+		transferInfo.setUpdateTime(now);
+		transferInfo.setOriginFcpTrxno(paramDTO.getOriginFcpTrxNo());
+		transferInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+
+		lmVaccountTransferInfoMapper.insert(transferInfo);
+
+		// 新增detail
+		LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
+		transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
+		transferDetail.setFcpTrxNo(fcpTrxNo);
+		transferDetail.setTransferInfoId(transferInfo.getId().toString());
+		transferDetail.setTransferAmount(paramDTO.getAmount().toString());
+		transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		transferDetail.setLmBizType(ApiType.CANCEL_PRE_TRANSACTION.getCode());
+		transferDetail.setCrfBizType(Constants.CANCEL_PRE_TRANSACTION);
+		transferDetail.setCreateTime(now);
+		transferDetail.setUpdateTime(now);
+		transferDetail.setPartitionDate(transferInfo.getPartitionDate());
+		lmVaccountTransferDetailMapper.insert(transferDetail);
+
+		//若存在佣金，则新增明细表
+		if(null != paramDTO.getCommissionAmount()){
+			LmVaccountTransferDetail transferDetail2 = null;
+			transferDetail2 = transferDetail;
+			transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
+			lmVaccountTransferDetailMapper.insert(transferDetail2);
+		}
+		
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		reqDataMap.put("requestNo", fcpTrxNo);
+		reqDataMap.put("preTransactionNo", paramDTO.getOriginFcpTrxNo());
+		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
+		if(null!=paramDTO.getCommissionAmount()){
+			reqDataMap.put("commission", MoneyUtils.toDollar(paramDTO.getCommissionAmount()));
+		}
+		if(paramDTO.getProfitDetailList().size()>0){
+			reqDataMap.put("profitDetails",paramDTO.getProfitDetailList() );
+		}
+		
+		AppConfig config = AppConfig.getConfig();
+		List<BasicNameValuePair> postParam = null;
+		JSONObject result = null;
+		try {
+			postParam = AppUtil.createServicePostParam(ApiType.CANCEL_PRE_TRANSACTION.getCode(), reqDataMap);
+			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+		} catch (Exception e) {
+			logger.error("调用懒猫接口异常", e);
+			//TODO 返回失败结果 更新失败状态
+
+		}
+
+		String code = result.getString("code");
+		String status = result.getString("status");
+		String failCode = result.getString("errorCode");
+		String failReason = result.getString("errorMessage");
+		now = new Date();
+		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+			transferInfo.setResult(ResultCode.SUCCESS.getCode());
+			transferInfo.setUpdateTime(now);
+
+			transferDetail.setResult(ResultCode.SUCCESS.getCode());
+			transferDetail.setUpdateTime(now);
+
+			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
+			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
+			//TODO 返回成功结果
+		} else {
+			transferInfo.setResult(ResultCode.FAIL.getCode());
+			transferInfo.setFailCode(failCode);
+			transferInfo.setFailReason(failReason);
+			transferInfo.setUpdateTime(now);
+
+			transferDetail.setResult(ResultCode.FAIL.getCode());
+			transferDetail.setFailCode(failCode);
+			transferDetail.setFailReason(failReason);
+			transferDetail.setUpdateTime(now);
+
+			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
+			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
+			//TODO 返回失败结果
+		}
+		return null;
+	}
+	
+	
 	
 }

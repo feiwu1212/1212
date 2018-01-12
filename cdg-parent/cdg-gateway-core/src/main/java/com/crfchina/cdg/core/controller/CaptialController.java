@@ -18,7 +18,6 @@ import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCapitalService;
 import java.security.GeneralSecurityException;
-import java.util.Enumeration;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class CaptialController {
 	 */
 	@RequestMapping("/recharge")
 	public ModelAndView recharge(HttpServletRequest request) {
-		LmRechargeParamDTO paramDto = getParamDto(request, LmRechargeParamDTO.class);
+		LmRechargeParamDTO paramDto = AppUtil.getParamDto(request, LmRechargeParamDTO.class);
 		Map<String, Object> rechargeReqDataMap = lmCapitalService.recharge(paramDto);
 		// 获取properties参数
 		AppConfig config = AppConfig.getConfig();
@@ -82,7 +81,7 @@ public class CaptialController {
 	 */
 	@RequestMapping("/withdraw")
 	public ModelAndView withdraw(HttpServletRequest request) {
-		LmWithdrawParamDTO paramDto = getParamDto(request, LmWithdrawParamDTO.class);
+		LmWithdrawParamDTO paramDto = AppUtil.getParamDto(request, LmWithdrawParamDTO.class);
 		Map<String, Object> withdrawReqDataMap = lmCapitalService.withdraw(paramDto);
 		// 获取properties参数
 		AppConfig config = AppConfig.getConfig();
@@ -107,7 +106,7 @@ public class CaptialController {
 	 */
 	@RequestMapping("/userPreTransaction")
 	public ModelAndView userPreTransaction(HttpServletRequest request) {
-		LmUserPreTransactionParamDTO paramDto = getParamDto(request, LmUserPreTransactionParamDTO.class);
+		LmUserPreTransactionParamDTO paramDto = AppUtil.getParamDto(request, LmUserPreTransactionParamDTO.class);
 		Map<String, Object> userPreTransactionReqDataMap = lmCapitalService.userPreTransaction(paramDto);
 		// 获取properties参数
 		AppConfig config = AppConfig.getConfig();
@@ -121,25 +120,6 @@ public class CaptialController {
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 	
-	
-	public <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
-		Enumeration<String> parameterNames = request.getParameterNames();
-		JSONObject paramObj = new JSONObject();
-		while (parameterNames.hasMoreElements()) {
-			String key = parameterNames.nextElement();
-			String value = request.getParameter(key);
-			if (value.contains(",") || "authList".equals(key)) {
-				paramObj.put(key, value.split(","));
-			} else {
-				paramObj.put(key, value);
-			}
-
-		}
-		System.out.println(paramObj.toJSONString());
-		T object = JSONObject.parseObject(paramObj.toJSONString(), clazz);
-		return object;
-	}
-
 	public static void main(String[] args) {
 		String a = "{\"authAmount\":\"9999999\",\"bankCardNo\":\"6226660404352422\",\"callbackUrl\":\"\",\"failTime\":\"20180602\",\"idCardNo\":\"650102199106220732\",\"idCardType\":\"PRC_ID\",\"mobile\":\"181684089854\",\"notifyUrl\":\"\",\"platformUserNo\":\"CRF0009\",\"realName\":\"但锐轩\",\"requestRefNo\":\"123\",\"systemNo\":\"website\",\"userAuthList\":[\"TENDER\"]}";
 		System.out.println();

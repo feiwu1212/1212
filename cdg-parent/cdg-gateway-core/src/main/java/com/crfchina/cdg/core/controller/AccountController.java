@@ -18,7 +18,6 @@ import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.service.LmAccountService;
 import java.security.GeneralSecurityException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +48,7 @@ public class AccountController {
 
 	@RequestMapping("/personOpen")
 	public ModelAndView personOpen(HttpServletRequest request) {
-		LmOpenAccountParamDTO paramDto = getParamDto(request, LmOpenAccountParamDTO.class);
+		LmOpenAccountParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountParamDTO.class);
 
 		Map<String, Object> personOpenReqDataMap = lmAccountService.personBindCard(paramDto);
 		// 获取properties参数
@@ -66,7 +65,7 @@ public class AccountController {
 	
 	@RequestMapping("/enterpriseOpen")
 	public ModelAndView enterpriseOpen(HttpServletRequest request) {
-		LmOpenAccountCompanyParamDTO paramDto = getParamDto(request, LmOpenAccountCompanyParamDTO.class);
+		LmOpenAccountCompanyParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountCompanyParamDTO.class);
 		LmEnterpriseOpenAccountDTO reqDto = JSONObject.parseObject(JSONObject.toJSONString(paramDto), LmEnterpriseOpenAccountDTO.class);
 		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(reqDto));
 		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo(Constants.COMPANY_OPEN_ACCOUNT));
@@ -86,23 +85,6 @@ public class AccountController {
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
-	public <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
-		Enumeration<String> parameterNames = request.getParameterNames();
-		JSONObject paramObj = new JSONObject();
-		while (parameterNames.hasMoreElements()) {
-			String key = parameterNames.nextElement();
-			String value = request.getParameter(key);
-			if (value.contains(",") || "authList".equals(key)) {
-				paramObj.put(key, value.split(","));
-			} else {
-				paramObj.put(key, value);
-			}
-
-		}
-		System.out.println(paramObj.toJSONString());
-		T object = JSONObject.parseObject(paramObj.toJSONString(), clazz);
-		return object;
-	}
 
 	public static void main(String[] args) {
 //		LmOpenAccountParamDTO a = new LmOpenAccountParamDTO();

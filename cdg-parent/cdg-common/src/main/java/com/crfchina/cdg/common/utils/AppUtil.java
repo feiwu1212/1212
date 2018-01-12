@@ -8,11 +8,14 @@ import java.security.PrivateKey;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,5 +88,23 @@ public class AppUtil {
 			logger.error("拼接懒猫请求参数异常", e);
 			throw e;
 		}
+	}
+
+	public static <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
+		Enumeration<String> parameterNames = request.getParameterNames();
+		JSONObject paramObj = new JSONObject();
+		while (parameterNames.hasMoreElements()) {
+			String key = parameterNames.nextElement();
+			String value = request.getParameter(key);
+			if (!StringUtils.isBlank(value)) {
+				if (value.contains(",") || "authList".equals(key)) {
+					paramObj.put(key, value.split(","));
+				} else {
+					paramObj.put(key, value);
+				}
+			}
+		}
+		T object = JSONObject.parseObject(paramObj.toJSONString(), clazz);
+		return object;
 	}
 }

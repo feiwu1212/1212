@@ -234,14 +234,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
 		} catch (Exception e) {
 			logger.error("调用懒猫接口异常", e);
-			//TODO 返回失败结果 更新失败状态
-
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
 		}
 		String code = result.getString("code");
 		String status = result.getString("status");
-		String failCode = result.getString("errorCode");
-		String failReason = result.getString("errorMessage");
-		now = new Date();
+
 		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 			transferInfo.setResult(ResultCode.ACCEPTED.getCode());
 			transferInfo.setUpdateTime(now);
@@ -256,9 +254,15 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
 			//TODO 返回成功结果
-			
-			
+			rsp.setAmount(paramDTO.getAmount());
+			if(!StringUtils.isEmpty(result.getString("commission")))
+			rsp.setCommissionAmount(paramDTO.getCommissionAmount());
+			rsp.setResult(ResultCode.ACCEPTED);
+			rsp.setTransactionTime(DateUtils.strToDate(result.getString("transactionTime")));
+			rsp.setPayMobile(result.getString("payMobile"));
 		} else {
+			String failCode = result.getString("errorCode");
+			String failReason = result.getString("errorMessage");
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -277,9 +281,15 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			}
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
-			//TODO 返回失败结果
+			rsp.setResult(ResultCode.FAIL);
+			if(!StringUtils.isEmpty(result.getString("channelErrorCode")))
+			rsp.setChannelErrorCode(result.getString("channelErrorCode"));
+			if(!StringUtils.isEmpty(result.getString("channelErrorMessage")))
+			rsp.setChannelErrorMessage(result.getString("channelErrorMessage"));
+			rsp.setFailReason(failReason);
+			rsp.setFailCode(failCode);		
 		}
-		return null;
+		return rsp;
 	}
 	
 	/**
@@ -349,14 +359,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
 		} catch (Exception e) {
 			logger.error("调用懒猫接口异常", e);
-			//TODO 返回失败结果 更新失败状态
-
+			 rsp.setResult(ResultCode.FAIL);
+			 return rsp;
 		}
 		String code = result.getString("code");
 		String status = result.getString("status");
-		String failCode = result.getString("errorCode");
-		String failReason = result.getString("errorMessage");
-		now = new Date();
+		
 		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 			transferInfo.setResult(ResultCode.ACCEPTED.getCode());
 			transferInfo.setUpdateTime(now);
@@ -370,10 +378,21 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			}
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
-			//TODO 返回成功结果
-			
-			
+			// 返回成功结果
+			rsp.setAmount(paramDTO.getAmount());
+			rsp.setBankcardNo(result.getString("bankcardNo"));
+			rsp.setBankcode(result.getString("bankcode"));
+			if(null != result.getString("commission"))
+			rsp.setCommissionAmount(paramDTO.getCommissionAmount());
+			rsp.setFloatAmount(Long.valueOf(result.getString("floatAmount")));
+			rsp.setRemitType(result.getString("remitType"));
+			rsp.setResult(ResultCode.ACCEPTED);
+			rsp.setTransactionTime(DateUtils.strToDate(result.getString("transactionTime")));
+			rsp.setWithdrawForm(result.getString("withdrawForm"));
+			rsp.setWithdrawWay(result.getString("withdrawWay"));
 		} else {
+			String failCode = result.getString("errorCode");
+			String failReason = result.getString("errorMessage");
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -393,8 +412,11 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
 			//TODO 返回失败结果
+			 rsp.setResult(ResultCode.FAIL);
+			 rsp.setFailReason(failReason);
+			 rsp.setFailCode(failCode);
 		}
-		return null;
+		return rsp;
 	}
 	
 }

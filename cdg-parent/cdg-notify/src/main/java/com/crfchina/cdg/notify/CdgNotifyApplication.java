@@ -5,10 +5,13 @@ package com.crfchina.cdg.notify; /**
  * @version V1.0
  */
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * @ProjectName：cdg-parent
@@ -21,6 +24,9 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @remarks：
  */
 @SpringBootApplication
+@MapperScan("com.crfchina")
+@ComponentScan(basePackages = {"com.crfchina"})
+@ImportResource({"classpath*:spring-disconf.xml"})//导入spring配置
 public class CdgNotifyApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

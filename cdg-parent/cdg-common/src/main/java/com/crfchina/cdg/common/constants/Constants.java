@@ -34,6 +34,11 @@ public class Constants {
 	public static final String CREATE_PROJECT = "CJBD";
 	
 	/**
+	 * 操作类型：变更标的
+	 */
+	public static final String MODIFY_PROJECT = "BGBD";
+
+	/**
 	 * 操作类型：自动充值
 	 */
 	public static final String DIRECT_RECHARGE = "ZDCZ";

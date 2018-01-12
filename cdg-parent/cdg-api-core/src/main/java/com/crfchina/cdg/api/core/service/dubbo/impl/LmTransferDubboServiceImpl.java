@@ -39,6 +39,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,6 +165,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 	 * 自动充值
 	 */
 	public LmAutoRechargeResultDTO autoRecharge(LmAutoRechargeParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
 		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.DIRECT_RECHARGE);
 		Date now = new Date();
 		//返回结果预封装
@@ -296,6 +299,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 	 * 自动提现
 	 */
 	public LmAutoWithdrawResultDTO autoWithdraw(LmAutoWithdrawParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
 		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.AUTO_WITHDRAW);
 		Date now = new Date();
 		//返回结果预封装

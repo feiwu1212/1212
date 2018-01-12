@@ -29,6 +29,15 @@ public class LmUpdateProjectResultDTO extends LmBaseResultDTO {
 	
 	private static final long serialVersionUID = 1L;
 	
+	protected String projectStatus;
+
+	public String getProjectStatus() {
+		return projectStatus;
+	}
+
+	public void setProjectStatus(String projectStatus) {
+		this.projectStatus = projectStatus;
+	}
 	
 
 }

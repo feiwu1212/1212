@@ -83,7 +83,7 @@ public class EnumsDBMap {
 	 */
 	public static Map<String, Integer> PROJECT_STATUS = new HashMap<String, Integer>() {
 		{
-			put("STANDARDPOWDER", 1);
+			put("COLLECTING", 1);
 			put("REPAYING", 2);
 			put("FINISH",3);
 			put("MISCARRY",4);

@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 
 /**    
  * 
@@ -24,6 +26,8 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @remarks：
  */
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.crfchina"})
+@ImportResource({"classpath*:spring-disconf.xml"})//导入spring配置
 public class CdgGeteWayApplication extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) {

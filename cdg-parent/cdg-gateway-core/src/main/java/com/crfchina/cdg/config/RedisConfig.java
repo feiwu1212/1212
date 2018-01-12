@@ -6,9 +6,9 @@
  */
 package com.crfchina.cdg.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import com.baidu.disconf.client.common.annotations.DisconfFile;
 
 /**
  * @ProjectName：webp2p_interface
@@ -21,8 +21,7 @@ import org.springframework.stereotype.Component;
  * @remarks：
  */
 @Component
-@PropertySource(value = { "classpath:redis.properties" }, encoding = "UTF-8")
-@ConfigurationProperties(prefix = "redis")
+@DisconfFile(filename="redis.properties")
 public class RedisConfig {
 
 	private String redisMode;

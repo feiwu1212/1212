@@ -98,6 +98,14 @@
           <artifactId>httpmime</artifactId>
           <version>4.5.1</version>
       </dependency>
+      
+      
+      <dependency>
+          <groupId>com.baidu.disconf</groupId>
+          <artifactId>disconf-client</artifactId>
+          <version>2.6.36</version>
+        </dependency>
+      
         <!-- CRFLOG 
 		<dependency>
 		  <groupId>com.crfchina</groupId>

@@ -15,24 +15,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.baidu.disconf.client.common.annotations.DisconfFile;
 
 /**
  * 
  * @ProjectName：finance_user_service
  * @ClassName：DruidConfiguration
  * @Description:
- * @author: qwb
+ * @author: William
  * @date：2017年6月26日 下午2:55:13
- * @updateBy：qwb
- * @updateDate：2017年6月26日 下午2:55:13 @remarks：
+ * @updateBy：William
+ * @updateDate：2017年6月26日 下午2:55:13 
+ * @remarks：
  */
-@Configuration
+@Component()
+@Scope("singleton")
+@DisconfFile(filename = "jdbc.properties")
 public class DruidConfiguration {
 	
 	@Value("${spring.datasource.url}")
@@ -76,7 +81,7 @@ public class DruidConfiguration {
 	@Primary // 在同样的DataSource中，首先使用被标注的DataSource
 	public DataSource dataSource() {
 		DruidDataSource datasource = new DruidDataSource();
-		datasource.setUrl(this.dbUrl);
+		datasource.setUrl(dbUrl);
 		datasource.setUsername(username);
 		datasource.setPassword(password);
 		datasource.setDriverClassName(driverClassName);
@@ -128,4 +133,5 @@ public class DruidConfiguration {
 		filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
 		return filterRegistrationBean;
 	}
+	
 }

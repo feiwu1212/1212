@@ -21,8 +21,10 @@ import com.crfchina.cdg.dto.base.LmAPIBaseParamDTO;
  * @remarks：
  */
 public class LmAutoRechargeParamDTO extends LmAPIBaseParamDTO {
+
 	protected Long amount;// 充值金额(分)
 	protected Long commissionAmount; // 平台佣金
+	protected String bankCode;//偏好支付公司
 	
 	public Long getAmount() {
 		return amount;
@@ -36,5 +38,10 @@ public class LmAutoRechargeParamDTO extends LmAPIBaseParamDTO {
 	public void setCommissionAmount(Long commissionAmount) {
 		this.commissionAmount = commissionAmount;
 	}
-	 
+	public String getBankCode() {
+		return bankCode;
+	}
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
 }

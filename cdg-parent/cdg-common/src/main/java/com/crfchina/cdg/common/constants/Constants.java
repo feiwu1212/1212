@@ -29,6 +29,11 @@ public class Constants {
 	public static final String PRE_FREEZE_TRANSACTION = "DJYCL";
 
 	/**
+	 * 操作类型：自动充值
+	 */
+	public static final String DIRECT_RECHARGE = "ZDCZ";
+	
+	/**
 	 * 操作类型：用户预处理
 	 */
 	public static final String USERPRETRANSACTION = "YHYCL";

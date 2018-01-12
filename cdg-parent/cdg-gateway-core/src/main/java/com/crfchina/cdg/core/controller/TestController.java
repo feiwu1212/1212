@@ -120,6 +120,6 @@ public class TestController {
 		String s = JSONObject.toJSONString(rp, SerializerFeature.WriteMapNullValue);
 		System.out.println(s);
 		JSONObject jsonObject = JSON.parseObject(s);
-		return new ModelAndView("test").addObject("url", "/cdg-geteway/capital/recharge").addObject("myparam",jsonObject);
+		return new ModelAndView("test").addObject("url", "/cdg-geteway/ca/recharge").addObject("myparam",jsonObject);
 	}
 }

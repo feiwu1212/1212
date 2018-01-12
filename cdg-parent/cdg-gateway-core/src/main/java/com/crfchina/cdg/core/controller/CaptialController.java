@@ -7,12 +7,10 @@
  */
 package com.crfchina.cdg.core.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
-import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
 import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
@@ -62,7 +60,7 @@ public class CaptialController {
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), rechargeReqDataMap);
+			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), rechargeReqDataMap, paramDto.getUserDevice().getCode());
 		}catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +86,7 @@ public class CaptialController {
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), withdrawReqDataMap);
+			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), withdrawReqDataMap, paramDto.getUserDevice().getCode());
 		}catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -113,16 +111,11 @@ public class CaptialController {
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.USERPRETRANSACTION.getCode(), userPreTransactionReqDataMap);
+			result = AppUtil.createPostParam(ApiType.USERPRETRANSACTION.getCode(), userPreTransactionReqDataMap, paramDto.getUserDevice().getCode() );
 		}catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 	
-	public static void main(String[] args) {
-		String a = "{\"authAmount\":\"9999999\",\"bankCardNo\":\"6226660404352422\",\"callbackUrl\":\"\",\"failTime\":\"20180602\",\"idCardNo\":\"650102199106220732\",\"idCardType\":\"PRC_ID\",\"mobile\":\"181684089854\",\"notifyUrl\":\"\",\"platformUserNo\":\"CRF0009\",\"realName\":\"但锐轩\",\"requestRefNo\":\"123\",\"systemNo\":\"website\",\"userAuthList\":[\"TENDER\"]}";
-		System.out.println();
-		LmOpenAccountParamDTO jsonObject = JSONObject.parseObject(a, LmOpenAccountParamDTO.class);
-	}
 }

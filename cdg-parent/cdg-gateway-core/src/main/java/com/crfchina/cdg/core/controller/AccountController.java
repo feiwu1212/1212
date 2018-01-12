@@ -56,7 +56,7 @@ public class AccountController {
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.PERSONAL_REGISTER_EXPAND.getCode(), personOpenReqDataMap);
+			result = AppUtil.createPostParam(ApiType.PERSONAL_REGISTER_EXPAND.getCode(), personOpenReqDataMap, paramDto.getUserDevice().getCode());
 		}catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -76,7 +76,7 @@ public class AccountController {
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.ENTERPRISE_REGISTER.getCode(), reqDataMap);
+			result = AppUtil.createPostParam(ApiType.ENTERPRISE_REGISTER.getCode(), reqDataMap, paramDto.getUserDevice().getCode());
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 			result = new HashMap<>();
@@ -85,13 +85,4 @@ public class AccountController {
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
-
-	public static void main(String[] args) {
-//		LmOpenAccountParamDTO a = new LmOpenAccountParamDTO();
-//		a.setIdCardType(IDCardType.COMPATRIOTS_CARD);
-//		a.setAuthAmount("11111");
-		String a = "{\"authAmount\":\"9999999\",\"bankCardNo\":\"6226660404352422\",\"callbackUrl\":\"\",\"failTime\":\"20180602\",\"idCardNo\":\"650102199106220732\",\"idCardType\":\"PRC_ID\",\"mobile\":\"181684089854\",\"notifyUrl\":\"\",\"platformUserNo\":\"CRF0009\",\"realName\":\"但锐轩\",\"requestRefNo\":\"123\",\"systemNo\":\"website\",\"userAuthList\":[\"TENDER\"]}";
-		System.out.println();
-		LmOpenAccountParamDTO jsonObject = JSONObject.parseObject(a, LmOpenAccountParamDTO.class);
-	}
 }

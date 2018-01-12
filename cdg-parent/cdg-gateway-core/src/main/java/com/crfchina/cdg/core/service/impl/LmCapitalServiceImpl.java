@@ -74,7 +74,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setCreateTime(now);
 		txnInfo.setCrfBizType(crfBizType);
 		txnInfo.setCurrency(1);
-		txnInfo.setExpiredTime(lmrpDto.getExpired());
+		txnInfo.setExpiredTime(DateUtils.parseStringToDate(lmrpDto.getExpired(), "yyyyMMddHHmmss"));
 		txnInfo.setFailCode("");//异步通知时候更新
 		txnInfo.setFailReason("");//异步通知时候更新
 		txnInfo.setFcpTrxNo(trxNo);
@@ -145,7 +145,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		//TODO 配置本地回调地址
 		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
-		reqDataMap.put("expired", df.format(lmrpDto.getExpired()) );
+		reqDataMap.put("expired", lmrpDto.getExpired());
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
 
 		int txnId = txnInfoMapper.insert(txnInfo);
@@ -176,7 +176,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		txnInfo.setCreateTime(now);
       		txnInfo.setCrfBizType(crfBizType);
       		txnInfo.setCurrency(1);
-      		txnInfo.setExpiredTime(paramDto.getExpired());
+      		txnInfo.setExpiredTime(DateUtils.parseStringToDate(paramDto.getExpired(), "yyyyMMddHHmmss"));
       		txnInfo.setFailCode("");//异步通知时候更新
       		txnInfo.setFailReason("");//异步通知时候更新
       		txnInfo.setFcpTrxNo(trxNo);
@@ -274,7 +274,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		txnInfo.setCreateTime(now);
       		txnInfo.setCrfBizType(crfBizType);
       		txnInfo.setCurrency(1);
-      		txnInfo.setExpiredTime(paramDto.getExpired());
+      		txnInfo.setExpiredTime(DateUtils.parseStringToDate(paramDto.getExpired(), "yyyyMMddHHmmss"));
       		txnInfo.setFailCode("");//异步通知时候更新
       		txnInfo.setFailReason("");//异步通知时候更新
       		txnInfo.setFcpTrxNo(trxNo);

@@ -105,6 +105,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		transferDetail.setCrfBizType(Constants.PRE_FREEZE_TRANSACTION);
 		transferDetail.setCreateTime(now);
 		transferDetail.setUpdateTime(now);
+		transferDetail.setPartitionDate(transferInfo.getPartitionDate());
 		lmVaccountTransferDetailMapper.insert(transferDetail);
 
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();

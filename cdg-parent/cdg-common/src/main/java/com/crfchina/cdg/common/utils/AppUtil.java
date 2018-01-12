@@ -37,7 +37,7 @@ public class AppUtil {
 	 * 签名加密
 	 */
 	public static Map<String, String> createPostParam(String serviceName,
-			Map<String, Object> reqDataMap) throws GeneralSecurityException {
+			Map<String, Object> reqDataMap, String userDevice) throws GeneralSecurityException {
 		Map<String, String> result = new HashMap<String, String>();
 
 		AppConfig config = AppConfig.getConfig();
@@ -56,7 +56,7 @@ public class AppUtil {
 		result.put("reqData", reqData);
 		result.put("keySerial", config.getKeySerial());
 		result.put("sign", Base64.encodeBase64String(sign));
-
+		result.put("userDevice", userDevice);
 		return result;
 	}
 
@@ -90,6 +90,13 @@ public class AppUtil {
 		}
 	}
 
+	/**
+	 * requestParam转Dto
+	 * @param request
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
 	public static <T> T getParamDto(HttpServletRequest request, Class<T> clazz) {
 		Enumeration<String> parameterNames = request.getParameterNames();
 		JSONObject paramObj = new JSONObject();

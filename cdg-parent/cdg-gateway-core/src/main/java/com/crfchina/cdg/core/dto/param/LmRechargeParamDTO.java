@@ -7,8 +7,6 @@
  */
 package com.crfchina.cdg.core.dto.param;
 
-import java.util.Date;
-
 import com.crfchina.cdg.common.enums.business.PayMode;
 import com.crfchina.cdg.common.enums.business.WebType;
 import com.crfchina.cdg.core.dto.base.LmGatewayBaseParamDTO;
@@ -32,7 +30,7 @@ public class LmRechargeParamDTO extends LmGatewayBaseParamDTO {
 	protected String bankCode;//若支付方式为快捷支付，此处必传;若支付方式为网银且传了 payType 则此处必传，不传 payTyp 则此处传了也不生效
 	protected WebType payType;//网银支付方式下，若此处传值则直接跳转至银行页面，不传则跳转至 支付公司收银台页面;
 	protected String projectNo;//标的号
-	protected Date expired;//页面过期时间
+	protected String expired;//页面过期时间
 	protected String callbackMode;//快捷充值回调模式，如传入 DIRECT_CALLBACK，则订单支付不论成功、失败、 处理中均直接同步、异步通知商户
 	protected String expectPayCompany;//偏好支付公司
 	
@@ -78,17 +76,16 @@ public class LmRechargeParamDTO extends LmGatewayBaseParamDTO {
 	public void setProjectNo(String projectNo) {
 		this.projectNo = projectNo;
 	}
-	public Date getExpired() {
-		return expired;
-	}
-	public void setExpired(Date expired) {
-		this.expired = expired;
-	}
 	public String getCallbackMode() {
 		return callbackMode;
 	}
 	public void setCallbackMode(String callbackMode) {
 		this.callbackMode = callbackMode;
 	}
-	
+	public String getExpired() {
+		return expired;
+	}
+	public void setExpired(String expired) {
+		this.expired = expired;
+	}
 }

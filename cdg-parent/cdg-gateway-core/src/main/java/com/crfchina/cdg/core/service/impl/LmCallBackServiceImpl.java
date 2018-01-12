@@ -176,13 +176,13 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 				//更新交易主表
 				flow.setResult(ResultCode.ACCEPTED.getCode());
-				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+				flow.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 				flow.setUpdateTime(now);
 				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 				flow.setSettleDate(now);
 			
 				txnDtl.setResult(ResultCode.ACCEPTED.getCode());
-				txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+				txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 				txnDtl.setUpdateTime(now);
 				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 				txnDtl.setSettleDate(now);
@@ -263,16 +263,16 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				flow.setResult(ResultCode.ACCEPTED.getCode());
 				flow.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 				flow.setUpdateTime(now);
-				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
+				flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 				flow.setSettleDate(now);
 				txnInfoMapper.updateByPrimaryKey(flow);
 
 				//更新交易明细表
 				for(LmVaccountTransferDetail txnDtl : txnDtlList){
 					txnDtl.setResult(ResultCode.ACCEPTED.getCode());
-					txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
+					txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 					txnDtl.setUpdateTime(now);
-					txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
+					txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 					txnDtl.setSettleDate(now);
 					txnDetailMapper.updateByPrimaryKey(txnDtl);
 				}
@@ -295,7 +295,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 					txnDtl.setResult(ResultCode.ACCEPTED.getCode());
 					txnDtl.setFinishDate(DateUtils.strToDate(respData.getString("transactionTime")));
 					txnDtl.setUpdateTime(now);
-					txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("paramDto")));
+					txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 					txnDtl.setSettleDate(now);
 					txnDetailMapper.updateByPrimaryKey(txnDtl);
 				}

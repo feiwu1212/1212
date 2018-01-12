@@ -7,8 +7,6 @@
  */
 package com.crfchina.cdg.core.dto.param;
 
-import java.util.Date;
-
 import com.crfchina.cdg.core.dto.base.LmGatewayBaseParamDTO;
 
 /**    
@@ -27,7 +25,7 @@ public class LmUserPreTransactionParamDTO extends LmGatewayBaseParamDTO {
 	private static final long serialVersionUID = 1L;
 	protected Long amount;//冻结金额
 	protected Long preMarketingAmount;//预备使用的红包金额，只记录不冻结，仅限投标业务类型 
-	protected Date expired;//页面过期时间
+	protected String expired;//页面过期时间
 	protected String bizType;  //预处理业务类型
 	protected String projectNo; //标的号
 	protected String share; //购买债转份额，业务类型为债权认购时，需要传此参数
@@ -76,11 +74,12 @@ public class LmUserPreTransactionParamDTO extends LmGatewayBaseParamDTO {
 	public void setOriginFcpTrxNo(String originFcpTrxNo) {
 		this.originFcpTrxNo = originFcpTrxNo;
 	}
-	public Date getExpired() {
+
+	public String getExpired() {
 		return expired;
 	}
-	public void setExpired(Date expired) {
+
+	public void setExpired(String expired) {
 		this.expired = expired;
 	}
-
 }

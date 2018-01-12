@@ -18,24 +18,30 @@ import com.crfchina.cdg.common.enums.business.CurrencyType;
 import com.crfchina.cdg.common.enums.business.PreBusinessType;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
+import com.crfchina.cdg.common.enums.common.SystemNo;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
+import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 import com.crfchina.cdg.service.LmTransferDubboService;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @ProjectName：cdg-parent
@@ -61,6 +67,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 	@Autowired
 	LmVaccountTransferBatchMapper lmVaccountTransferBatchMapper;
+
 
 	@Override
 	public LmFreezePreTransactionResultDTO freezePreTransaction(LmFreezePreTransactionParamDTO paramDTO) {
@@ -109,6 +116,110 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		JSONObject result = null;
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.FREEZE_PRE_TRANSACTION.getCode(), reqDataMap);
+			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+		} catch (Exception e) {
+			logger.error("调用懒猫接口异常", e);
+			//TODO 返回失败结果 更新失败状态
+
+		}
+
+		String code = result.getString("code");
+		String status = result.getString("status");
+		String failCode = result.getString("errorCode");
+		String failReason = result.getString("errorMessage");
+		now = new Date();
+		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+			transferInfo.setResult(ResultCode.SUCCESS.getCode());
+			transferInfo.setUpdateTime(now);
+
+			transferDetail.setResult(ResultCode.SUCCESS.getCode());
+			transferDetail.setUpdateTime(now);
+
+			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
+			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
+			//TODO 返回成功结果
+		} else {
+			transferInfo.setResult(ResultCode.FAIL.getCode());
+			transferInfo.setFailCode(failCode);
+			transferInfo.setFailReason(failReason);
+			transferInfo.setUpdateTime(now);
+
+			transferDetail.setResult(ResultCode.FAIL.getCode());
+			transferDetail.setFailCode(failCode);
+			transferDetail.setFailReason(failReason);
+			transferDetail.setUpdateTime(now);
+
+			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
+			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
+			//TODO 返回失败结果
+		}
+		return null;
+	}
+
+	/**
+	 * 自动充值
+	 */
+	public LmAutoRechargeResultDTO autoRecharge(LmAutoRechargeParamDTO paramDTO) {
+		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.DIRECT_RECHARGE);
+		Date now = new Date();
+		// 新增info
+		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
+		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
+		transferInfo.setRequestTime(new Date());
+		transferInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		transferInfo.setFcpTrxNo(fcpTrxNo);
+		transferInfo.setTransferAmount(paramDTO.getAmount().toString());
+		transferInfo.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
+		transferInfo.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		transferInfo.setTransferType(Constants.DIRECT_RECHARGE);
+		transferInfo.setLmBizType(ApiType.DIRECT_RECHARGE.getCode());
+		transferInfo.setCrfBizType(Constants.DIRECT_RECHARGE);
+		transferInfo.setCreateTime(now);
+		transferInfo.setUpdateTime(now);
+		transferInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+
+		int txnId = lmVaccountTransferInfoMapper.insert(transferInfo);
+
+		// 新增detail
+		LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
+		transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
+		transferDetail.setFcpTrxNo(fcpTrxNo);
+		transferDetail.setTransferInfoId(String.valueOf(txnId));
+		transferDetail.setTransferAmount(paramDTO.getAmount().toString());
+		transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		transferDetail.setLmBizType(ApiType.DIRECT_RECHARGE.getCode());
+		transferDetail.setCrfBizType(Constants.DIRECT_RECHARGE);
+		transferDetail.setCreateTime(now);
+		transferDetail.setUpdateTime(now);
+		lmVaccountTransferDetailMapper.insert(transferDetail);
+
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		reqDataMap.put("requestNo", fcpTrxNo);
+		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());
+		//佣金分拆
+		if(null != paramDTO.getCommissionAmount()){
+			reqDataMap.put("commission", MoneyUtils.toDollar(paramDTO.getCommissionAmount()));
+			//新增明细表2
+			LmVaccountTransferDetail transferDetail2 = transferDetail;
+			transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
+			lmVaccountTransferDetailMapper.insert(transferDetail2);
+		}
+		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
+		//判断理财端过来的自动充值走富友，现金贷走拉卡拉，不过目前懒猫没有拉卡拉的支付通道，默认富友？
+	    if(transferInfo.getSystemNo().equals(SystemNo.website.getValue())){
+	    	reqDataMap.put("expectPayCompany","FUIOU");
+	    }
+	    else {
+	    	reqDataMap.put("expectPayCompany","FUIOU");
+	    }
+        if(!StringUtils.isEmpty(paramDTO.getBankCode()))
+        reqDataMap.put("bankcode",paramDTO.getBankCode());
+        
+		AppConfig config = AppConfig.getConfig();
+		List<BasicNameValuePair> postParam = null;
+		JSONObject result = null;
+		try {
+			postParam = AppUtil.createServicePostParam(ApiType.DIRECT_RECHARGE.getCode(), reqDataMap);
 			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
 		} catch (Exception e) {
 			logger.error("调用懒猫接口异常", e);

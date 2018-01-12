@@ -7,7 +7,9 @@
  */
 package com.crfchina.cdg.service;
 
+import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 
 /**
@@ -24,4 +26,10 @@ import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 public interface LmTransferDubboService {
 
 	LmFreezePreTransactionResultDTO freezePreTransaction(LmFreezePreTransactionParamDTO paramDTO);
+	
+	/**
+	 * 自动充值
+	 */
+	LmAutoRechargeResultDTO autoRecharge(LmAutoRechargeParamDTO paramDTO);
+	
 }

@@ -56,4 +56,37 @@ public class EnumsDBMap {
 			put("REFUSED ", 4);
 		}
 	};
+	
+	/**
+	 * 标的类型枚举key--db映射
+	 */
+	public static Map<String, Integer> PROJECT_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("STANDARDPOWDER", 1);
+			put("ENTRUST_PAY", 2);
+		}
+	};
+	
+	/**
+	 * 还款方式枚举key--db映射
+	 */
+	public static Map<String, Integer> REPAYMENT_WAY = new HashMap<String, Integer>() {
+		{
+			put("ONE_TIME_SERVICING", 1);
+			put("FIRSEINTREST_LASTPRICIPAL", 2);
+			put("FIXED_PAYMENT_MORTGAGE",3);
+			put("FIXED_BASIS_MORTGAGE",4);
+		}
+	};
+	/**
+	 * 标的状态枚举key--db映射ProjectStatus
+	 */
+	public static Map<String, Integer> PROJECT_STATUS = new HashMap<String, Integer>() {
+		{
+			put("STANDARDPOWDER", 1);
+			put("REPAYING", 2);
+			put("FINISH",3);
+			put("MISCARRY",4);
+		}
+	};
 }

@@ -31,6 +31,16 @@ public class LmBaseResultDTO extends BaseResultDTO{
 	
 	protected String fcpTrxNo;//资金通道对懒猫交易流水号
 
+	protected String platformUserNo;//平台用户编号
+	
+	public String getPlatformUserNo() {
+		return platformUserNo;
+	}
+
+	public void setPlatformUserNo(String platformUserNo) {
+		this.platformUserNo = platformUserNo;
+	}
+
 	public String getRequestRefNo() {
 		return requestRefNo;
 	}

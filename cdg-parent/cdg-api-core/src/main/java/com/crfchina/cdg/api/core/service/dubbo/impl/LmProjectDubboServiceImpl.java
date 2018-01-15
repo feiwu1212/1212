@@ -6,21 +6,6 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmProjectFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmProjectListMapper;
@@ -44,6 +29,19 @@ import com.crfchina.cdg.dto.param.LmUpdateProjectParamDTO;
 import com.crfchina.cdg.dto.result.LmCreateProjectResultDTO;
 import com.crfchina.cdg.dto.result.LmUpdateProjectResultDTO;
 import com.crfchina.cdg.service.LmProjectDubboService;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 
@@ -57,7 +55,7 @@ import com.crfchina.cdg.service.LmProjectDubboService;
  * @updateDate：2018年1月12日 下午2:40:21
  * @remarks：
  */
-@Service(version="1.0.0")
+@Service("lmProjectDubboService")
 public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 
 	public static final Logger logger = LoggerFactory

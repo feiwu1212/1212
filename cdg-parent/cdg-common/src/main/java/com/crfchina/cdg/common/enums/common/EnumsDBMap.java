@@ -107,6 +107,7 @@ public class EnumsDBMap {
 			put("ACTIVATE_STOCKED_USER", 1);
 			put("RESET_PASSWORD", 2);
 			put("CHECK_PASSWORD", 3);
+			put("UNFREEZE_TRADE_PASSWORD", 4);
 		}
 	};
 
@@ -116,6 +117,15 @@ public class EnumsDBMap {
 	public static Map<String, Integer> CHECK_TYPE_MAP = new HashMap<String, Integer>() {
 		{
 			put("LIMIT", 1);
+		}
+	};
+
+	/**
+	 * 验证身份唯一性，枚举key--db映射
+	 */
+	public static Map<String, Integer> USER_LIMIT_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("ID_CARD_NO_UNIQUE", 1);
 		}
 	};
 }

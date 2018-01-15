@@ -28,7 +28,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  */
 //@ComponentScan(basePackages = {"com.crfchina"})
 @SpringBootApplication
-@MapperScan("com.crfchina")//Mybatis扫包
+@MapperScan("com.crfchina.cdg.basedb.dao")//Mybatis扫包
 public class CdgAPICoreApplication extends SpringBootServletInitializer{
 	
 	public static void main(String[] args) {

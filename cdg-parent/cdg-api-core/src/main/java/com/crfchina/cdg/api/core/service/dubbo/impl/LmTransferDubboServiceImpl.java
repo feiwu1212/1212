@@ -16,6 +16,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -24,8 +25,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
+import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
+import com.crfchina.cdg.basedb.entity.LmProjectList;
+import com.crfchina.cdg.basedb.entity.LmProjectListExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLogExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.CurrencyType;
@@ -74,12 +82,25 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 	@Autowired
 	LmVaccountTransferBatchMapper lmVaccountTransferBatchMapper;
+	
+	@Autowired
+	LmVaccountTransferLogMapper lmVaccountTransferLogMapper;
 
 
-	@Override
+	/**
+	 * 冻结预处理
+	 */
 	public LmFreezePreTransactionResultDTO freezePreTransaction(LmFreezePreTransactionParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
 		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.PRE_FREEZE_TRANSACTION);
 		Date now = new Date();
+		//返回结果预封装
+		LmFreezePreTransactionResultDTO rsp = new LmFreezePreTransactionResultDTO();
+				rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+				rsp.setFcpTrxNo(fcpTrxNo);
+				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+				
+				
 		// 新增info
 		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
 		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -126,8 +147,9 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
 		} catch (Exception e) {
 			logger.error("调用懒猫接口异常", e);
-			//TODO 返回失败结果 更新失败状态
-
+			//返回失败结果 更新失败状态
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
 		}
 
 		String code = result.getString("code");
@@ -145,6 +167,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
 			//TODO 返回成功结果
+			rsp.setResult(ResultCode.SUCCESS);
 		} else {
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
@@ -159,8 +182,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
 			//TODO 返回失败结果
+			rsp.setResult(ResultCode.FAIL);
+			rsp.setFailReason(failReason);
+			rsp.setFailCode(failCode);		
 		}
-		return null;
+		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+		return rsp;
 	}
 
 	/**
@@ -176,49 +203,87 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
-		// 新增info
-		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
-		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
-		transferInfo.setRequestTime(new Date());
-		transferInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
-		transferInfo.setFcpTrxNo(fcpTrxNo);
-		transferInfo.setTransferAmount(paramDTO.getAmount().toString());
-		transferInfo.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
-		transferInfo.setOutExternalAccount(paramDTO.getPlatformUserNo());
-		transferInfo.setTransferType(Constants.DIRECT_RECHARGE);
-		transferInfo.setLmBizType(ApiType.DIRECT_RECHARGE.getCode());
-		transferInfo.setCrfBizType(Constants.DIRECT_RECHARGE);
-		transferInfo.setCreateTime(now);
-		transferInfo.setUpdateTime(now);
-		transferInfo.setNotifyUrl(paramDTO.getNotifyUrl());
-		transferInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+		// 新增LOG
+		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
+		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
+		txnLog.setRequestTime(new Date());
+		txnLog.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		txnLog.setFcpTrxNo(fcpTrxNo);
+		txnLog.setTransferAmount(paramDTO.getAmount().toString());
+		txnLog.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
+		txnLog.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		txnLog.setTransferType(Constants.DIRECT_RECHARGE);
+		txnLog.setLmBizType(ApiType.DIRECT_RECHARGE.getCode());
+		txnLog.setCrfBizType(Constants.DIRECT_RECHARGE);
+		txnLog.setCreateTime(now);
+		txnLog.setUpdateTime(now);
+		txnLog.setNotifyUrl(paramDTO.getNotifyUrl());
+		txnLog.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+		lmVaccountTransferLogMapper.insert(txnLog);
 
-		int txnId = lmVaccountTransferInfoMapper.insert(transferInfo);
+		
+		//重复提交判断，通过requestRefNo判断,若存在重复记录，则将老交易取出，若不存在则新增INFO和DETAIL
+		 LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
+		 LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
+		 LmVaccountTransferDetail transferDetail2 = new LmVaccountTransferDetail();
 
-		// 新增detail
-		LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
-		transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
-		transferDetail.setFcpTrxNo(fcpTrxNo);
-		transferDetail.setTransferInfoId(String.valueOf(txnId));
-		transferDetail.setTransferAmount(paramDTO.getAmount().toString());
-		transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
-		transferDetail.setLmBizType(ApiType.DIRECT_RECHARGE.getCode());
-		transferDetail.setCrfBizType(Constants.DIRECT_RECHARGE);
-		transferDetail.setCreateTime(now);
-		transferDetail.setUpdateTime(now);
-		lmVaccountTransferDetailMapper.insert(transferDetail);
-
+		 LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();
+		 infoExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+		 List<LmVaccountTransferInfo> infoList = lmVaccountTransferInfoMapper.selectByExample(infoExample);
+		 if(infoList.size()==1){
+			  transferInfo = infoList.get(0);
+			  //原始交易成功判断判断,只要不是失败状态，则激立即返回结果为目前状态
+			  if(!transferInfo.getResult().equals(ResultCode.FAIL.getCode())){
+					rsp.setAmount(paramDTO.getAmount());
+					if(!StringUtils.isEmpty(paramDTO.getCommissionAmount()))
+					rsp.setCommissionAmount(paramDTO.getCommissionAmount());
+					rsp.setResult(ResultCode.valueOf(transferInfo.getResult()));
+					rsp.setTransactionTime(transferInfo.getFinishDate());
+					logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+					return rsp;
+			  }
+			  //获取detail信息
+			  LmVaccountTransferDetailExample detailExample = new LmVaccountTransferDetailExample();
+			  detailExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+			  List<LmVaccountTransferDetail> detailList = lmVaccountTransferDetailMapper.selectByExample(detailExample);
+			  transferDetail = detailList.get(0);
+			  if(null != paramDTO.getCommissionAmount()){
+				transferDetail2 = detailList.get(1);
+			  }
+		 }
+		 else if(infoList.size()==0){
+			BeanUtils.copyProperties(transferInfo, txnLog);
+			//新增info
+			lmVaccountTransferInfoMapper.insert(transferInfo);
+			// 新增detail
+			transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
+			transferDetail.setFcpTrxNo(fcpTrxNo);
+			transferDetail.setTransferInfoId(String.valueOf(transferInfo.getId()));
+			transferDetail.setTransferAmount(paramDTO.getAmount().toString());
+			transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
+			transferDetail.setLmBizType(ApiType.DIRECT_RECHARGE.getCode());
+			transferDetail.setCrfBizType(Constants.DIRECT_RECHARGE);
+			transferDetail.setCreateTime(now);
+			transferDetail.setUpdateTime(now);
+			//佣金分拆
+			if(null != paramDTO.getCommissionAmount()){
+				transferDetail2 = transferDetail;
+				transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
+				lmVaccountTransferDetailMapper.insert(transferDetail2);
+			}
+			lmVaccountTransferDetailMapper.insert(transferDetail);
+		 }
+		 else{
+			logger.error("流水号："+paramDTO.getRequestRefNo()+"在txninfo表中数据异常");
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		 }
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("requestNo", fcpTrxNo);
 		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());
-		//新增明细表2
-		LmVaccountTransferDetail transferDetail2 = null;
 		//佣金分拆
 		if(null != paramDTO.getCommissionAmount()){
 			reqDataMap.put("commission", MoneyUtils.toDollar(paramDTO.getCommissionAmount()));
-			transferDetail2 = transferDetail;
-			transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
-			lmVaccountTransferDetailMapper.insert(transferDetail2);
 		}
 		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
 		//判断理财端过来的自动充值走富友，现金贷走拉卡拉，不过目前懒猫没有拉卡拉的支付通道，默认富友？
@@ -311,49 +376,89 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
-		// 新增info
-		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
-		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
-		transferInfo.setRequestTime(new Date());
-		transferInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
-		transferInfo.setFcpTrxNo(fcpTrxNo);
-		transferInfo.setTransferAmount(paramDTO.getAmount().toString());
-		transferInfo.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
-		transferInfo.setOutExternalAccount(paramDTO.getPlatformUserNo());
-		transferInfo.setTransferType(Constants.AUTO_WITHDRAW);
-		transferInfo.setLmBizType(ApiType.AUTO_WITHDRAW.getCode());
-		transferInfo.setCrfBizType(Constants.AUTO_WITHDRAW);
-		transferInfo.setCreateTime(now);
-		transferInfo.setUpdateTime(now);
-		transferInfo.setNotifyUrl(paramDTO.getNotifyUrl());
-		transferInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
 
-		int txnId = lmVaccountTransferInfoMapper.insert(transferInfo);
+		// 新增LOG
+		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
+		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
+		txnLog.setRequestTime(new Date());
+		txnLog.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		txnLog.setFcpTrxNo(fcpTrxNo);
+		txnLog.setTransferAmount(paramDTO.getAmount().toString());
+		txnLog.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
+		txnLog.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		txnLog.setTransferType(Constants.AUTO_WITHDRAW);
+		txnLog.setLmBizType(ApiType.AUTO_WITHDRAW.getCode());
+		txnLog.setCrfBizType(Constants.AUTO_WITHDRAW);
+		txnLog.setCreateTime(now);
+		txnLog.setUpdateTime(now);
+		txnLog.setNotifyUrl(paramDTO.getNotifyUrl());
+		txnLog.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+		lmVaccountTransferLogMapper.insert(txnLog);
 
-		// 新增detail
-		LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
-		transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
-		transferDetail.setFcpTrxNo(fcpTrxNo);
-		transferDetail.setTransferInfoId(String.valueOf(txnId));
-		transferDetail.setTransferAmount(paramDTO.getAmount().toString());
-		transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
-		transferDetail.setLmBizType(ApiType.AUTO_WITHDRAW.getCode());
-		transferDetail.setCrfBizType(Constants.AUTO_WITHDRAW);
-		transferDetail.setCreateTime(now);
-		transferDetail.setUpdateTime(now);
-		lmVaccountTransferDetailMapper.insert(transferDetail);
+		
+		//重复提交判断，通过requestRefNo判断,若存在重复记录，则将老交易取出，若不存在则新增INFO和DETAIL
+		 LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
+		 LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
+		 LmVaccountTransferDetail transferDetail2 = new LmVaccountTransferDetail();
 
+		 LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();
+		 infoExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+		 List<LmVaccountTransferInfo> infoList = lmVaccountTransferInfoMapper.selectByExample(infoExample);
+		 if(infoList.size()==1){
+			  transferInfo = infoList.get(0);
+			  //原始交易成功判断判断,只要不是失败状态，则激立即返回结果为目前状态
+			  if(!transferInfo.getResult().equals(ResultCode.FAIL.getCode())){
+					rsp.setAmount(paramDTO.getAmount());
+					if(!StringUtils.isEmpty(paramDTO.getCommissionAmount()))
+					rsp.setCommissionAmount(paramDTO.getCommissionAmount());
+					rsp.setResult(ResultCode.valueOf(transferInfo.getResult()));
+					rsp.setTransactionTime(transferInfo.getFinishDate());
+					logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+					return rsp;
+			  }
+			  //获取detail信息
+			  LmVaccountTransferDetailExample detailExample = new LmVaccountTransferDetailExample();
+			  detailExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+			  List<LmVaccountTransferDetail> detailList = lmVaccountTransferDetailMapper.selectByExample(detailExample);
+			  transferDetail = detailList.get(0);
+			  if(null != paramDTO.getCommissionAmount()){
+				transferDetail2 = detailList.get(1);
+			  }
+		 }
+		 else if(infoList.size()==0){
+			BeanUtils.copyProperties(transferInfo, txnLog);
+			//新增info
+			lmVaccountTransferInfoMapper.insert(transferInfo);
+			// 新增detail
+			transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
+			transferDetail.setFcpTrxNo(fcpTrxNo);
+			transferDetail.setTransferInfoId(String.valueOf(transferInfo.getId()));
+			transferDetail.setTransferAmount(paramDTO.getAmount().toString());
+			transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
+			transferDetail.setLmBizType(ApiType.AUTO_WITHDRAW.getCode());
+			transferDetail.setCrfBizType(Constants.AUTO_WITHDRAW);
+			transferDetail.setCreateTime(now);
+			transferDetail.setUpdateTime(now);
+			//佣金分拆
+			if(null != paramDTO.getCommissionAmount()){
+				transferDetail2 = transferDetail;
+				transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
+				lmVaccountTransferDetailMapper.insert(transferDetail2);
+			}
+			lmVaccountTransferDetailMapper.insert(transferDetail);
+		 }
+		 else{
+			logger.error("流水号："+paramDTO.getRequestRefNo()+"在txninfo表中数据异常");
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		 }
+		 
+		 //封装懒猫请求报文
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("requestNo", fcpTrxNo);
 		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());
-		//新增明细表2
-		LmVaccountTransferDetail transferDetail2 = null;
-		//佣金分拆
 		if(null != paramDTO.getCommissionAmount()){
 			reqDataMap.put("commission", MoneyUtils.toDollar(paramDTO.getCommissionAmount()));
-			transferDetail2 = transferDetail;
-			transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
-			lmVaccountTransferDetailMapper.insert(transferDetail2);
 		}
 			reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
 	    	reqDataMap.put("withdrawType",WithdrawalType.URGENT.getCode());
@@ -441,46 +546,81 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 				rsp.setFcpTrxNo(fcpTrxNo);
 				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
-		// 新增info
-		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
-		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
-		transferInfo.setRequestTime(new Date());
-		transferInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
-		transferInfo.setFcpTrxNo(fcpTrxNo);
-		transferInfo.setTransferAmount(String.valueOf(paramDTO.getAmount()));
-		transferInfo.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
-		transferInfo.setOutExternalAccount(paramDTO.getPlatformUserNo());
-		transferInfo.setTransferType(Constants.CANCEL_PRE_TRANSACTION);
-		transferInfo.setLmBizType(ApiType.CANCEL_PRE_TRANSACTION.getCode());
-		transferInfo.setCrfBizType(Constants.CANCEL_PRE_TRANSACTION);
-		transferInfo.setCreateTime(now);
-		transferInfo.setUpdateTime(now);
-		transferInfo.setOriginFcpTrxno(paramDTO.getOriginFcpTrxNo());
-		transferInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+		// 新增LOG
+		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
+		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
+		txnLog.setRequestTime(new Date());
+		txnLog.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		txnLog.setFcpTrxNo(fcpTrxNo);
+		txnLog.setTransferAmount(String.valueOf(paramDTO.getAmount()));
+		txnLog.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
+		txnLog.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		txnLog.setTransferType(Constants.CANCEL_PRE_TRANSACTION);
+		txnLog.setLmBizType(ApiType.CANCEL_PRE_TRANSACTION.getCode());
+		txnLog.setCrfBizType(Constants.CANCEL_PRE_TRANSACTION);
+		txnLog.setCreateTime(now);
+		txnLog.setUpdateTime(now);
+		txnLog.setOriginFcpTrxno(paramDTO.getOriginFcpTrxNo());
+		txnLog.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
+		lmVaccountTransferLogMapper.insert(txnLog);
 
-		lmVaccountTransferInfoMapper.insert(transferInfo);
+		//重复提交判断，通过requestRefNo判断,若存在重复记录，则将老交易取出，若不存在则新增INFO和DETAIL
+		 LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
+		 LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
+		 LmVaccountTransferDetail transferDetail2 = new LmVaccountTransferDetail();
 
-		// 新增detail
-		LmVaccountTransferDetail transferDetail = new LmVaccountTransferDetail();
-		transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
-		transferDetail.setFcpTrxNo(fcpTrxNo);
-		transferDetail.setTransferInfoId(transferInfo.getId().toString());
-		transferDetail.setTransferAmount(paramDTO.getAmount().toString());
-		transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
-		transferDetail.setLmBizType(ApiType.CANCEL_PRE_TRANSACTION.getCode());
-		transferDetail.setCrfBizType(Constants.CANCEL_PRE_TRANSACTION);
-		transferDetail.setCreateTime(now);
-		transferDetail.setUpdateTime(now);
-		transferDetail.setPartitionDate(transferInfo.getPartitionDate());
-		lmVaccountTransferDetailMapper.insert(transferDetail);
-		//若存在佣金，则新增明细表
-		LmVaccountTransferDetail transferDetail2=null;
-		if(null != paramDTO.getCommissionAmount()){
-			 transferDetail2 = transferDetail;
-			transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
-			lmVaccountTransferDetailMapper.insert(transferDetail2);
-		}
+		 LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();
+		 infoExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+		 List<LmVaccountTransferInfo> infoList = lmVaccountTransferInfoMapper.selectByExample(infoExample);
+		 if(infoList.size()==1){
+			  transferInfo = infoList.get(0);
+			  //原始交易成功判断判断,只要不是失败状态，则激立即返回结果为目前状态
+			  if(!transferInfo.getResult().equals(ResultCode.FAIL.getCode())){
+					rsp.setResult(ResultCode.valueOf(transferInfo.getResult()));
+					logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+					return rsp;
+			  }
+			  //获取detail信息
+			  LmVaccountTransferDetailExample detailExample = new LmVaccountTransferDetailExample();
+			  detailExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+			  List<LmVaccountTransferDetail> detailList = lmVaccountTransferDetailMapper.selectByExample(detailExample);
+			  transferDetail = detailList.get(0);
+			  if(null != paramDTO.getCommissionAmount()){
+				transferDetail2 = detailList.get(1);
+			  }
+		 }
+		 else if(infoList.size()==0){
+			BeanUtils.copyProperties(transferInfo, txnLog);
+			//新增info
+			lmVaccountTransferInfoMapper.insert(transferInfo);
+			// 新增detail
+			transferDetail.setRequestRefNo(paramDTO.getRequestRefNo());
+			transferDetail.setFcpTrxNo(fcpTrxNo);
+			transferDetail.setTransferInfoId(transferInfo.getId().toString());
+			transferDetail.setTransferAmount(paramDTO.getAmount().toString());
+			transferDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
+			transferDetail.setLmBizType(ApiType.CANCEL_PRE_TRANSACTION.getCode());
+			transferDetail.setCrfBizType(Constants.CANCEL_PRE_TRANSACTION);
+			transferDetail.setCreateTime(now);
+			transferDetail.setUpdateTime(now);
+			transferDetail.setPartitionDate(transferInfo.getPartitionDate());
+			lmVaccountTransferDetailMapper.insert(transferDetail);
+			//佣金分拆
+			if(null != paramDTO.getCommissionAmount()){
+				transferDetail2 = transferDetail;
+				transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
+				lmVaccountTransferDetailMapper.insert(transferDetail2);
+			}
+			lmVaccountTransferDetailMapper.insert(transferDetail);
+		 }
+		 else{
+			logger.error("流水号："+paramDTO.getRequestRefNo()+"在txninfo表中数据异常");
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		 }
 		
+		
+		//封装懒猫接口
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("requestNo", fcpTrxNo);
 		reqDataMap.put("preTransactionNo", paramDTO.getOriginFcpTrxNo());
@@ -506,7 +646,6 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 		String code = result.getString("code");
 		String status = result.getString("status");
-		
 		now = new Date();
 		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 			transferInfo.setResult(ResultCode.SUCCESS.getCode());
@@ -524,6 +663,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			}
 			//返回成功结果
 			rsp.setResult(ResultCode.SUCCESS);
+			
 		} else {
 			String failCode = result.getString("errorCode");
 			String failReason = result.getString("errorMessage");
@@ -536,7 +676,11 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			transferDetail.setFailCode(failCode);
 			transferDetail.setFailReason(failReason);
 			transferDetail.setUpdateTime(now);
-
+			//若存在佣金，则新增明细表
+			if(null != paramDTO.getCommissionAmount()){
+				transferDetail2.setResult(ResultCode.FAIL.getCode());
+				lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail2);
+			}
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
 			// 返回失败结果

@@ -18,7 +18,7 @@ import com.crfchina.cdg.dto.base.LmBaseResultDTO;
  * @date：2018年1月6日 上午10:25:41
  * @updateBy：William
  * @updateDate：2018年1月6日 上午10:25:41
- * @remarks：预处理解冻结果
+ * @remarks：
  */
 public class LmAutoPreTransactionResultDTO extends LmBaseResultDTO {
 
@@ -28,9 +28,6 @@ public class LmAutoPreTransactionResultDTO extends LmBaseResultDTO {
 	 */    
 	
 	private static final long serialVersionUID = 1L;
-	
-	private String bizType; //预处理业务类型
-	
 	
 
 }

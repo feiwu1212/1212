@@ -7,10 +7,12 @@
  */
 package com.crfchina.cdg.service;
 
+import com.crfchina.cdg.dto.param.LmAutoPreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmUnFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.result.LmAutoPreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
@@ -66,5 +68,14 @@ public interface LmTransferDubboService {
 	 */
 	LmUnFreezePreTransactionResultDTO cancelPreTransaction(LmUnFreezePreTransactionParamDTO paramDTO);
 	
-	LmAuto
+	/**
+	 * 
+	 * @Title: autoPreTransaction  
+	 * @Description: 授权预处理
+	 * @param paramDTO
+	 * @return
+	 * LmAutoPreTransactionResultDTO
+	 * @throws
+	 */
+    LmAutoPreTransactionResultDTO autoPreTransaction(LmAutoPreTransactionParamDTO paramDTO);
 }

@@ -33,6 +33,28 @@ public class LmAutoPreTransactionParamDTO extends LmAPIBaseParamDTO {
 	protected PreBusinessType bizType;//预处理业务类型 通常用于还款资金冻结
 	protected Long amount;//冻结金额（分）
 	protected String projectNo;//标的号, 若传入关联充值请求流水号，则标的号固定为充值请求传入的标的号
+	protected String remark ;
+	protected String share;
+	protected String preMarketingAmount;
+	
+	public String getPreMarketingAmount() {
+		return preMarketingAmount;
+	}
+	public void setPreMarketingAmount(String preMarketingAmount) {
+		this.preMarketingAmount = preMarketingAmount;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public String getShare() {
+		return share;
+	}
+	public void setShare(String share) {
+		this.share = share;
+	}
 	public String getOriginFcpTrxNo() {
 		return originFcpTrxNo;
 	}

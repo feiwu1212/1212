@@ -53,6 +53,13 @@ public class Constants {
 	 */
 	public static final String CANCEL_PRE_TRANSACTION = "YCLQX";
 
+
+	/**
+	 * 操作类型：授权预处理
+	 */
+	public static final String AUTO_PRE_TRANSACTION = "SQYCL";
+
+	
 	/**
 	 * 操作类型：创建标的
 	 */

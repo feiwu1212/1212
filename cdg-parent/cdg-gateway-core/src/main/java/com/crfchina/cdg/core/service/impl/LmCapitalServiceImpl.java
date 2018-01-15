@@ -6,32 +6,36 @@
  */
 package com.crfchina.cdg.core.service.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.druid.util.StringUtils;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
+import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
+import com.crfchina.cdg.common.enums.business.CurrencyType;
 import com.crfchina.cdg.common.enums.business.TransferResultType;
 import com.crfchina.cdg.common.enums.business.WithdrawForm;
 import com.crfchina.cdg.common.enums.business.WithdrawalType;
+import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
 import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
+import com.crfchina.cdg.core.dto.param.LmVerifyDeductParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCapitalService;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @ProjectName：cdg-parent
@@ -52,6 +56,8 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 	@Autowired
 	LmVaccountTransferDetailMapper txnDetailMapper;
 
+	@Autowired
+	LmVaccountTransferLogMapper lmVaccountTransferLogMapper;
 	/**
 	 * 充值
 	 * @param lmrpDto
@@ -353,5 +359,80 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		txnDetailMapper.insert(txnDetail);
       		return reqDataMap;
 	}
-	
+
+	/**
+	 * 验密扣费
+	 * @param paramDTO
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> verifyDeduct(LmVerifyDeductParamDTO paramDTO) {
+		String trxNo = TrxNoUtils.getTrxNo(Constants.VERIFY_DEDUCT);//获取当前交易流水
+		Date now = new Date();
+		String crfBizType=Constants.VERIFY_DEDUCT;
+		String lmBizType=ApiType.VERIFY_DEDUCT.getCode();
+		int partitionDt=Integer.valueOf(DateUtils.dateToString(now, "yyyyMM"));
+
+		//txnInfo封装
+		LmVaccountTransferInfo txnInfo = new LmVaccountTransferInfo();
+		txnInfo.setAccountDate(now);
+		txnInfo.setBatchNo("");
+		txnInfo.setCallbackUrl(paramDTO.getCallbackUrl());
+		txnInfo.setCreateTime(now);
+		txnInfo.setCrfBizType(crfBizType);
+		txnInfo.setCurrency(Integer.valueOf(CurrencyType.RMB.getCode()));
+		txnInfo.setExpiredTime(DateUtils.parseStringToDate(paramDTO.getExpired(), "yyyyMMddHHmmss"));
+		txnInfo.setFcpTrxNo(trxNo);
+		txnInfo.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		txnInfo.setInExternalAccount(paramDTO.getTargetPlatformUserNo());
+		txnInfo.setLmBizType(lmBizType);
+		txnInfo.setNotifyUrl(paramDTO.getNotifyUrl());
+		txnInfo.setPartitionDate(partitionDt);
+		txnInfo.setRemark(paramDTO.getRemark());
+		txnInfo.setRequestRefNo(paramDTO.getRequestRefNo());
+		txnInfo.setRequestTime(now);
+		txnInfo.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
+		txnInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		txnInfo.setTransferAmount(String.valueOf(paramDTO.getAmount()));
+		txnInfo.setTransferType(crfBizType);
+		txnInfo.setUpdateTime(now);//异步通知时候更新
+		txnInfo.setCreateTime(now);
+		//txnDetail封装
+		LmVaccountTransferDetail txnDetail = new LmVaccountTransferDetail();
+		txnDetail.setAccountDate(now);
+		txnDetail.setCreateTime(now);
+		txnDetail.setCrfBizType(crfBizType);
+		txnDetail.setFcpTrxNo(trxNo);
+		txnDetail.setOutExternalAccount(paramDTO.getPlatformUserNo());
+		txnDetail.setInExternalAccount(paramDTO.getTargetPlatformUserNo());
+		txnDetail.setLmBizType(lmBizType);
+		txnDetail.setPartitionDate(partitionDt);
+		txnDetail.setRemark(paramDTO.getRemark());
+		txnDetail.setRequestRefNo(paramDTO.getRequestRefNo());
+		txnDetail.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
+		txnDetail.setTransferAmount(String.valueOf(paramDTO.getAmount()));
+		txnDetail.setUpdateTime(now);//异步通知时候更新
+		txnDetail.setCreateTime(now);
+		//log生成
+		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
+		BeanUtils.copyProperties(txnInfo, txnLog);
+		//拼接reqData
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());
+		reqDataMap.put("requestNo", trxNo);
+		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
+		reqDataMap.put("customDefine", paramDTO.getCustomDefine());
+		reqDataMap.put("targetPlatformUserNo", paramDTO.getTargetPlatformUserNo());
+		//TODO 配置本地回调地址
+		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
+		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
+		reqDataMap.put("expired", paramDTO.getExpired());
+
+		int txnId = txnInfoMapper.insert(txnInfo);
+		//赋值detail中主表主键字段
+		txnDetail.setTransferInfoId(String.valueOf(txnId));
+		txnDetailMapper.insert(txnDetail);
+		lmVaccountTransferLogMapper.insert(txnLog);
+		return reqDataMap;
+	}
 }

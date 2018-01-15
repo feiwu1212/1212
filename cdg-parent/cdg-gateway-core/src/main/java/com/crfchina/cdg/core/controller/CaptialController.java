@@ -13,6 +13,7 @@ import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
 import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
+import com.crfchina.cdg.core.dto.param.LmVerifyDeductParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCapitalService;
 import java.security.GeneralSecurityException;
@@ -117,5 +118,25 @@ public class CaptialController {
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
-	
+
+	/**
+	 * 验密扣费
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/verifyDeduct")
+	public ModelAndView verifyDeduct(HttpServletRequest request) {
+		LmVerifyDeductParamDTO paramDto = AppUtil.getParamDto(request, LmVerifyDeductParamDTO.class);
+		Map<String, Object> verifyDeductReqDataMap = lmCapitalService.verifyDeduct(paramDto);
+		// 获取properties参数
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.VERIFY_DEDUCT.getCode(), verifyDeductReqDataMap, paramDto.getUserDevice().getCode() );
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
 }

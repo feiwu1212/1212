@@ -861,6 +861,11 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		return null;
 	}
 
+	/**
+	 * 解冻交易密码
+	 * @param paramDTO
+	 * @return
+	 */
 	@Override
 	public LmUnFreezePwdResultDTO unFreezePwd(LmUnFreezePwdParamDTO paramDTO) {
 		LmUnFreezePwdResultDTO returnResult = new LmUnFreezePwdResultDTO();

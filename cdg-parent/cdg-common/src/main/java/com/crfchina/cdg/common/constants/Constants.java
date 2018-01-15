@@ -96,6 +96,11 @@ public class Constants {
 	public static final String UNFREEZE_PWD = "JDMM";
 
 	/**
+	 * 验密扣费
+	 */
+	public static final String VERIFY_DEDUCT = "YMKF";
+
+	/**
 	 * 网关地址后缀
 	 */
 	public static final String GATEWAY_SUFFIX = "/gateway";

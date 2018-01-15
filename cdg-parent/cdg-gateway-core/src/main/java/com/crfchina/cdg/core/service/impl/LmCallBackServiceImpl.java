@@ -687,4 +687,18 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			return new ModelAndView("callback").addObject("paramDto", callBackParam);
 		}
 	}
+
+	/**
+	 * 验密扣费回调
+	 * @param respData
+	 * @return
+	 */
+	private ModelAndView dealVerityDeduct(JSONObject respData) {
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		//TODO 更新info detail log
+		return null;
+	}
 }

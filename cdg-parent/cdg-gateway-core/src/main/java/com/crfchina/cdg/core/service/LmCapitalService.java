@@ -3,14 +3,11 @@
  */
 package com.crfchina.cdg.core.service;
 
-import java.util.Map;
-
-import org.springframework.web.servlet.ModelAndView;
-
-import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
 import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
+import com.crfchina.cdg.core.dto.param.LmVerifyDeductParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
+import java.util.Map;
 
 /**
  * @author ghf
@@ -49,5 +46,11 @@ public interface LmCapitalService {
      * @throws
      */
 	Map<String, Object> userPreTransaction(LmUserPreTransactionParamDTO paramDto);
-    
+
+	/**
+	 * 验密扣费
+	 * @param paramDTO
+	 * @return
+	 */
+	Map<String, Object> verifyDeduct(LmVerifyDeductParamDTO paramDTO);
 }

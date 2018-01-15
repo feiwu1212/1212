@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.crfchina.cdg.basedb.dao.LmUserOperationFlowinfoMapper" >
   <resultMap id="BaseResultMap" type="com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo" >
-    <id column="id" property="id" jdbcType="BIT" />
+    <id column="id" property="id" jdbcType="TINYINT" />
     <result column="fcp_trx_no" property="fcpTrxNo" jdbcType="VARCHAR" />
     <result column="request_ref_no" property="requestRefNo" jdbcType="VARCHAR" />
     <result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
@@ -12,7 +12,7 @@
     <result column="is_skip" property="isSkip" jdbcType="BIT" />
     <result column="biz_type_desc" property="bizTypeDesc" jdbcType="VARCHAR" />
     <result column="auth_list" property="authList" jdbcType="VARCHAR" />
-    <result column="check_type" property="checkType" jdbcType="BIT" />
+    <result column="check_type" property="checkType" jdbcType="TINYINT" />
     <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
     <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR" />
     <result column="result" property="result" jdbcType="VARCHAR" />
@@ -91,8 +91,8 @@
       partition_date)
     values (#{id,jdbcType=BIT}, #{fcpTrxNo,jdbcType=VARCHAR}, #{requestRefNo,jdbcType=VARCHAR}, 
       #{requestTime,jdbcType=TIMESTAMP}, #{systemNo,jdbcType=VARCHAR}, #{operType,jdbcType=TINYINT}, 
-      #{platformUserId,jdbcType=VARCHAR}, #{isSkip,jdbcType=BIT}, #{bizTypeDesc,jdbcType=VARCHAR}, 
-      #{authList,jdbcType=VARCHAR}, #{checkType,jdbcType=BIT}, #{callbackUrl,jdbcType=VARCHAR}, 
+      #{platformUserId,jdbcType=VARCHAR}, #{isSkip,jdbcType=TINYINT}, #{bizTypeDesc,jdbcType=VARCHAR},
+      #{authList,jdbcType=VARCHAR}, #{checkType,jdbcType=TINYINT}, #{callbackUrl,jdbcType=VARCHAR},
       #{notifyUrl,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, #{failCode,jdbcType=VARCHAR}, 
       #{failReason,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{partitionDate,jdbcType=INTEGER})
@@ -181,7 +181,7 @@
         #{platformUserId,jdbcType=VARCHAR},
       </if>
       <if test="isSkip != null" >
-        #{isSkip,jdbcType=BIT},
+        #{isSkip,jdbcType=TINYINT},
       </if>
       <if test="bizTypeDesc != null" >
         #{bizTypeDesc,jdbcType=VARCHAR},
@@ -190,7 +190,7 @@
         #{authList,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        #{checkType,jdbcType=BIT},
+        #{checkType,jdbcType=TINYINT},
       </if>
       <if test="callbackUrl != null" >
         #{callbackUrl,jdbcType=VARCHAR},
@@ -246,7 +246,7 @@
         platform_user_id = #{platformUserId,jdbcType=VARCHAR},
       </if>
       <if test="isSkip != null" >
-        is_skip = #{isSkip,jdbcType=BIT},
+        is_skip = #{isSkip,jdbcType=TINYINT},
       </if>
       <if test="bizTypeDesc != null" >
         biz_type_desc = #{bizTypeDesc,jdbcType=VARCHAR},
@@ -255,7 +255,7 @@
         auth_list = #{authList,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        check_type = #{checkType,jdbcType=BIT},
+        check_type = #{checkType,jdbcType=TINYINT},
       </if>
       <if test="callbackUrl != null" >
         callback_url = #{callbackUrl,jdbcType=VARCHAR},
@@ -292,10 +292,10 @@
       system_no = #{systemNo,jdbcType=VARCHAR},
       oper_type = #{operType,jdbcType=TINYINT},
       platform_user_id = #{platformUserId,jdbcType=VARCHAR},
-      is_skip = #{isSkip,jdbcType=BIT},
+      is_skip = #{isSkip,jdbcType=TINYINT},
       biz_type_desc = #{bizTypeDesc,jdbcType=VARCHAR},
       auth_list = #{authList,jdbcType=VARCHAR},
-      check_type = #{checkType,jdbcType=BIT},
+      check_type = #{checkType,jdbcType=TINYINT},
       callback_url = #{callbackUrl,jdbcType=VARCHAR},
       notify_url = #{notifyUrl,jdbcType=VARCHAR},
       result = #{result,jdbcType=VARCHAR},

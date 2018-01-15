@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import com.crfchina.cdg.basedb.dao.LmProjectFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmProjectListMapper;
 import com.crfchina.cdg.basedb.entity.LmProjectFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmProjectList;
+import com.crfchina.cdg.basedb.entity.LmProjectListExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.ProjectStatus;
@@ -37,7 +40,9 @@ import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.dto.param.LmCreateProjectParamDTO;
+import com.crfchina.cdg.dto.param.LmUpdateProjectParamDTO;
 import com.crfchina.cdg.dto.result.LmCreateProjectResultDTO;
+import com.crfchina.cdg.dto.result.LmUpdateProjectResultDTO;
 import com.crfchina.cdg.service.LmProjectDubboService;
 
 /**
@@ -69,6 +74,7 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 	 */
 	public LmCreateProjectResultDTO establishProject(
 			LmCreateProjectParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
 		//获取交易流水号
 		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.CREATE_PROJECT);
 		Date now = new Date();
@@ -131,7 +137,6 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 		String code = result.getString("code");
 		String status = result.getString("status");
 
-		now = new Date();
 		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 			//更新流水表和信息表
 			  flow.setResult(ResultCode.SUCCESS.getCode());
@@ -157,7 +162,99 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 			 rsp.setFailReason(failReason);
 			 rsp.setFailCode(failCode);
 		}
+		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
+	}
+
+	/**
+	 * 标的变更
+	 */
+	public LmUpdateProjectResultDTO modifyProject(
+			LmUpdateProjectParamDTO paramDTO) {
+			logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
+				//获取交易流水号
+				String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.MODIFY_PROJECT);
+				Date now = new Date();
+		        int partitionDt=Integer.valueOf(DateUtils.dateToString(now, "yyyyMM"));
+
+				//返回结果预封装
+		        LmUpdateProjectResultDTO rsp = new LmUpdateProjectResultDTO();
+			    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+				rsp.setFcpTrxNo(fcpTrxNo);
+				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+				
+				//通过标的号查抄标的信息
+				LmProjectListExample example = new LmProjectListExample();
+				example.createCriteria().andProjectNoEqualTo(paramDTO.getProjectNo());
+				 List<LmProjectList> proInfoList = projectListMapper.selectByExample(example);
+				if(proInfoList.size()==0){
+					logger.info("未找到标的号["+paramDTO.getProjectNo()+"]信息");
+					rsp.setResult(ResultCode.FAIL);
+					return rsp;
+				}
+				LmProjectList proInfo = proInfoList.get(0);
+				//新增标的流水信息
+			   LmProjectFlowinfo flow = new LmProjectFlowinfo();
+			   BeanUtils.copyProperties(flow, proInfo);//对象赋值
+			   flow.setCreateTime(now);
+			   flow.setFcpTrxNo(fcpTrxNo);
+			   flow.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+			   flow.setProjectStatus(EnumsDBMap.PROJECT_STATUS.get(paramDTO.getStatus().getCode()));		 //需要转码
+			   flow.setUpdateTime(now);
+			   flow.setResult(ResultCode.UNKNOWN.getCode()); //受理成功
+			   flow.setPartitionDate(partitionDt);
+
+			   //数据库操作
+			   projectFlowInfoMapper.insert(flow);
+			   
+			   //调用懒猫交易接口
+			    Map<String, Object> reqDataMap = new LinkedHashMap<>();
+				reqDataMap.put("requestNo", fcpTrxNo);
+				reqDataMap.put("projectNo", paramDTO.getProjectNo());
+				reqDataMap.put("status", paramDTO.getStatus());
+				
+				AppConfig config = AppConfig.getConfig();
+				List<BasicNameValuePair> postParam = null;
+				JSONObject result = null;
+				try {
+					postParam = AppUtil.createServicePostParam(ApiType.MODIFY_PROJECT.getCode(), reqDataMap);
+					result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+				} catch (Exception e) {
+					logger.error("调用懒猫接口异常", e);
+					 flow.setResult(ResultCode.UNKNOWN.getCode());
+					 projectFlowInfoMapper.updateByPrimaryKey(flow);
+					 rsp.setResult(ResultCode.FAIL);
+					 return rsp;
+				}
+				String code = result.getString("code");
+				String status = result.getString("status");
+
+				if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+					//更新流水表和信息表
+					  flow.setResult(ResultCode.SUCCESS.getCode());
+					  projectFlowInfoMapper.updateByPrimaryKey(flow);
+					  
+					   //更新标的信息表
+					   proInfo.setProjectStatus(EnumsDBMap.PROJECT_STATUS.get(result.getString("projectStatus")));
+					   projectListMapper.updateByPrimaryKey(proInfo);
+					   
+					//返回成功结果
+					  rsp.setResult(ResultCode.SUCCESS);
+					  rsp.setProjectStatus(result.getString("projectStatus"));
+				} else {
+					String failCode = result.getString("errorCode");
+					String failReason = result.getString("errorMessage");
+					//更新流水表和信息表
+					 flow.setResult(ResultCode.FAIL.getCode());
+					 flow.setFailCode(failCode);
+					 flow.setFailReason(failReason);
+					 projectFlowInfoMapper.updateByPrimaryKey(flow);
+					 rsp.setResult(ResultCode.FAIL);
+					 rsp.setFailReason(failReason);
+					 rsp.setFailCode(failCode);
+				}
+				logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+				return rsp;
 	}
 
 

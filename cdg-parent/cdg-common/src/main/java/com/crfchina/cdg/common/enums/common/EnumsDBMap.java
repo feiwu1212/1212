@@ -56,7 +56,7 @@ public class EnumsDBMap {
 			put("REFUSED ", 4);
 		}
 	};
-	
+
 	/**
 	 * 标的类型枚举key--db映射
 	 */
@@ -66,7 +66,7 @@ public class EnumsDBMap {
 			put("ENTRUST_PAY", 2);
 		}
 	};
-	
+
 	/**
 	 * 还款方式枚举key--db映射
 	 */
@@ -83,10 +83,39 @@ public class EnumsDBMap {
 	 */
 	public static Map<String, Integer> PROJECT_STATUS = new HashMap<String, Integer>() {
 		{
-			put("STANDARDPOWDER", 1);
+			put("COLLECTING", 1);
 			put("REPAYING", 2);
 			put("FINISH",3);
 			put("MISCARRY",4);
+		}
+	};
+
+	/**
+	 * 绑定类型枚举key--db映射
+	 */
+	public static Map<String, Integer> BIND_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("UPDATE_BANKCARD", 1);
+		}
+	};
+
+	/**
+	 * 操作类型枚举key--db映射
+	 */
+	public static Map<String, Integer> OPER_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("ACTIVATE_STOCKED_USER", 1);
+			put("RESET_PASSWORD", 2);
+			put("CHECK_PASSWORD", 3);
+		}
+	};
+
+	/**
+	 * 鉴权类型枚举key--db映射
+	 */
+	public static Map<String, Integer> CHECK_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("LIMIT", 1);
 		}
 	};
 }

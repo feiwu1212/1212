@@ -14,6 +14,26 @@ public class Constants {
 	public static final String COMPANY_OPEN_ACCOUNT = "COA";
 
 	/**
+	 * 操作类型：个人换卡
+	 */
+	public static final String PERSON_CHANGE_CARD = "PCC";
+
+	/**
+	 * 操作类型：更换交易密码
+	 */
+	public static final String PERSON_CHANGE_PWD = "PCP";
+
+	/**
+	 * 操作类型：验证密码
+	 */
+	public static final String PERSON_NCHECK_PWD = "PNP";
+
+	/**
+	 * 操作类型：更换预留手机号
+	 */
+	public static final String PERSON_CHANGE_MOBILE = "PCM";
+
+	/**
 	 * 操作类型：充值
 	 */
 	public static final String RECHARGE = "CZ";
@@ -27,12 +47,22 @@ public class Constants {
 	 * 操作类型：冻结预处理
 	 */
 	public static final String PRE_FREEZE_TRANSACTION = "DJYCL";
+	
+	/**
+	 * 操作类型：预处理取消
+	 */
+	public static final String CANCEL_PRE_TRANSACTION = "YCLQX";
 
 	/**
 	 * 操作类型：创建标的
 	 */
 	public static final String CREATE_PROJECT = "CJBD";
 	
+	/**
+	 * 操作类型：变更标的
+	 */
+	public static final String MODIFY_PROJECT = "BGBD";
+
 	/**
 	 * 操作类型：自动充值
 	 */
@@ -47,6 +77,7 @@ public class Constants {
 	 * 操作类型：用户预处理
 	 */
 	public static final String USERPRETRANSACTION = "YHYCL";
+
 	/**
 	 * 网关地址后缀
 	 */
@@ -66,4 +97,8 @@ public class Constants {
 	 */
 	public static final String ID_CARD_NO_UNIQUE = "ID_CARD_NO_UNIQUE";
 
+	/**
+	 * 绑卡类型
+	 */
+	public static final String UPDATE_BANKCARD = "UPDATE_BANKCARD";
 }

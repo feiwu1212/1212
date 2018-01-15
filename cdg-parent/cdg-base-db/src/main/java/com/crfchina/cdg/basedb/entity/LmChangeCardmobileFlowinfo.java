@@ -27,13 +27,13 @@ public class LmChangeCardmobileFlowinfo {
 
     private String remark;
 
-    private Boolean checkType;
+    private Integer checkType;
 
-    private Boolean bindType;
+    private Integer bindType;
 
-    private Boolean accessType;
+    private Integer accessType;
 
-    private Boolean auditStatus;
+    private Integer auditStatus;
 
     private String callbackUrl;
 
@@ -49,7 +49,7 @@ public class LmChangeCardmobileFlowinfo {
 
     private Date updateTime;
 
-    private Boolean changeType;
+    private Integer changeType;
 
     private Integer partitionDate;
 
@@ -149,38 +149,6 @@ public class LmChangeCardmobileFlowinfo {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Boolean getCheckType() {
-        return checkType;
-    }
-
-    public void setCheckType(Boolean checkType) {
-        this.checkType = checkType;
-    }
-
-    public Boolean getBindType() {
-        return bindType;
-    }
-
-    public void setBindType(Boolean bindType) {
-        this.bindType = bindType;
-    }
-
-    public Boolean getAccessType() {
-        return accessType;
-    }
-
-    public void setAccessType(Boolean accessType) {
-        this.accessType = accessType;
-    }
-
-    public Boolean getAuditStatus() {
-        return auditStatus;
-    }
-
-    public void setAuditStatus(Boolean auditStatus) {
-        this.auditStatus = auditStatus;
-    }
-
     public String getCallbackUrl() {
         return callbackUrl;
     }
@@ -237,19 +205,51 @@ public class LmChangeCardmobileFlowinfo {
         this.updateTime = updateTime;
     }
 
-    public Boolean getChangeType() {
-        return changeType;
-    }
-
-    public void setChangeType(Boolean changeType) {
-        this.changeType = changeType;
-    }
-
     public Integer getPartitionDate() {
         return partitionDate;
     }
 
     public void setPartitionDate(Integer partitionDate) {
         this.partitionDate = partitionDate;
+    }
+
+    public Integer getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(Integer checkType) {
+        this.checkType = checkType;
+    }
+
+    public Integer getBindType() {
+        return bindType;
+    }
+
+    public void setBindType(Integer bindType) {
+        this.bindType = bindType;
+    }
+
+    public Integer getAccessType() {
+        return accessType;
+    }
+
+    public void setAccessType(Integer accessType) {
+        this.accessType = accessType;
+    }
+
+    public Integer getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(Integer auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+
+    public Integer getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(Integer changeType) {
+        this.changeType = changeType;
     }
 }

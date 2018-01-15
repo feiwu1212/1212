@@ -66,5 +66,5 @@ public interface LmTransferDubboService {
 	 */
 	LmUnFreezePreTransactionResultDTO cancelPreTransaction(LmUnFreezePreTransactionParamDTO paramDTO);
 	
-	
+	LmAuto
 }

@@ -12,10 +12,7 @@ import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
-<<<<<<< HEAD
-=======
 import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
->>>>>>> e53d00080f7ce730c44bedb23ff96165c27bc4cd
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;

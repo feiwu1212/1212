@@ -61,7 +61,7 @@ import com.crfchina.cdg.service.LmDebtTransferDubboService;
  * @updateDate：2018年1月12日 下午2:40:21
  * @remarks：
  */
-@Service(version="1.0.0")
+@Service(version="lmDebtTransferDubboService")
 public class LmDebtTransDubboServiceImpl implements LmDebtTransferDubboService {
 
 	public static final Logger logger = LoggerFactory

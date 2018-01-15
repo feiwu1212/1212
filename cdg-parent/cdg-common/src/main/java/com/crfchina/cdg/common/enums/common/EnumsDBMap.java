@@ -46,7 +46,7 @@ public class EnumsDBMap {
 	};
 
 	/**
-	 * 鉴权通过类型枚举key--db映射
+	 * 审核状态类型枚举key--db映射
 	 */
 	public static Map<String, Integer> AUDIT_STATUS_MAP = new HashMap<String, Integer>() {
 		{
@@ -54,6 +54,35 @@ public class EnumsDBMap {
 			put("PASSED", 2);
 			put("BACK", 3);
 			put("REFUSED ", 4);
+		}
+	};
+
+	/**
+	 * 绑定类型枚举key--db映射
+	 */
+	public static Map<String, Integer> BIND_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("UPDATE_BANKCARD", 1);
+		}
+	};
+
+	/**
+	 * 操作类型枚举key--db映射
+	 */
+	public static Map<String, Integer> OPER_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("ACTIVATE_STOCKED_USER", 1);
+			put("RESET_PASSWORD", 2);
+			put("CHECK_PASSWORD", 3);
+		}
+	};
+
+	/**
+	 * 鉴权类型枚举key--db映射
+	 */
+	public static Map<String, Integer> CHECK_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("LIMIT", 1);
 		}
 	};
 }

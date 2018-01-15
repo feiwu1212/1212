@@ -3,7 +3,7 @@ package com.crfchina.cdg.basedb.entity;
 import java.util.Date;
 
 public class LmUserOperationFlowinfo {
-    private Boolean id;
+    private Long id;
 
     private String fcpTrxNo;
 
@@ -13,17 +13,17 @@ public class LmUserOperationFlowinfo {
 
     private String systemNo;
 
-    private Byte operType;
+    private Integer operType;
 
     private String platformUserId;
 
-    private Boolean isSkip;
+    private Integer isSkip;
 
     private String bizTypeDesc;
 
     private String authList;
 
-    private Boolean checkType;
+    private Integer checkType;
 
     private String callbackUrl;
 
@@ -40,14 +40,6 @@ public class LmUserOperationFlowinfo {
     private Date updateTime;
 
     private Integer partitionDate;
-
-    public Boolean getId() {
-        return id;
-    }
-
-    public void setId(Boolean id) {
-        this.id = id;
-    }
 
     public String getFcpTrxNo() {
         return fcpTrxNo;
@@ -81,11 +73,11 @@ public class LmUserOperationFlowinfo {
         this.systemNo = systemNo == null ? null : systemNo.trim();
     }
 
-    public Byte getOperType() {
+    public Integer getOperType() {
         return operType;
     }
 
-    public void setOperType(Byte operType) {
+    public void setOperType(Integer operType) {
         this.operType = operType;
     }
 
@@ -95,14 +87,6 @@ public class LmUserOperationFlowinfo {
 
     public void setPlatformUserId(String platformUserId) {
         this.platformUserId = platformUserId == null ? null : platformUserId.trim();
-    }
-
-    public Boolean getIsSkip() {
-        return isSkip;
-    }
-
-    public void setIsSkip(Boolean isSkip) {
-        this.isSkip = isSkip;
     }
 
     public String getBizTypeDesc() {
@@ -119,14 +103,6 @@ public class LmUserOperationFlowinfo {
 
     public void setAuthList(String authList) {
         this.authList = authList == null ? null : authList.trim();
-    }
-
-    public Boolean getCheckType() {
-        return checkType;
-    }
-
-    public void setCheckType(Boolean checkType) {
-        this.checkType = checkType;
     }
 
     public String getCallbackUrl() {
@@ -191,5 +167,29 @@ public class LmUserOperationFlowinfo {
 
     public void setPartitionDate(Integer partitionDate) {
         this.partitionDate = partitionDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getIsSkip() {
+        return isSkip;
+    }
+
+    public void setIsSkip(Integer isSkip) {
+        this.isSkip = isSkip;
+    }
+
+    public Integer getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(Integer checkType) {
+        this.checkType = checkType;
     }
 }

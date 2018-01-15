@@ -13,6 +13,11 @@ import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
+import com.crfchina.cdg.core.dto.param.LmActiveAccountParamDTO;
+import com.crfchina.cdg.core.dto.param.LmChangeBankCardParamDTO;
+import com.crfchina.cdg.core.dto.param.LmChangeMobileParamDTO;
+import com.crfchina.cdg.core.dto.param.LmChangePwdParamDTO;
+import com.crfchina.cdg.core.dto.param.LmCheckPwdParamDTO;
 import com.crfchina.cdg.core.dto.param.LmEnterpriseOpenAccountDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
@@ -46,6 +51,11 @@ public class AccountController {
 	@Autowired
 	LmAccountService lmAccountService;
 
+	/**
+	 * 个人绑卡
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/personOpen")
 	public ModelAndView personOpen(HttpServletRequest request) {
 		LmOpenAccountParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountParamDTO.class);
@@ -62,7 +72,12 @@ public class AccountController {
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
-	
+
+	/**
+	 * 企业绑卡
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/enterpriseOpen")
 	public ModelAndView enterpriseOpen(HttpServletRequest request) {
 		LmOpenAccountCompanyParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountCompanyParamDTO.class);
@@ -85,4 +100,95 @@ public class AccountController {
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
+	/**
+	 * 个人换绑卡
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/changeCard")
+	public ModelAndView changeCard(HttpServletRequest request) {
+		LmChangeBankCardParamDTO changeCardDto = AppUtil.getParamDto(request, LmChangeBankCardParamDTO.class);
+		Map<String, Object> changeCardReqDataMap = lmAccountService.changeCard(changeCardDto);
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.PERSONAL_BIND_BANKCARD_EXPAND.getCode(), changeCardReqDataMap, changeCardDto.getUserDevice().getCode());
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
+
+	/**
+	 * 个人用户修改交易密码
+	 */
+	@RequestMapping("/changePwd")
+	public ModelAndView changePwd(HttpServletRequest request) {
+		LmChangePwdParamDTO changePwdDto = AppUtil.getParamDto(request, LmChangePwdParamDTO.class);
+		Map<String, Object> changePwdReqDataMap = lmAccountService.changePwd(changePwdDto);
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.RESET_PASSWORD.getCode(), changePwdReqDataMap, changePwdDto.getUserDevice().getCode());
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
+
+	/**
+	 * 个人用户验证交易密码
+	 */
+	@RequestMapping("/checkpwd")
+	public ModelAndView checkpwd(HttpServletRequest request) {
+		LmCheckPwdParamDTO checkPwdDto = AppUtil.getParamDto(request, LmCheckPwdParamDTO.class);
+		Map<String, Object> checkPwdReqDataMap = lmAccountService.checkPwd(checkPwdDto);
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.CHECK_PASSWORD.getCode(), checkPwdReqDataMap, checkPwdDto.getUserDevice().getCode());
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
+
+	/**
+	 * 个人用户验证交易密码
+	 */
+	@RequestMapping("/changemobile")
+	public ModelAndView changemobile(HttpServletRequest request) {
+		LmChangeMobileParamDTO changeMobileDto = AppUtil.getParamDto(request, LmChangeMobileParamDTO.class);
+		Map<String, Object> changeMobileReqDataMap = lmAccountService.changeMobile(changeMobileDto);
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.MODIFY_MOBILE_EXPAND.getCode(), changeMobileReqDataMap, changeMobileDto.getUserDevice().getCode());
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
+
+	/**
+	 * 会员激活
+	 */
+	@RequestMapping("/activeaccount")
+	public ModelAndView activeaccount(HttpServletRequest request) {
+		LmActiveAccountParamDTO activeAccountDto = AppUtil.getParamDto(request, LmActiveAccountParamDTO.class);
+		Map<String, Object> activeAccountReqDataMap = lmAccountService.activeAccount(activeAccountDto);
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
+		Map<String, String> result = null;
+		try {
+			result = AppUtil.createPostParam(ApiType.ACTIVATE_STOCKED_USER.getCode(), activeAccountReqDataMap, activeAccountDto.getUserDevice().getCode());
+		}catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
+	}
 }

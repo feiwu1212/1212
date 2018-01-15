@@ -14,10 +14,10 @@
     <result column="bank_card_no" property="bankCardNo" jdbcType="VARCHAR" />
     <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="check_type" property="checkType" jdbcType="BIT" />
-    <result column="bind_type" property="bindType" jdbcType="BIT" />
-    <result column="access_type" property="accessType" jdbcType="BIT" />
-    <result column="audit_status" property="auditStatus" jdbcType="BIT" />
+    <result column="check_type" property="checkType" jdbcType="TINYINT" />
+    <result column="bind_type" property="bindType" jdbcType="TINYINT" />
+    <result column="access_type" property="accessType" jdbcType="TINYINT" />
+    <result column="audit_status" property="auditStatus" jdbcType="TINYINT" />
     <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
     <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR" />
     <result column="result" property="result" jdbcType="VARCHAR" />
@@ -25,7 +25,7 @@
     <result column="fail_reason" property="failReason" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="change_type" property="changeType" jdbcType="BIT" />
+    <result column="change_type" property="changeType" jdbcType="TINYINT" />
     <result column="partition_date" property="partitionDate" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -102,10 +102,10 @@
       #{requestTime,jdbcType=TIMESTAMP}, #{systemNo,jdbcType=VARCHAR}, #{platformUserId,jdbcType=VARCHAR}, 
       #{realName,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{bankCardNo,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{checkType,jdbcType=BIT}, #{bindType,jdbcType=BIT}, #{accessType,jdbcType=BIT}, 
-      #{auditStatus,jdbcType=BIT}, #{callbackUrl,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, 
+      #{checkType,jdbcType=TINYINT}, #{bindType,jdbcType=TINYINT}, #{accessType,jdbcType=TINYINT},
+      #{auditStatus,jdbcType=TINYINT}, #{callbackUrl,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR},
       #{result,jdbcType=VARCHAR}, #{failCode,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{changeType,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{changeType,jdbcType=TINYINT},
       #{partitionDate,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo" >
@@ -225,16 +225,16 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        #{checkType,jdbcType=BIT},
+        #{checkType,jdbcType=TINYINT},
       </if>
       <if test="bindType != null" >
-        #{bindType,jdbcType=BIT},
+        #{bindType,jdbcType=TINYINT},
       </if>
       <if test="accessType != null" >
-        #{accessType,jdbcType=BIT},
+        #{accessType,jdbcType=TINYINT},
       </if>
       <if test="auditStatus != null" >
-        #{auditStatus,jdbcType=BIT},
+        #{auditStatus,jdbcType=TINYINT},
       </if>
       <if test="callbackUrl != null" >
         #{callbackUrl,jdbcType=VARCHAR},
@@ -258,7 +258,7 @@
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="changeType != null" >
-        #{changeType,jdbcType=BIT},
+        #{changeType,jdbcType=TINYINT},
       </if>
       <if test="partitionDate != null" >
         #{partitionDate,jdbcType=INTEGER},
@@ -308,16 +308,16 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="checkType != null" >
-        check_type = #{checkType,jdbcType=BIT},
+        check_type = #{checkType,jdbcType=TINYINT},
       </if>
       <if test="bindType != null" >
-        bind_type = #{bindType,jdbcType=BIT},
+        bind_type = #{bindType,jdbcType=TINYINT},
       </if>
       <if test="accessType != null" >
-        access_type = #{accessType,jdbcType=BIT},
+        access_type = #{accessType,jdbcType=TINYINT},
       </if>
       <if test="auditStatus != null" >
-        audit_status = #{auditStatus,jdbcType=BIT},
+        audit_status = #{auditStatus,jdbcType=TINYINT},
       </if>
       <if test="callbackUrl != null" >
         callback_url = #{callbackUrl,jdbcType=VARCHAR},
@@ -341,7 +341,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="changeType != null" >
-        change_type = #{changeType,jdbcType=BIT},
+        change_type = #{changeType,jdbcType=TINYINT},
       </if>
       <if test="partitionDate != null" >
         partition_date = #{partitionDate,jdbcType=INTEGER},
@@ -362,10 +362,10 @@
       bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
       bank_code = #{bankCode,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      check_type = #{checkType,jdbcType=BIT},
-      bind_type = #{bindType,jdbcType=BIT},
-      access_type = #{accessType,jdbcType=BIT},
-      audit_status = #{auditStatus,jdbcType=BIT},
+      check_type = #{checkType,jdbcType=TINYINT},
+      bind_type = #{bindType,jdbcType=TINYINT},
+      access_type = #{accessType,jdbcType=TINYINT},
+      audit_status = #{auditStatus,jdbcType=TINYINT},
       callback_url = #{callbackUrl,jdbcType=VARCHAR},
       notify_url = #{notifyUrl,jdbcType=VARCHAR},
       result = #{result,jdbcType=VARCHAR},
@@ -373,7 +373,7 @@
       fail_reason = #{failReason,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      change_type = #{changeType,jdbcType=BIT},
+      change_type = #{changeType,jdbcType=TINYINT},
       partition_date = #{partitionDate,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>

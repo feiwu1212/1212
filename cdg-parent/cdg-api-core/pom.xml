@@ -8,15 +8,27 @@
 		<artifactId>cdg-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	
+
 	<groupId>com.crfchina</groupId>
 	<artifactId>cdg-api-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<packaging>war</packaging>
 	<name>cdg-api-core Maven Webapp</name>
 	<url>http://maven.apache.org</url>
-	
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<cdg.common.version>0.0.1-SNAPSHOT</cdg.common.version>
+		<cdg.basedb.version>0.0.1-SNAPSHOT</cdg.basedb.version>
+		<cdg.service.version>0.0.1-SNAPSHOT</cdg.service.version>
+		<com.alibaba.dubbo.version>2.5.3</com.alibaba.dubbo.version>
+		<org.apache.zookeeper.version>3.4.6</org.apache.zookeeper.version>
+		<com.github.sgroschupf.zkclient.version>0.1</com.github.sgroschupf.zkclient.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -43,16 +55,43 @@
 			<version>${cdg.service.version}</version>
 		</dependency>
 
-	</dependencies>
+		<!-- dubbo -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+			<version>${com.alibaba.dubbo.version}</version>
+		</dependency>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<cdg.common.version>0.0.1-SNAPSHOT</cdg.common.version>
-		<cdg.basedb.version>0.0.1-SNAPSHOT</cdg.basedb.version>
-		<cdg.service.version>0.0.1-SNAPSHOT</cdg.service.version>
-	</properties>
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+			<version>${org.apache.zookeeper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.sgroschupf</groupId>
+			<artifactId>zkclient</artifactId>
+			<version>0.1</version>
+		</dependency>
+
+
+	</dependencies>
 
 	<profiles>
 		<profile>

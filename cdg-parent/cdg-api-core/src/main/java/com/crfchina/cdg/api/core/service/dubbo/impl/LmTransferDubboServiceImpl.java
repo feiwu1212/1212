@@ -6,6 +6,20 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
@@ -36,20 +50,6 @@ import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
 import com.crfchina.cdg.service.LmTransferDubboService;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 /**
  * @ProjectName：cdg-parent
  * @ClassName：LmTransferDubboServiceImpl
@@ -60,7 +60,7 @@ import org.springframework.util.StringUtils;
  * @updateDate：2018/1/10 16:30
  * @remarks：
  */
-@Service("lmTransferDubboService")
+@Service(version="1.0.0")
 public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 	public static final Logger logger = LoggerFactory

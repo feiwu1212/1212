@@ -9,4 +9,5 @@
 
 	<!-- 声明需要暴露的服务接口 -->
 	<dubbo:service interface="com.crfchina.cdg.service.LmProjectDubboService" ref="lmProjectDubboService"/>
+	<dubbo:service interface="com.crfchina.cdg.service.LmTransferDubboService" ref="lmTransferDubboService"/>
 </beans>

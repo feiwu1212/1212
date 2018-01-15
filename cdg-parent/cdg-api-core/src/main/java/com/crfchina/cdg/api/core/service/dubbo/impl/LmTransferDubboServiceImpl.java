@@ -6,34 +6,16 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
-import com.crfchina.cdg.basedb.entity.LmProjectList;
-import com.crfchina.cdg.basedb.entity.LmProjectListExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
-import com.crfchina.cdg.basedb.entity.LmVaccountTransferLogExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.CurrencyType;
@@ -59,6 +41,19 @@ import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
 import com.crfchina.cdg.service.LmTransferDubboService;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @ProjectName：cdg-parent
@@ -70,7 +65,7 @@ import com.crfchina.cdg.service.LmTransferDubboService;
  * @updateDate：2018/1/10 16:30
  * @remarks：
  */
-@Service(version="1.0.0")
+@Service("lmTransferDubboService")
 public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 	public static final Logger logger = LoggerFactory

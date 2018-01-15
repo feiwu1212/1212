@@ -294,6 +294,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			rsp.setFailReason(failReason);
 			rsp.setFailCode(failCode);		
 		}
+		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
 	}
 	
@@ -417,11 +418,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			}
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
-			//TODO 返回失败结果
+			// 返回失败结果
 			 rsp.setResult(ResultCode.FAIL);
 			 rsp.setFailReason(failReason);
 			 rsp.setFailCode(failCode);
 		}
+		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
 	}
 
@@ -433,6 +435,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
 		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.CANCEL_PRE_TRANSACTION);
 		Date now = new Date();
+		//返回结果预封装
+		LmUnFreezePreTransactionResultDTO rsp = new LmUnFreezePreTransactionResultDTO();
+				rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+				rsp.setFcpTrxNo(fcpTrxNo);
+				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		
 		// 新增info
 		LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
 		transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -465,11 +473,10 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		transferDetail.setUpdateTime(now);
 		transferDetail.setPartitionDate(transferInfo.getPartitionDate());
 		lmVaccountTransferDetailMapper.insert(transferDetail);
-
 		//若存在佣金，则新增明细表
+		LmVaccountTransferDetail transferDetail2=null;
 		if(null != paramDTO.getCommissionAmount()){
-			LmVaccountTransferDetail transferDetail2 = null;
-			transferDetail2 = transferDetail;
+			 transferDetail2 = transferDetail;
 			transferDetail2.setTransferAmount(paramDTO.getCommissionAmount().toString());
 			lmVaccountTransferDetailMapper.insert(transferDetail2);
 		}
@@ -493,14 +500,13 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
 		} catch (Exception e) {
 			logger.error("调用懒猫接口异常", e);
-			//TODO 返回失败结果 更新失败状态
-
+			 rsp.setResult(ResultCode.FAIL);
+			 return rsp;
 		}
 
 		String code = result.getString("code");
 		String status = result.getString("status");
-		String failCode = result.getString("errorCode");
-		String failReason = result.getString("errorMessage");
+		
 		now = new Date();
 		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 			transferInfo.setResult(ResultCode.SUCCESS.getCode());
@@ -511,8 +517,16 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
-			//TODO 返回成功结果
+			//若存在佣金，则新增明细表
+			if(null != paramDTO.getCommissionAmount()){
+				transferDetail2.setResult(ResultCode.SUCCESS.getCode());
+				lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail2);
+			}
+			//返回成功结果
+			rsp.setResult(ResultCode.SUCCESS);
 		} else {
+			String failCode = result.getString("errorCode");
+			String failReason = result.getString("errorMessage");
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -525,9 +539,13 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
 			lmVaccountTransferDetailMapper.updateByPrimaryKey(transferDetail);
-			//TODO 返回失败结果
+			// 返回失败结果
+			 rsp.setResult(ResultCode.FAIL);
+			 rsp.setFailReason(failReason);
+			 rsp.setFailCode(failCode);
 		}
-		return null;
+		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+		return rsp;
 	}
 	
 	

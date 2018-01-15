@@ -16,21 +16,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmProjectFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmProjectListMapper;
-import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
-import com.crfchina.cdg.basedb.entity.LmProjectAuthList;
 import com.crfchina.cdg.basedb.entity.LmProjectFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmProjectList;
-import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.ProjectStatus;
-import com.crfchina.cdg.common.enums.business.WithdrawalType;
 import com.crfchina.cdg.common.enums.common.EnumsDBMap;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
@@ -41,7 +37,6 @@ import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.dto.param.LmCreateProjectParamDTO;
-import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmCreateProjectResultDTO;
 import com.crfchina.cdg.service.LmProjectDubboService;
 
@@ -57,7 +52,7 @@ import com.crfchina.cdg.service.LmProjectDubboService;
  * @updateDate：2018年1月12日 下午2:40:21
  * @remarks：
  */
-@Service("lmProjectDubboService")
+@Service(version="1.0.0")
 public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 
 	public static final Logger logger = LoggerFactory

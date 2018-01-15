@@ -7,6 +7,9 @@
  */
 package com.crfchina.cdg.api;
 
+import java.io.IOException;
+
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -23,11 +26,19 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @updateDate：2018年1月6日 下午5:50:38
  * @remarks：
  */
+//@ComponentScan(basePackages = {"com.crfchina"})
 @SpringBootApplication
+@MapperScan("com.crfchina")//Mybatis扫包
 public class CdgAPICoreApplication extends SpringBootServletInitializer{
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CdgAPICoreApplication.class, args);
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

@@ -26,14 +26,11 @@ import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
-import com.crfchina.cdg.basedb.entity.LmProjectList;
-import com.crfchina.cdg.basedb.entity.LmProjectListExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
-import com.crfchina.cdg.basedb.entity.LmVaccountTransferLogExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.CurrencyType;
@@ -721,9 +718,9 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		txnLog.setCrfBizType(Constants.AUTO_PRE_TRANSACTION);
 		txnLog.setCreateTime(now);
 		txnLog.setUpdateTime(now);
-		if(StringUtils.isEmpty(paramDTO.getOriginFcpTrxNo()))
+		if(!StringUtils.isEmpty(paramDTO.getOriginFcpTrxNo()))
 		txnLog.setOriginFcpTrxno(paramDTO.getOriginFcpTrxNo());
-		if(StringUtils.isEmpty(paramDTO.getRemark()))
+		if(!StringUtils.isEmpty(paramDTO.getRemark()))
 		txnLog.setRemark(paramDTO.getRemark());
 		txnLog.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
 		
@@ -771,9 +768,13 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
 		reqDataMap.put("bizType", paramDTO.getBizType());
 		reqDataMap.put("projectNo", paramDTO.getProjectNo());
-		if(StringUtils.isEmpty(paramDTO.getPreMarketingAmount()))
+		if(!StringUtils.isEmpty(paramDTO.getPreMarketingAmount()))
 		reqDataMap.put("preMarketingAmount", paramDTO.getPreMarketingAmount());
-
+        if(!StringUtils.isEmpty(paramDTO.getOriginFcpTrxNo()))
+        reqDataMap.put("originalRechargeNo", paramDTO.getOriginFcpTrxNo());
+        if(!StringUtils.isEmpty(paramDTO.getShare()))
+        reqDataMap.put("share", paramDTO.getShare());
+		
 		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;

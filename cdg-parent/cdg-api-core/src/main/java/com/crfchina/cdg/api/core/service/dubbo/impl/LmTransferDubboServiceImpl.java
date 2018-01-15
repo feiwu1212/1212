@@ -7,10 +7,12 @@
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.crfchina.cdg.basedb.dao.LmUserOperationFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
+import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
@@ -21,6 +23,7 @@ import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.CurrencyType;
 import com.crfchina.cdg.common.enums.business.PreBusinessType;
 import com.crfchina.cdg.common.enums.business.WithdrawalType;
+import com.crfchina.cdg.common.enums.common.EnumsDBMap;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.enums.common.SystemNo;
@@ -34,12 +37,16 @@ import com.crfchina.cdg.dto.param.LmAutoPreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.param.LmFundTransferParamDTO;
 import com.crfchina.cdg.dto.param.LmUnFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.param.LmUnFreezePwdParamDTO;
 import com.crfchina.cdg.dto.result.LmAutoPreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
+import com.crfchina.cdg.dto.result.LmFundTransferResultDTO;
 import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
+import com.crfchina.cdg.dto.result.LmUnFreezePwdResultDTO;
 import com.crfchina.cdg.service.LmTransferDubboService;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -83,6 +90,8 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 	@Autowired
 	LmVaccountTransferLogMapper lmVaccountTransferLogMapper;
 
+	@Autowired
+	LmUserOperationFlowinfoMapper lmUserOperationFlowinfoMapper;
 
 	/**
 	 * 冻结预处理
@@ -818,7 +827,105 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
 	}
-	
-	
+
+	@Override
+	public LmFundTransferResultDTO batchTransfer(LmFundTransferParamDTO paramDTO) {
+//		Date now = new Date();
+//		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.BATCH_TRANSFER);
+//		//生成batch
+//		LmVaccountTransferBatch batchInfo = new LmVaccountTransferBatch();
+//		//FIXME 生成batchNo
+//		batchInfo.setBatchNo("1");
+//		batchInfo.setCreateTime(now);
+//		batchInfo.setUpdateTime(now);
+//		lmVaccountTransferBatchMapper.insert(batchInfo);
+//
+//		List<FundTransferDetailDTO> mainTransferList = paramDTO.getMainTransferList();
+//		List<FundTransferDetailDTO> subTransferDetailList = paramDTO.getSubTransferDetailList();
+//		mainTransferList.stream().map((o, t) -> {
+//			LmVaccountTransferInfo transferInfo = new LmVaccountTransferInfo();
+//			transferInfo.setBatchNo(batchInfo.getBatchNo());
+//			//FIXME 怎么塞
+//			transferInfo.setRequestRefNo(paramDTO.getRequestRefNo());
+//			transferInfo.setRequestTime(paramDTO.getRequestTime());
+//			transferInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+//			transferInfo.setFcpTrxNo();
+//		})
+//		List<LmVaccountTransferInfo> transferInfoList = new LinkedList<>();
+//		List<LmVaccountTransferDetail> transferDetailList = new LinkedList<>();
+//		List<LmVaccountTransferLog> transferLogList = new LinkedList<>();
+		//拆分INFO
+
+		//拆分DETAIL
+		//拆分log
+		return null;
+	}
+
+	@Override
+	public LmUnFreezePwdResultDTO unFreezePwd(LmUnFreezePwdParamDTO paramDTO) {
+		LmUnFreezePwdResultDTO returnResult = new LmUnFreezePwdResultDTO();
+		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.UNFREEZE_PWD);
+		Date now = new Date();
+		LmUserOperationFlowinfo flowInfo = new LmUserOperationFlowinfo();
+		flowInfo.setRequestRefNo(paramDTO.getRequestRefNo());
+		flowInfo.setFcpTrxNo(fcpTrxNo);
+		flowInfo.setRequestTime(now);
+		flowInfo.setSystemNo(String.valueOf(paramDTO.getSystemNo().getValue()));
+		flowInfo.setPlatformUserId(paramDTO.getPlatformUserNo());
+		flowInfo.setOperType(EnumsDBMap.OPER_TYPE_MAP.get(ApiType.UNFREEZE_TRADE_PASSWORD.getCode()));
+		flowInfo.setNotifyUrl(paramDTO.getNotifyUrl());
+		flowInfo.setResult(ResultCode.UNKNOWN.getCode());
+		flowInfo.setCreateTime(now);
+		flowInfo.setUpdateTime(now);
+		flowInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(now, "yyyyMM")));
+
+		lmUserOperationFlowinfoMapper.insert(flowInfo);
+
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		reqDataMap.put("requestNo", fcpTrxNo);
+		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());
+
+		AppConfig config = AppConfig.getConfig();
+		List<BasicNameValuePair> postParam = null;
+		JSONObject result = null;
+
+		try {
+			postParam = AppUtil.createServicePostParam(ApiType.UNFREEZE_TRADE_PASSWORD.getCode(), reqDataMap);
+			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+		} catch (Exception e) {
+			logger.error("调用懒猫接口异常", e);
+			flowInfo.setResult(ResultCode.FAIL.getCode());
+			flowInfo.setFailCode("");
+			flowInfo.setFailReason("调用懒猫接口异常");
+			flowInfo.setUpdateTime(now);
+			lmUserOperationFlowinfoMapper.updateByPrimaryKey(flowInfo);
+			returnResult.setFcpTrxNo(fcpTrxNo);
+			returnResult.setResult(ResultCode.FAIL);
+		}
+
+		String code = result.getString("code");
+		String status = result.getString("status");
+		String failCode = result.getString("errorCode");
+		String failReason = result.getString("errorMessage");
+		now = new Date();
+		if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+			flowInfo.setResult(ResultCode.SUCCESS.getCode());
+			flowInfo.setUpdateTime(now);
+
+			lmUserOperationFlowinfoMapper.updateByPrimaryKey(flowInfo);
+
+			returnResult.setFcpTrxNo(fcpTrxNo);
+			returnResult.setResult(ResultCode.SUCCESS);
+		} else {
+			flowInfo.setResult(ResultCode.FAIL.getCode());
+			flowInfo.setFailCode(failCode);
+			flowInfo.setFailReason(failReason);
+			flowInfo.setUpdateTime(now);
+			lmUserOperationFlowinfoMapper.updateByPrimaryKey(flowInfo);
+			returnResult.setFcpTrxNo(fcpTrxNo);
+			returnResult.setResult(ResultCode.FAIL);
+		}
+		return returnResult;
+	}
 	
 }

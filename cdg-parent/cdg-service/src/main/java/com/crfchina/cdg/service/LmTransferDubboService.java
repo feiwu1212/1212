@@ -11,12 +11,16 @@ import com.crfchina.cdg.dto.param.LmAutoPreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.param.LmFundTransferParamDTO;
 import com.crfchina.cdg.dto.param.LmUnFreezePreTransactionParamDTO;
+import com.crfchina.cdg.dto.param.LmUnFreezePwdParamDTO;
 import com.crfchina.cdg.dto.result.LmAutoPreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
+import com.crfchina.cdg.dto.result.LmFundTransferResultDTO;
 import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
+import com.crfchina.cdg.dto.result.LmUnFreezePwdResultDTO;
 
 /**
  * 
@@ -78,4 +82,18 @@ public interface LmTransferDubboService {
 	 * @throws
 	 */
     LmAutoPreTransactionResultDTO autoPreTransaction(LmAutoPreTransactionParamDTO paramDTO);
+
+	/**
+	 * 批量交易
+	 * @param paramDTO
+	 * @return
+	 */
+	LmFundTransferResultDTO batchTransfer(LmFundTransferParamDTO paramDTO);
+
+	/**
+	 * 交易密码解冻
+	 * @param paramDTO
+	 * @return
+	 */
+	LmUnFreezePwdResultDTO unFreezePwd(LmUnFreezePwdParamDTO paramDTO);
 }

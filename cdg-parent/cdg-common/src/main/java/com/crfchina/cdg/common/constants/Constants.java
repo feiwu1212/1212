@@ -6,32 +6,32 @@ public class Constants {
 	/**
 	 * 操作类型:个人开户
 	 */
-	public static final String PERSON_OPEN_ACCOUNT = "POA";
+	public static final String PERSON_OPEN_ACCOUNT = "GRKH";
 
 	/**
 	 * 操作类型:企业绑卡
 	 */
-	public static final String COMPANY_OPEN_ACCOUNT = "COA";
+	public static final String COMPANY_OPEN_ACCOUNT = "QYBK";
 
 	/**
 	 * 操作类型：个人换卡
 	 */
-	public static final String PERSON_CHANGE_CARD = "PCC";
+	public static final String PERSON_CHANGE_CARD = "GRHK";
 
 	/**
 	 * 操作类型：更换交易密码
 	 */
-	public static final String PERSON_CHANGE_PWD = "PCP";
+	public static final String PERSON_CHANGE_PWD = "GHMM";
 
 	/**
 	 * 操作类型：验证密码
 	 */
-	public static final String PERSON_NCHECK_PWD = "PNP";
+	public static final String PERSON_NCHECK_PWD = "YZMM";
 
 	/**
 	 * 操作类型：更换预留手机号
 	 */
-	public static final String PERSON_CHANGE_MOBILE = "PCM";
+	public static final String PERSON_CHANGE_MOBILE = "GHSJ";
 
 	/**
 	 * 操作类型：充值
@@ -84,6 +84,16 @@ public class Constants {
 	 * 操作类型：用户预处理
 	 */
 	public static final String USERPRETRANSACTION = "YHYCL";
+
+	/**
+	 * 操作类型：批量交易
+	 */
+	public static final String BATCH_TRANSFER= "PLJY";
+
+	/**
+	 * 操作类型：解冻交易密码
+	 */
+	public static final String UNFREEZE_PWD = "JDMM";
 
 	/**
 	 * 网关地址后缀

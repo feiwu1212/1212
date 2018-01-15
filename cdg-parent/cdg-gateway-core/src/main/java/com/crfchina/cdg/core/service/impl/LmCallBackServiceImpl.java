@@ -92,6 +92,16 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 		else if (apiType.equals(ApiType.CHECK_PASSWORD)) {
 			return dealCheckPwd(result.getRespData());
 		}
+		else if (apiType.equals(ApiType.MODIFY_MOBILE_EXPAND)) {
+			return dealChangeMobile(result.getRespData());
+		}
+		else if (apiType.equals(ApiType.RESET_PASSWORD)) {
+			return dealChangePwd(result.getRespData());
+		}
+		else if (apiType.equals(ApiType.ACTIVATE_STOCKED_USER)) {
+			return dealActiveAccount(result.getRespData());
+		}
+
 		return null;
 	}
 
@@ -582,6 +592,57 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 	 * @return
 	 */
 	private ModelAndView dealChangeMobile(JSONObject respData) {
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		LmUserOperationFlowinfoExample example = new LmUserOperationFlowinfoExample();
+		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmUserOperationFlowinfo> flowInfoList = lmUserOperationFlowinfoMapper.selectByExample(example);
+		if (flowInfoList != null || flowInfoList.size() == 1) {
+			LmUserOperationFlowinfo flow = flowInfoList.get(0);
+			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+				flow.setResult(ResultCode.ACCEPTED.getCode());
+				flow.setUpdateTime(now);
+				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
+
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult(ResultCode.ACCEPTED.getCode());
+				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+				respData.put("fcpTrxNo", flow.getFcpTrxNo());
+				callBackParam.setData(respData.toJSONString());
+				//TODO 页面返回塞值
+				return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+			} else {
+				flow.setResult(ResultCode.FAIL.getCode());
+				flow.setFailCode(respData.getString("errorCode"));
+				flow.setFailReason(respData.getString("errorMessage"));
+				flow.setUpdateTime(now);
+				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
+
+				CallBackParam callBackParam = new CallBackParam();
+				callBackParam.setResult(ResultCode.FAIL.getCode());
+				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+				callBackParam.setFailCode(respData.getString("errorCode"));
+				callBackParam.setFailReason(respData.getString("errorMessage"));
+				return new ModelAndView("callback").addObject("paramDto", callBackParam);
+			}
+		} else {
+			CallBackParam callBackParam = new CallBackParam();
+			callBackParam.setResult("系统异常");
+			callBackParam.setRequestRefNo(fcpTrxNo);
+			callBackParam.setFailCode("99");
+			callBackParam.setFailReason("未找到原始交易记录");
+			return new ModelAndView("callback").addObject("paramDto", callBackParam);
+		}
+	}
+
+	/**
+	 * 用户激活页面回调
+	 * @param respData
+	 * @return
+	 */
+	private ModelAndView dealActiveAccount(JSONObject respData) {
 		Date now = new Date();
 		String fcpTrxNo = respData.getString("requestNo");
 		String code = respData.getString("code");

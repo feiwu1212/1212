@@ -85,8 +85,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		String authStr = String.join(",", authStrList);
 		flowInfo.setAuthList(authStr);
 		flowInfo.setCheckType(EnumsDBMap.CHECK_TYPE_MAP.get(Constants.CHECK_TYPE));
-		//FIXME 枚举映射
-		flowInfo.setUserLimitType(1);
+		flowInfo.setUserLimitType(EnumsDBMap.USER_LIMIT_TYPE_MAP.get(Constants.ID_CARD_NO_UNIQUE));
 		flowInfo.setCallbackUrl(loapDto.getCallbackUrl());
 		flowInfo.setNotifyUrl(loapDto.getNotifyUrl());
 		flowInfo.setCreateTime(now);

@@ -7,6 +7,11 @@
  */
 package com.crfchina.cdg.service;
 
+import com.crfchina.cdg.dto.param.LmCancelDebentureSaleParamDTO;
+import com.crfchina.cdg.dto.param.LmDebentureSaleParamDTO;
+import com.crfchina.cdg.dto.result.LmCancelDebentureSaleResultDTO;
+import com.crfchina.cdg.dto.result.LmDebentureSaleResultDTO;
+
 /**    
  * 
  * @ProjectName：cdg-service
@@ -20,4 +25,26 @@ package com.crfchina.cdg.service;
  */
 public interface LmDebtTransferDubboService {
 
+	 /**
+	  * 
+	  * @Title: debentureSale  
+	  * @Description: TODO
+	  * @param paramDTO
+	  * @return
+	  * LmDebentureSaleResultDTO
+	  * @throws
+	  */
+	LmDebentureSaleResultDTO debentureSale(LmDebentureSaleParamDTO paramDTO);
+	/**
+	 * 
+	 * @Title: cancelDebentureSale  
+	 * @Description: TODO
+	 * @param paramDTO
+	 * @return
+	 * LmCancelDebentureSaleResultDTO
+	 * @throws
+	 */
+	LmCancelDebentureSaleResultDTO cancelDebentureSale(LmCancelDebentureSaleParamDTO paramDTO);
+
+	
 }

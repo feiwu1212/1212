@@ -37,6 +37,8 @@ public enum ApiType {
 	AUTO_PRE_TRANSACTION("USER_AUTO_PRE_TRANSACTION","授权预处理"),
 	UNFREEZE_TRADE_PASSWORD("UNFREEZE_TRADE_PASSWORD", "解冻交易密码"),
 	VERIFY_DEDUCT("VERIFY_DEDUCT", "验密扣费");
+	DEBENTURE_SALE("DEBENTURE_SALE","债权转让申请"),
+	CANCEL_DEBENTURE_SALE("CANCEL_DEBENTURE_SALE","取消债权转让申请");
 	private String code;
 
 	private String desc;

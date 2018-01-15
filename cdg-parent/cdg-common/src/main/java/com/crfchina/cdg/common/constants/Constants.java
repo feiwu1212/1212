@@ -59,6 +59,16 @@ public class Constants {
 	 */
 	public static final String AUTO_PRE_TRANSACTION = "SQYCL";
 
+	/**
+	 * 操作类型：债券转让申请
+	 */
+	public static final String DEBENTURE_SALE = "ZQZR";
+
+	/**
+	 * 操作类型：取消债券转让申请
+	 */
+	public static final String CANCEL_DEBENTURE_SALE = "QXZQ";
+
 	
 	/**
 	 * 操作类型：创建标的

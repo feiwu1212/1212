@@ -725,9 +725,9 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		txnLog.setCrfBizType(Constants.AUTO_PRE_TRANSACTION);
 		txnLog.setCreateTime(now);
 		txnLog.setUpdateTime(now);
-		if(StringUtils.isEmpty(paramDTO.getOriginFcpTrxNo()))
+		if(!StringUtils.isEmpty(paramDTO.getOriginFcpTrxNo()))
 		txnLog.setOriginFcpTrxno(paramDTO.getOriginFcpTrxNo());
-		if(StringUtils.isEmpty(paramDTO.getRemark()))
+		if(!StringUtils.isEmpty(paramDTO.getRemark()))
 		txnLog.setRemark(paramDTO.getRemark());
 		txnLog.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
 		
@@ -775,9 +775,13 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
 		reqDataMap.put("bizType", paramDTO.getBizType());
 		reqDataMap.put("projectNo", paramDTO.getProjectNo());
-		if(StringUtils.isEmpty(paramDTO.getPreMarketingAmount()))
+		if(!StringUtils.isEmpty(paramDTO.getPreMarketingAmount()))
 		reqDataMap.put("preMarketingAmount", paramDTO.getPreMarketingAmount());
-
+        if(!StringUtils.isEmpty(paramDTO.getOriginFcpTrxNo()))
+        reqDataMap.put("originalRechargeNo", paramDTO.getOriginFcpTrxNo());
+        if(!StringUtils.isEmpty(paramDTO.getShare()))
+        reqDataMap.put("share", paramDTO.getShare());
+		
 		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;

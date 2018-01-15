@@ -23,17 +23,17 @@ public class LmProjectFlowinfo {
 
     private String projectDesc;
 
-    private Boolean projectType;
+    private int projectType;
 
     private Integer projectPeriod;
 
     private String interestRate;
 
-    private Boolean repaymentWay;
+    private int repaymentWay;
 
     private String extend;
 
-    private Byte projectStatus;
+    private int projectStatus;
 
     private Date createTime;
 
@@ -127,11 +127,11 @@ public class LmProjectFlowinfo {
         this.projectDesc = projectDesc == null ? null : projectDesc.trim();
     }
 
-    public Boolean getProjectType() {
+    public int getProjectType() {
         return projectType;
     }
 
-    public void setProjectType(Boolean projectType) {
+    public void setProjectType(int projectType) {
         this.projectType = projectType;
     }
 
@@ -151,11 +151,11 @@ public class LmProjectFlowinfo {
         this.interestRate = interestRate == null ? null : interestRate.trim();
     }
 
-    public Boolean getRepaymentWay() {
+    public int getRepaymentWay() {
         return repaymentWay;
     }
 
-    public void setRepaymentWay(Boolean repaymentWay) {
+    public void setRepaymentWay(int repaymentWay) {
         this.repaymentWay = repaymentWay;
     }
 
@@ -167,11 +167,11 @@ public class LmProjectFlowinfo {
         this.extend = extend == null ? null : extend.trim();
     }
 
-    public Byte getProjectStatus() {
+    public int getProjectStatus() {
         return projectStatus;
     }
 
-    public void setProjectStatus(Byte projectStatus) {
+    public void setProjectStatus(int projectStatus) {
         this.projectStatus = projectStatus;
     }
 

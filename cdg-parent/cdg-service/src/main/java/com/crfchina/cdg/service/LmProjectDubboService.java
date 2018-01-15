@@ -7,8 +7,10 @@
  */
 package com.crfchina.cdg.service;
 
-import com.crfchina.cdg.dto.base.BaseParamDTO;
-import com.crfchina.cdg.dto.base.BaseResultDTO;
+import com.crfchina.cdg.dto.param.LmCreateProjectParamDTO;
+import com.crfchina.cdg.dto.param.LmUpdateProjectParamDTO;
+import com.crfchina.cdg.dto.result.LmCreateProjectResultDTO;
+import com.crfchina.cdg.dto.result.LmUpdateProjectResultDTO;
 
 /**
  * 
@@ -23,6 +25,25 @@ import com.crfchina.cdg.dto.base.BaseResultDTO;
  */
 public interface LmProjectDubboService {
 
-	BaseResultDTO test(BaseParamDTO dto);
+ /**
+  * 创建标的ESTABLISH_PROJECT
+  * @Title: establishProject  
+  * @Description: 标的新增
+  * @param paramDTO
+  * @return
+  * LmAutoWithdrawResultDTO
+  * @throws
+  */
+	LmCreateProjectResultDTO establishProject(LmCreateProjectParamDTO paramDTO);
 
+	/**
+	 * 
+	 * @Title: modifyProject  
+	 * @Description: 标的变更
+	 * @param paramDTO
+	 * @return
+	 * LmUpdateProjectResultDTO
+	 * @throws
+	 */
+	LmUpdateProjectResultDTO modifyProject(LmUpdateProjectParamDTO paramDTO);
 }

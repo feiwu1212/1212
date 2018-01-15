@@ -47,6 +47,21 @@ public class Constants {
 	 * 操作类型：冻结预处理
 	 */
 	public static final String PRE_FREEZE_TRANSACTION = "DJYCL";
+	
+	/**
+	 * 操作类型：预处理取消
+	 */
+	public static final String CANCEL_PRE_TRANSACTION = "YCLQX";
+
+	/**
+	 * 操作类型：创建标的
+	 */
+	public static final String CREATE_PROJECT = "CJBD";
+	
+	/**
+	 * 操作类型：变更标的
+	 */
+	public static final String MODIFY_PROJECT = "BGBD";
 
 	/**
 	 * 操作类型：自动充值

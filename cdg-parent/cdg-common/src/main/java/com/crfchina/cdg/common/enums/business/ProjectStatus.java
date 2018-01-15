@@ -19,7 +19,7 @@ package com.crfchina.cdg.common.enums.business;
 
 public enum ProjectStatus {
 	
-	COLLECTING("STANDARDPOWDER","募集中"),
+	COLLECTING("COLLECTING","募集中"),
 	REPAYING("REPAYING","还款中"),
 	FINISH("FINISH","已截标"),
 	MISCARRY("MISCARRY","流标"),

@@ -1,5 +1,5 @@
 /**    
- * @Title：LmUpdateProjectResultDTO.java    
+ * @Title：LmCreateProjectResultDTO.java    
  * @Package com.crfchina.cdg.dto.param
  *     
  * @date 2018年1月6日 上午10:53:02 
@@ -12,15 +12,15 @@ import com.crfchina.cdg.dto.base.LmBaseResultDTO;
 /**    
  * 
  * @ProjectName：cdg-service
- * @ClassName：LmUpdateProjectResultDTO
+ * @ClassName：LmCreateProjectResultDTO
  * @Description:
  * @author: William
  * @date：2018年1月6日 上午10:53:02
  * @updateBy：William
  * @updateDate：2018年1月6日 上午10:53:02
- * @remarks：标的变更状态
+ * @remarks：标的新增
  */
-public class LmUpdateProjectResultDTO extends LmBaseResultDTO {
+public class LmCreateProjectResultDTO extends LmBaseResultDTO {
 
 	/**    
 	 * serialVersionUID:TODO    
@@ -29,15 +29,6 @@ public class LmUpdateProjectResultDTO extends LmBaseResultDTO {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected String projectStatus;
-
-	public String getProjectStatus() {
-		return projectStatus;
-	}
-
-	public void setProjectStatus(String projectStatus) {
-		this.projectStatus = projectStatus;
-	}
 	
 
 }

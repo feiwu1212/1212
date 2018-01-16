@@ -9,6 +9,7 @@ package com.crfchina.cdg.core.controller;
 
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
+import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.core.dto.param.LmRechargeParamDTO;
@@ -16,7 +17,6 @@ import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmVerifyDeductParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCapitalService;
-import java.security.GeneralSecurityException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +62,8 @@ public class CaptialController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), rechargeReqDataMap, paramDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -88,8 +88,8 @@ public class CaptialController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.RECHARGE.getCode(), withdrawReqDataMap, paramDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -113,8 +113,8 @@ public class CaptialController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.USERPRETRANSACTION.getCode(), userPreTransactionReqDataMap, paramDto.getUserDevice().getCode() );
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -134,8 +134,8 @@ public class CaptialController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.VERIFY_DEDUCT.getCode(), verifyDeductReqDataMap, paramDto.getUserDevice().getCode() );
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}

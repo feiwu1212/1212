@@ -10,6 +10,7 @@ package com.crfchina.cdg.core.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
+import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
@@ -22,8 +23,6 @@ import com.crfchina.cdg.core.dto.param.LmEnterpriseOpenAccountDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.service.LmAccountService;
-import java.security.GeneralSecurityException;
-import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
@@ -67,8 +66,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.PERSONAL_REGISTER_EXPAND.getCode(), personOpenReqDataMap, paramDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -92,9 +91,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.ENTERPRISE_REGISTER.getCode(), reqDataMap, paramDto.getUserDevice().getCode());
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-			result = new HashMap<>();
+		} catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
@@ -114,8 +112,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.PERSONAL_BIND_BANKCARD_EXPAND.getCode(), changeCardReqDataMap, changeCardDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -132,8 +130,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.RESET_PASSWORD.getCode(), changePwdReqDataMap, changePwdDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -150,8 +148,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.CHECK_PASSWORD.getCode(), checkPwdReqDataMap, checkPwdDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -168,8 +166,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.MODIFY_MOBILE_EXPAND.getCode(), changeMobileReqDataMap, changeMobileDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
@@ -186,8 +184,8 @@ public class AccountController {
 		Map<String, String> result = null;
 		try {
 			result = AppUtil.createPostParam(ApiType.ACTIVATE_STOCKED_USER.getCode(), activeAccountReqDataMap, activeAccountDto.getUserDevice().getCode());
-		}catch (GeneralSecurityException e) {
-			e.printStackTrace();
+		}catch (CdgException e) {
+			return new ModelAndView("error");
 		}
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}

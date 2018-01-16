@@ -245,7 +245,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			rsp.setResult(ResultCode.SUCCESS);
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorMessage"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(sysCodeSrv.getResCodeByLm(failCode));
 			transferInfo.setFailReason(sysCodeSrv.getExplainByLm(failReason));
@@ -458,7 +458,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			rsp.setPayMobile(result.getString("payMobile"));
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorMessage"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -680,7 +680,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			rsp.setWithdrawWay(result.getString("withdrawWay"));
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorMessage"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -890,7 +890,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorMessage"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -1079,7 +1079,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorMessage"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -1201,7 +1201,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			returnResult.setResult(ResultCode.SUCCESS);
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorMessage"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
 			flowInfo.setResult(ResultCode.FAIL.getCode());
 			flowInfo.setFailCode(failCode);
 			flowInfo.setFailReason(failReason);

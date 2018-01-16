@@ -13,9 +13,9 @@ public class LmProjectAuthList {
 
     private String projectNo;
 
-    private Boolean checkType;
+    private int checkType;
 
-    private Boolean entrustedType;
+    private int entrustedType;
 
     private String platformUserId;
     
@@ -71,19 +71,19 @@ public class LmProjectAuthList {
         this.projectNo = projectNo == null ? null : projectNo.trim();
     }
 
-    public Boolean getCheckType() {
+    public int getCheckType() {
         return checkType;
     }
 
-    public void setCheckType(Boolean checkType) {
+    public void setCheckType(int checkType) {
         this.checkType = checkType;
     }
 
-    public Boolean getEntrustedType() {
+    public int getEntrustedType() {
         return entrustedType;
     }
 
-    public void setEntrustedType(Boolean entrustedType) {
+    public void setEntrustedType(int entrustedType) {
         this.entrustedType = entrustedType;
     }
 

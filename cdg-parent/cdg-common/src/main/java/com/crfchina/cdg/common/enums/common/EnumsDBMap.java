@@ -128,4 +128,14 @@ public class EnumsDBMap {
 			put("ID_CARD_NO_UNIQUE", 1);
 		}
 	};
+	
+	/**
+	 * 受托方类型 ENTRUSTED_TYPE
+	 */
+	public static Map<String, Integer> ENTRUSTED_TYPE = new HashMap<String, Integer>() {
+		{
+			put("PERSONAL", 1);
+			put("ENTERPRISE", 2);
+		}
+	};
 }

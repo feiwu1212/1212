@@ -68,7 +68,7 @@ public class TestController {
 		loapDto.setUserDevice(Terminal.PC);
 		String s = JSONObject.toJSONString(loapDto, SerializerFeature.WriteMapNullValue);
 		JSONObject jsonObject = JSON.parseObject(s);
-		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/personOpen").addObject("myparam", jsonObject);
+		return new ModelAndView("test").addObject("url", "/cdg-gateway/account/personOpen").addObject("myparam", jsonObject);
 	}
 	
 	@RequestMapping("/toEnterpriseOpen")
@@ -89,7 +89,7 @@ public class TestController {
 		oacParam.setNotifyUrl("http://127.0.0.1:8080/cdg-notify/notify/notiryAddr");  
 		oacParam.setUnifiedCode("13f1sd2f1sd31");  
 		oacParam.setBandCardNo("11212442124634543454");  
-		oacParam.setCallbackUrl("http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");  
+		oacParam.setCallbackUrl("http://127.0.0.1:8080/cdg-gateway/callBack/pageCallBack");  
 		oacParam.setUserDevice(Terminal.PC);  
 		oacParam.setAuthList(Arrays.asList(UserAuthType.COMPENSATORY));  
 		oacParam.setContactPhone("13325412365");  
@@ -101,7 +101,7 @@ public class TestController {
 		String s = JSONObject.toJSONString(oacParam, SerializerFeature.WriteMapNullValue);
 		System.out.println(s);
 		JSONObject jsonObject = JSON.parseObject(s);
-		return new ModelAndView("test").addObject("url", "/cdg-geteway/account/enterpriseOpen").addObject("myparam",jsonObject);
+		return new ModelAndView("test").addObject("url", "/cdg-gateway/account/enterpriseOpen").addObject("myparam",jsonObject);
 	}
 
 	@RequestMapping("/toRecharge")
@@ -120,6 +120,6 @@ public class TestController {
 		String s = JSONObject.toJSONString(rp, SerializerFeature.WriteMapNullValue);
 		System.out.println(s);
 		JSONObject jsonObject = JSON.parseObject(s);
-		return new ModelAndView("test").addObject("url", "/cdg-geteway/ca/recharge").addObject("myparam",jsonObject);
+		return new ModelAndView("test").addObject("url", "/cdg-gateway/ca/recharge").addObject("myparam",jsonObject);
 	}
 }

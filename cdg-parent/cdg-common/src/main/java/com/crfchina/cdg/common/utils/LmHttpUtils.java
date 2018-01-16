@@ -9,10 +9,12 @@ package com.crfchina.cdg.common.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
+import com.crfchina.cdg.common.exception.CdgException;
+import com.crfchina.cdg.common.exception.CdgExceptionCode;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
@@ -47,7 +49,7 @@ public class LmHttpUtils {
 	 * @param formParams
 	 * @return
 	 */
-	public static JSONObject postServiceResult(String url, List<BasicNameValuePair> formParams) throws Exception {
+	public static JSONObject postServiceResult(String url, List<BasicNameValuePair> formParams) throws CdgException {
 		logger.info("调用懒猫直连接口开始【begin】参数url:{};formParams:{}", url, JSONObject.toJSONString(formParams));
 		// 创建默认的httpClient实例.
 		CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -64,13 +66,13 @@ public class LmHttpUtils {
 			verifySign(response, result);
 			logger.info("调用懒猫直连接口结束【end】结果:{}", result);
 			return JSON.parseObject(result);
-		} catch (Exception e) {
-			logger.error("调用懒猫接口异常",e);
-			throw e;
+		} catch (IOException e) {
+			logger.error("调用懒猫接口异常");
+			throw new CdgException(CdgExceptionCode.CDG10022, e);
 		}
 	}
 
-	private static void verifySign(CloseableHttpResponse response, String responseData) throws Exception {
+	private static void verifySign(CloseableHttpResponse response, String responseData) throws CdgException {
 		AppConfig config = AppConfig.getConfig();
 		Map<String, Object> respMap = JSON.parseObject(responseData);
 		//接口返回code!=0 || status!=SUCCESS时，不做验签处理
@@ -93,17 +95,13 @@ public class LmHttpUtils {
 
 			boolean b = SignatureUtils.verify(SignatureAlgorithm.SHA1WithRSA, publicKey, responseData, signByte);
 			if (!b) {
-				throw new Exception("验签失败，sign与respData不匹配");
+				logger.info("验签数据不一致--->{}", responseData);
+				throw new CdgException(CdgExceptionCode.CDG10021);
 			}
 
 			logger.info("sign success ...");
-		} catch (InvalidKeySpecException e) {
-			throw new InvalidKeySpecException("验签错误，生成商户公钥失败", e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new NoSuchAlgorithmException("验签错误" + e.getMessage(), e);
-		} catch (GeneralSecurityException e) {
-			throw new GeneralSecurityException("验签错误" + e.getMessage(), e);
+		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
+			throw new CdgException(CdgExceptionCode.CDG10021, e);
 		}
-
 	}
 }

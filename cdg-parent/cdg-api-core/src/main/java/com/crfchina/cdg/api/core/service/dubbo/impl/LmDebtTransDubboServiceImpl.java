@@ -6,21 +6,6 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
@@ -40,14 +25,24 @@ import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
-import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.dto.param.LmCancelDebentureSaleParamDTO;
 import com.crfchina.cdg.dto.param.LmDebentureSaleParamDTO;
-import com.crfchina.cdg.dto.result.LmAutoPreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmCancelDebentureSaleResultDTO;
 import com.crfchina.cdg.dto.result.LmDebentureSaleResultDTO;
 import com.crfchina.cdg.service.LmDebtTransferDubboService;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 
@@ -61,7 +56,7 @@ import com.crfchina.cdg.service.LmDebtTransferDubboService;
  * @updateDate：2018年1月12日 下午2:40:21
  * @remarks：
  */
-@Service(version="lmDebtTransferDubboService")
+@Service("lmDebtTransferDubboService")
 public class LmDebtTransDubboServiceImpl implements LmDebtTransferDubboService {
 
 	public static final Logger logger = LoggerFactory

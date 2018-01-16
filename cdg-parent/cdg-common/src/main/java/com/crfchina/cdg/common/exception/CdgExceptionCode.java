@@ -9,7 +9,9 @@ package com.crfchina.cdg.common.exception;
  */
 public enum CdgExceptionCode{
 	
-	SUCCESS("0000","成功");
+	SUCCESS("0000","成功"),
+	CDG10021("CDG10021", "返回验证签名失败"),
+	CDG10022("CDG10022", "调用懒猫接口异常");
 	
 	private String msg;
 

@@ -77,9 +77,9 @@ public class LmAccountServiceImpl implements LmAccountService {
 		flowInfo.setBankcardNo(loapDto.getBankCardNo());
 		flowInfo.setMobile(loapDto.getMobile());
 		flowInfo.setIdNo(loapDto.getIdCardNo());
-		//FIXME 枚举映射数据库类型
 		flowInfo.setIdType(EnumsDBMap.ID_CARD_TYPE_MAP.get(loapDto.getIdCardType().getCode()));
 		flowInfo.setBindcardTime(now);
+		flowInfo.setResult(ResultCode.UNKNOWN.getCode()); // 新创建绑卡申请结果为unknown
 		flowInfo.setUserRole(loapDto.getUserRole().getCode());
 		List<String> authStrList = loapDto.getAuthList().stream().map(o -> o.getCode()).collect(Collectors.toList());
 		String authStr = String.join(",", authStrList);
@@ -103,7 +103,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("idCardType", loapDto.getIdCardType());
 		reqDataMap.put("userRole", loapDto.getUserRole());
 		reqDataMap.put("checkType", Constants.CHECK_TYPE);
-		//TODO 配置本地回调地址
+		//FIXME 配置本地回调地址
 		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
 		reqDataMap.put("userLimitType", Constants.ID_CARD_NO_UNIQUE);
 		reqDataMap.put("authList", authStr);
@@ -187,7 +187,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 	}
 
 	/**
-	 * 用户更换密码
+	 * 验证密码
 	 * @param lcpDto
 	 * @return
 	 */
@@ -208,7 +208,6 @@ public class LmAccountServiceImpl implements LmAccountService {
 		flowInfo.setCreateTime(now);
 		flowInfo.setUpdateTime(now);
 		flowInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(now, "yyyyMM")));
-
 		//拼接reqData
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("platformUserNo", lcpDto.getPlatformUserNo());

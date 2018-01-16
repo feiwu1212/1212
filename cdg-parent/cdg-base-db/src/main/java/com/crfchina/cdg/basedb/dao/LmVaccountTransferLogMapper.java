@@ -3,8 +3,10 @@ package com.crfchina.cdg.basedb.dao;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferLogExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface LmVaccountTransferLogMapper {
     int countByExample(LmVaccountTransferLogExample example);
 

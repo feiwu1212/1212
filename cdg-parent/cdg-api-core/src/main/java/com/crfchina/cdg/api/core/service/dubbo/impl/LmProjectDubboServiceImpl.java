@@ -7,6 +7,7 @@
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.crfchina.cdg.api.cache.SysCodeService;
 import com.crfchina.cdg.basedb.dao.LmProjectFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmProjectListMapper;
 import com.crfchina.cdg.basedb.entity.LmProjectFlowinfo;
@@ -18,21 +19,27 @@ import com.crfchina.cdg.common.enums.business.ProjectStatus;
 import com.crfchina.cdg.common.enums.common.EnumsDBMap;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
+import com.crfchina.cdg.common.exception.CdgException;
+import com.crfchina.cdg.common.exception.CdgExceptionCode;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
+import com.crfchina.cdg.dto.param.LmAuthorizationEntrustPayParamDTO;
 import com.crfchina.cdg.dto.param.LmCreateProjectParamDTO;
 import com.crfchina.cdg.dto.param.LmUpdateProjectParamDTO;
+import com.crfchina.cdg.dto.result.LmAuthorizationEntrustPayResultDTO;
 import com.crfchina.cdg.dto.result.LmCreateProjectResultDTO;
 import com.crfchina.cdg.dto.result.LmUpdateProjectResultDTO;
 import com.crfchina.cdg.service.LmProjectDubboService;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.http.message.BasicNameValuePair;
@@ -66,6 +73,9 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 	
 	@Autowired
 	LmProjectListMapper projectListMapper;
+	
+	@Autowired
+	SysCodeService sysCodeSrv;
 	
 	/**
 	 * 标的创建
@@ -125,11 +135,22 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.ESTABLISH_PROJECT.getCode(), reqDataMap);
 			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
-		} catch (Exception e) {
-			logger.error("调用懒猫接口异常", e);
-			 flow.setResult(ResultCode.UNKNOWN.getCode());
+		} catch (CdgException e) {
+			//异常流程处理
+			 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
+				 rsp.setFailCode(CdgExceptionCode.CDG10023.getCode());
+				 rsp.setFailReason(sysCodeSrv.getExplain(CdgExceptionCode.CDG10023.getCode()));
+				 flow.setResult(ResultCode.FAIL.getCode());
+				 flow.setFailCode(CdgExceptionCode.CDG10023.getCode());
+				 flow.setFailReason(sysCodeSrv.getExplain(CdgExceptionCode.CDG10023.getCode()));
+			 }
+			 else{
+				 rsp.setFailCode(e.getCode());
+				 rsp.setFailReason(e.getMsg());
+				 flow.setResult(ResultCode.UNKNOWN.getCode());
+			 }
+			 //更新异常流水信息
 			 projectFlowInfoMapper.updateByPrimaryKey(flow);
-			 rsp.setResult(ResultCode.FAIL);
 			 return rsp;
 		}
 		String code = result.getString("code");
@@ -150,15 +171,15 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 			  rsp.setResult(ResultCode.SUCCESS);
 		} else {
 			String failCode = result.getString("errorCode");
-			String failReason = result.getString("errorMessage");
 			//更新流水表和信息表
 			 flow.setResult(ResultCode.FAIL.getCode());
-			 flow.setFailCode(failCode);
-			 flow.setFailReason(failReason);
+			 flow.setFailCode(sysCodeSrv.getResCodeByLm(failCode));
+			 flow.setFailReason(sysCodeSrv.getExplainByLm(failCode));
 			 projectFlowInfoMapper.updateByPrimaryKey(flow);
+			 //封装返回报文
 			 rsp.setResult(ResultCode.FAIL);
-			 rsp.setFailReason(failReason);
-			 rsp.setFailCode(failCode);
+			 rsp.setFailReason(sysCodeSrv.getExplainByLm(failCode));
+			 rsp.setFailCode(sysCodeSrv.getResCodeByLm(failCode));
 		}
 		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
@@ -217,11 +238,21 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 				try {
 					postParam = AppUtil.createServicePostParam(ApiType.MODIFY_PROJECT.getCode(), reqDataMap);
 					result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
-				} catch (Exception e) {
-					logger.error("调用懒猫接口异常", e);
-					 flow.setResult(ResultCode.UNKNOWN.getCode());
+				} catch (CdgException e) {
+					//异常流程处理
+					 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
+						 rsp.setFailCode(CdgExceptionCode.CDG10023.getCode());
+						 rsp.setFailReason(sysCodeSrv.getExplain(CdgExceptionCode.CDG10023.getCode()));
+						 flow.setResult(ResultCode.FAIL.getCode());
+						 flow.setFailCode(CdgExceptionCode.CDG10023.getCode());
+					 }
+					 else{
+						 rsp.setFailCode(e.getCode());
+						 rsp.setFailReason(e.getMsg());
+						 flow.setResult(ResultCode.UNKNOWN.getCode());
+					 }
+					 //更新异常流水信息
 					 projectFlowInfoMapper.updateByPrimaryKey(flow);
-					 rsp.setResult(ResultCode.FAIL);
 					 return rsp;
 				}
 				String code = result.getString("code");
@@ -244,18 +275,29 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 					String failReason = result.getString("errorMessage");
 					//更新流水表和信息表
 					 flow.setResult(ResultCode.FAIL.getCode());
-					 flow.setFailCode(failCode);
-					 flow.setFailReason(failReason);
+					 flow.setFailCode(sysCodeSrv.getExplainByLm(failCode));
+					 flow.setFailReason(sysCodeSrv.getResCodeByLm(failCode));
 					 projectFlowInfoMapper.updateByPrimaryKey(flow);
 					 rsp.setResult(ResultCode.FAIL);
-					 rsp.setFailReason(failReason);
-					 rsp.setFailCode(failCode);
+					 rsp.setFailReason(sysCodeSrv.getExplainByLm(failCode));
+					 rsp.setFailCode(sysCodeSrv.getResCodeByLm(failCode));
 				}
 				logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 				return rsp;
 	}
 
+	/**
+	 * 委托支付授权
+	 */
+	@Override
+	public LmAuthorizationEntrustPayResultDTO authorizationEntrustPay(
+			LmAuthorizationEntrustPayParamDTO paramDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+
+	
 
 	
 }

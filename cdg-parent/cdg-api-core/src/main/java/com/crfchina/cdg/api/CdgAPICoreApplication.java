@@ -14,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**    
  * 
@@ -28,6 +29,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  */
 //@ComponentScan(basePackages = {"com.crfchina"})
 @SpringBootApplication
+@EnableCaching  //缓存使用
 @MapperScan("com.crfchina.cdg.basedb.dao")//Mybatis扫包
 public class CdgAPICoreApplication extends SpringBootServletInitializer{
 	

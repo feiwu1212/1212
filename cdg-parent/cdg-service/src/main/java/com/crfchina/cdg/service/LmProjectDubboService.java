@@ -7,8 +7,10 @@
  */
 package com.crfchina.cdg.service;
 
+import com.crfchina.cdg.dto.param.LmAuthorizationEntrustPayParamDTO;
 import com.crfchina.cdg.dto.param.LmCreateProjectParamDTO;
 import com.crfchina.cdg.dto.param.LmUpdateProjectParamDTO;
+import com.crfchina.cdg.dto.result.LmAuthorizationEntrustPayResultDTO;
 import com.crfchina.cdg.dto.result.LmCreateProjectResultDTO;
 import com.crfchina.cdg.dto.result.LmUpdateProjectResultDTO;
 
@@ -46,4 +48,17 @@ public interface LmProjectDubboService {
 	 * @throws
 	 */
 	LmUpdateProjectResultDTO modifyProject(LmUpdateProjectParamDTO paramDTO);
+	
+	/**
+	 *  
+	 * @Title: authorizationEntrustPay  
+	 * @Description: 委托支付授权
+	 * @param paramDTO
+	 * @return
+	 * LmAuthorizationEntrustPayResultDTO
+	 * @throws
+	 */
+	LmAuthorizationEntrustPayResultDTO authorizationEntrustPay(LmAuthorizationEntrustPayParamDTO paramDTO);
+	
+	
 }

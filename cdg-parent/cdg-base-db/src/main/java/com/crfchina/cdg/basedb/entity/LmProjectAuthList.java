@@ -18,6 +18,8 @@ public class LmProjectAuthList {
     private Boolean entrustedType;
 
     private String platformUserId;
+    
+    private String entrustPlatformUserId;//受托方平台用户编号
 
     private String result;
 
@@ -132,4 +134,14 @@ public class LmProjectAuthList {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getEntrustPlatformUserId() {
+		return entrustPlatformUserId;
+	}
+
+	public void setEntrustPlatformUserId(String entrustPlatformUserId) {
+		this.entrustPlatformUserId = entrustPlatformUserId;
+	}
+    
+    
 }

@@ -10,6 +10,7 @@
     <result column="check_type" property="checkType" jdbcType="BIT" />
     <result column="entrusted_type" property="entrustedType" jdbcType="BIT" />
     <result column="platform_user_id" property="platformUserId" jdbcType="VARCHAR" />
+    <result column="platform_user_id" property="entrustPlatformUserId" jdbcType="VARCHAR" />
     <result column="result" property="result" jdbcType="VARCHAR" />
     <result column="fail_code" property="failCode" jdbcType="VARCHAR" />
     <result column="fail_reason" property="failReason" jdbcType="VARCHAR" />

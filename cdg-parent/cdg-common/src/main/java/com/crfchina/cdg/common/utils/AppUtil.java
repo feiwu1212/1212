@@ -3,6 +3,8 @@ package com.crfchina.cdg.common.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
+import com.crfchina.cdg.common.exception.CdgException;
+import com.crfchina.cdg.common.exception.CdgExceptionCode;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.text.DateFormat;
@@ -37,7 +39,7 @@ public class AppUtil {
 	 * 签名加密
 	 */
 	public static Map<String, String> createPostParam(String serviceName,
-			Map<String, Object> reqDataMap, String userDevice) throws GeneralSecurityException {
+			Map<String, Object> reqDataMap, String userDevice){
 		Map<String, String> result = new HashMap<String, String>();
 
 		AppConfig config = AppConfig.getConfig();
@@ -45,10 +47,16 @@ public class AppUtil {
 		reqDataMap.put("timestamp", format.format(new Date()));
 		String reqData = JSON.toJSONString(reqDataMap);
 		logger.info("请求服务:"+serviceName+",请求参数reqData:" + reqData);
-		PrivateKey privateKey = SignatureUtils.getRsaPkcs8PrivateKey(Base64
-				.decodeBase64(privateStr));
-		byte[] sign = SignatureUtils.sign(SignatureAlgorithm.SHA1WithRSA,
-				privateKey, reqData);
+		byte[] sign;
+		try {
+			PrivateKey privateKey = SignatureUtils.getRsaPkcs8PrivateKey(Base64
+					.decodeBase64(privateStr));
+			sign = SignatureUtils.sign(SignatureAlgorithm.SHA1WithRSA,
+					privateKey, reqData);
+		} catch (GeneralSecurityException e) {
+			logger.error("请求数据签名失败");
+			throw new CdgException(CdgExceptionCode.CDG10023);
+		}
 
 		// 拼装网关参数
 		result.put("serviceName", serviceName);
@@ -60,7 +68,7 @@ public class AppUtil {
 		return result;
 	}
 
-	public static List<BasicNameValuePair> createServicePostParam(String serviceName, Map<String, Object> reqDataMap) throws Exception{
+	public static List<BasicNameValuePair> createServicePostParam(String serviceName, Map<String, Object> reqDataMap) throws CdgException{
 		logger.info("拼接懒猫请求参数开始【begin】serviceName={};reqDataMap={}", serviceName, JSONObject.toJSONString(reqDataMap));
 		try {
 			List<BasicNameValuePair> result = new LinkedList<>();
@@ -84,9 +92,9 @@ public class AppUtil {
 			result.add(bn);
 			result.add(bn4);
 			return result;
-		}catch (Exception e) {
-			logger.error("拼接懒猫请求参数异常", e);
-			throw e;
+		} catch (GeneralSecurityException e) {
+			logger.error("请求数据签名失败");
+			throw new CdgException(CdgExceptionCode.CDG10023);
 		}
 	}
 

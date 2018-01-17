@@ -110,7 +110,14 @@
           <artifactId>disconf-client</artifactId>
           <version>2.6.36</version>
         </dependency>
-      
+        
+        <!-- 引用crftaskwork -->
+        <dependency>
+	        <groupId>com.crfchina.csf</groupId> 
+				<artifactId>csf-task</artifactId> 
+			<version>1.0.11-SNAPSHOT</version>
+      	</dependency>
+      	
         <!-- CRFLOG 
 		<dependency>
 		  <groupId>com.crfchina</groupId>
@@ -124,6 +131,24 @@
   
   <build>
 	<plugins>
+	
+		 <!--   要将源码放上去，需要加入这个插件    -->
+        <plugin>  
+            <artifactId>maven-source-plugin</artifactId>  
+            <version>2.1</version>  
+            <configuration>  
+                <attach>true</attach>  
+            </configuration>  
+            <executions>  
+                <execution>  
+                    <phase>compile</phase>  
+                    <goals>  
+                        <goal>jar</goal>  
+                    </goals>  
+                </execution>  
+            </executions>  
+        </plugin>
+        
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-compiler-plugin</artifactId>

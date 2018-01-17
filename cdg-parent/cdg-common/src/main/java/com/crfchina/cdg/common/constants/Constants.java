@@ -81,6 +81,11 @@ public class Constants {
 	public static final String MODIFY_PROJECT = "BGBD";
 
 	/**
+	 * 操作类型 用户查询
+	 */
+	public static final String QUERY_USER_INFORMATION = "YHCX";
+	
+	/**
 	 * 操作类型：自动充值
 	 */
 	public static final String DIRECT_RECHARGE = "ZDCZ";

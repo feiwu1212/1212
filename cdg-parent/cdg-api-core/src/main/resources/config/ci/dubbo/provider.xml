@@ -11,5 +11,6 @@
 	<dubbo:service interface="com.crfchina.cdg.service.LmProjectDubboService" ref="lmProjectDubboService"/>
 	<dubbo:service interface="com.crfchina.cdg.service.LmTransferDubboService" ref="lmTransferDubboService"/>
 	<dubbo:service interface="com.crfchina.cdg.service.LmDebtTransferDubboService" ref="lmDebtTransferDubboService"/>
+	<dubbo:service interface="com.crfchina.cdg.service.LmQueryDubboService" ref="lmQueryDubboService"/>
 
 </beans>

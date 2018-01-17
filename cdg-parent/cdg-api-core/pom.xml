@@ -54,18 +54,21 @@
 			<groupId>com.crfchina</groupId>
 			<artifactId>cdg-common</artifactId>
 			<version>${cdg.common.version}</version>
+			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>com.crfchina</groupId>
 			<artifactId>cdg-base-db</artifactId>
 			<version>${cdg.basedb.version}</version>
+			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>com.crfchina</groupId>
 			<artifactId>cdg-service</artifactId>
 			<version>${cdg.service.version}</version>
+			<type>jar</type>
 		</dependency>
 
 		<!-- dubbo -->

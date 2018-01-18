@@ -6,19 +6,6 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.api.cache.SysCodeService;
@@ -28,7 +15,6 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.exception.CdgExceptionCode;
-import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
@@ -37,6 +23,17 @@ import com.crfchina.cdg.dto.param.LmQueryUserInformationParamDTO;
 import com.crfchina.cdg.dto.result.AuthLimitResultList;
 import com.crfchina.cdg.dto.result.LmQueryUserInformationResultDTO;
 import com.crfchina.cdg.service.LmQueryDubboService;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 
@@ -78,12 +75,11 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 	    Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());	
 		
-		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.QUERY_USER_INFORMATION.getCode(), reqDataMap);
-			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+			result = LmHttpUtils.postServiceResult(postParam);
 		} catch (CdgException e) {
 			//异常流程处理
 			 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){

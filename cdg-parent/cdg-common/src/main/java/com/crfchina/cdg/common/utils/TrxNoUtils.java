@@ -39,6 +39,12 @@ public class TrxNoUtils {
 		return builder.toString();
 	}
 
+	public static String getBatchNo() {
+		StringBuilder builder = new StringBuilder();
+		String currentTime = df.format(new Date());//当前时间
+		builder.append(Constants.BATCH_NO_PERFIX).append(currentTime).append(idWorker.nextId());
+		return builder.toString();
+	}
 	public static void main(String[] args) {
 		for (int i = 0; i < 10000; i++) {
 			String oc = TrxNoUtils.getTrxNo("HB");

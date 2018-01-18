@@ -96,7 +96,7 @@
     delete from lm_vaccount_transfer_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo" >
+  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo" keyProperty="id" useGeneratedKeys="true">
     insert into lm_vaccount_transfer_info (id, batch_no, request_ref_no, 
       request_time, system_no, fcp_trx_no, 
       transfer_amount, channel_fee_amount, currency, 

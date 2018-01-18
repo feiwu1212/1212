@@ -376,7 +376,6 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		//txnInfo封装
 		LmVaccountTransferInfo txnInfo = new LmVaccountTransferInfo();
 		txnInfo.setAccountDate(now);
-		txnInfo.setBatchNo("");
 		txnInfo.setCallbackUrl(paramDTO.getCallbackUrl());
 		txnInfo.setCreateTime(now);
 		txnInfo.setCrfBizType(crfBizType);

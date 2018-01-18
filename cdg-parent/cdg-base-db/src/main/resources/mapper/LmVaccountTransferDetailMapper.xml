@@ -378,4 +378,37 @@
       partition_date = #{partitionDate,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into lm_vaccount_transfer_detail (id, request_ref_no, fcp_trx_no,
+    transfer_info_id, transfer_amount, out_real_name,
+    out_external_account, in_real_name, in_external_account,
+    account_date, settle_amount, finish_date,
+    settle_date, lm_biz_type, crf_biz_type,
+    right_share, origin_fcp_trxno, custom_define,
+    remark, result, fail_code,
+    fail_reason, create_time, update_time,
+    partition_date)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.id,jdbcType=BIGINT}, #{item.requestRefNo,jdbcType=VARCHAR}, #{item.fcpTrxNo,jdbcType=VARCHAR},
+      #{item.transferInfoId,jdbcType=VARCHAR}, #{item.transferAmount,jdbcType=VARCHAR}, #{item.outRealName,jdbcType=VARCHAR},
+      #{item.outExternalAccount,jdbcType=VARCHAR}, #{item.inRealName,jdbcType=VARCHAR}, #{item.inExternalAccount,jdbcType=VARCHAR},
+      #{item.accountDate,jdbcType=TIMESTAMP}, #{item.settleAmount,jdbcType=VARCHAR}, #{item.finishDate,jdbcType=TIMESTAMP},
+      #{item.settleDate,jdbcType=TIMESTAMP}, #{item.lmBizType,jdbcType=VARCHAR}, #{item.crfBizType,jdbcType=VARCHAR},
+      #{item.rightShare,jdbcType=VARCHAR}, #{item.originFcpTrxno,jdbcType=VARCHAR}, #{item.customDefine,jdbcType=VARCHAR},
+      #{item.remark,jdbcType=VARCHAR}, #{item.result,jdbcType=VARCHAR}, #{item.failCode,jdbcType=VARCHAR},
+      #{item.failReason,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP},
+      #{item.partitionDate,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+
+  <update id="updateResultByTransferInfoId" parameterType="com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail">
+    update lm_vaccount_transfer_detail
+    set result = #{result,jdbcType=VARCHAR},
+    fail_code = #{failCode,jdbcType=VARCHAR},
+    fail_reason = #{failReason,jdbcType=VARCHAR},
+    update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where transfer_info_id = #{transferInfoId,jdbcType=VARCHAR}
+  </update>
 </mapper>

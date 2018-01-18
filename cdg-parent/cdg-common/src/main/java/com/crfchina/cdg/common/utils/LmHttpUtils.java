@@ -8,6 +8,7 @@ package com.crfchina.cdg.common.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.exception.CdgExceptionCode;
@@ -49,8 +50,10 @@ public class LmHttpUtils {
 	 * @param formParams
 	 * @return
 	 */
-	public static JSONObject postServiceResult(String url, List<BasicNameValuePair> formParams) throws CdgException {
-		logger.info("调用懒猫直连接口开始【begin】参数url:{};formParams:{}", url, JSONObject.toJSONString(formParams));
+	public static JSONObject postServiceResult(List<BasicNameValuePair> formParams) throws CdgException {
+		AppConfig config = AppConfig.getConfig();
+		String url = config.getUrl() + Constants.SERVICE_SUFFIX;
+		logger.info("调用懒猫直连接口开始【begin】");
 		// 创建默认的httpClient实例.
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		CloseableHttpResponse response = null;

@@ -147,12 +147,11 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 		if(!StringUtils.isEmpty(paramDTO.getExtend()))
 		reqDataMap.put("extend", paramDTO.getExtend());
 
-		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.ESTABLISH_PROJECT.getCode(), reqDataMap);
-			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+			result = LmHttpUtils.postServiceResult(postParam);
 		} catch (CdgException e) {
 			//异常流程处理
 			 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
@@ -262,12 +261,11 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 				reqDataMap.put("projectNo", paramDTO.getProjectNo());
 				reqDataMap.put("status", paramDTO.getStatus());
 				
-				AppConfig config = AppConfig.getConfig();
 				List<BasicNameValuePair> postParam = null;
 				JSONObject result = null;
 				try {
 					postParam = AppUtil.createServicePostParam(ApiType.MODIFY_PROJECT.getCode(), reqDataMap);
-					result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+					result = LmHttpUtils.postServiceResult(postParam);
 				} catch (CdgException e) {
 					//异常流程处理
 					 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
@@ -368,12 +366,11 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 		reqDataMap.put("entrustedType", paramDTO.getEntrustedType());	
 		reqDataMap.put("entrustedPlatformUserNo",paramDTO.getToPlatformUserNo());
 		
-		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.AUTHORIZATION_ENTRUST_PAY.getCode(), reqDataMap);
-			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+			result = LmHttpUtils.postServiceResult(postParam);
 		} catch (CdgException e) {
 			//异常流程处理
 			 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){

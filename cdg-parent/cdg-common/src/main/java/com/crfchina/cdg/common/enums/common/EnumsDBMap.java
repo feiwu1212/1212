@@ -128,7 +128,7 @@ public class EnumsDBMap {
 			put("ID_CARD_NO_UNIQUE", 1);
 		}
 	};
-	
+
 	/**
 	 * 受托方类型 ENTRUSTED_TYPE
 	 */
@@ -136,6 +136,13 @@ public class EnumsDBMap {
 		{
 			put("PERSONAL", 1);
 			put("ENTERPRISE", 2);
+		}
+	};
+
+	public static Map<String, String>  TRADE_TYPE_MAP = new HashMap<String, String>() {
+		{
+			put("TENDER", "FKHB");
+			put("REPAYMENT", "HKHB");
 		}
 	};
 }

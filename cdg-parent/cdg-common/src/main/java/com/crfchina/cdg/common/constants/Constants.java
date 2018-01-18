@@ -119,10 +119,17 @@ public class Constants {
 	 * 网关地址后缀
 	 */
 	public static final String GATEWAY_SUFFIX = "/gateway";
+
+	public static final String SERVICE_SUFFIX = "/service";
 	/**
 	 * 流水号前缀
 	 */
 	public static final String TRX_PERFIX = "CDG";
+
+	/**
+	 * 批次号前缀
+	 */
+	public static final String BATCH_NO_PERFIX = "BN";
 
 	/**
 	 * 鉴权验证类型

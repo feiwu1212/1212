@@ -124,11 +124,6 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-<<<<<<< HEAD
-=======
-				
-
->>>>>>> 74912d738ce36724d3004e7501ff13ba77af7b21
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());

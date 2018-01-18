@@ -6,6 +6,19 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.api.cache.SysCodeService;
@@ -29,17 +42,6 @@ import com.crfchina.cdg.dto.result.AuthLimitResultList;
 import com.crfchina.cdg.dto.result.LmQueryTransferInfoResultDTO;
 import com.crfchina.cdg.dto.result.LmQueryUserInformationResultDTO;
 import com.crfchina.cdg.service.LmQueryDubboService;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * 
@@ -204,13 +206,11 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 			reqDataMap.put("requestNo", paramDTO.getRequestRefNo());	
 			reqDataMap.put("transactionType",TransactionQueryTypeMapped.valueOf(transferInfo.getCrfBizType()).getCode());
 			
-			
-			AppConfig config = AppConfig.getConfig();
 			List<BasicNameValuePair> postParam = null;
 			JSONObject result = null;
 			try {
 				postParam = AppUtil.createServicePostParam(ApiType.QUERY_TRANSACTION.getCode(), reqDataMap);
-				result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+				result = LmHttpUtils.postServiceResult( postParam);
 			} catch (CdgException e) {
 				//异常流程处理
 				 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
@@ -226,11 +226,13 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 			String code = result.getString("code");
 			String status = result.getString("status");
 			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+				//按照不同业务类型进行不同的判断
 				
+			
 			}
 		 
 		 
-		return null;
+		return rsp;
 	}
 
 	

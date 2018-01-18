@@ -41,7 +41,6 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.exception.CdgExceptionCode;
-import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.LmHttpUtils;

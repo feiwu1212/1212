@@ -17,6 +17,7 @@ import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.common.EnumsDBMap;
 import com.crfchina.cdg.common.enums.common.ResultCode;
+import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
@@ -32,6 +33,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +51,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LmAccountServiceImpl implements LmAccountService {
 
+	public static final Logger logger = LoggerFactory
+			.getLogger(LmAccountServiceImpl.class);
 	@Autowired
 	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
 
@@ -65,6 +70,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 	 */
 	@Override
 	public Map<String, Object> personBindCard(LmOpenAccountParamDTO loapDto) {
+		logger.info("个人绑卡参数拼装入库开始【begin】");
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_OPEN_ACCOUNT);
 		Date now = new Date();
 		LmBindCardFlowinfo flowInfo = new LmBindCardFlowinfo();
@@ -103,14 +109,16 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("idCardType", loapDto.getIdCardType());
 		reqDataMap.put("userRole", loapDto.getUserRole());
 		reqDataMap.put("checkType", Constants.CHECK_TYPE);
-		//FIXME 配置本地回调地址
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		// 本地调试配置本地回调地址
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 		reqDataMap.put("userLimitType", Constants.ID_CARD_NO_UNIQUE);
 		reqDataMap.put("authList", authStr);
 		reqDataMap.put("failTime", loapDto.getFailTime());
 		reqDataMap.put("amount", MoneyUtils.toDollar(loapDto.getAuthAmount()));
 
 		lmBindCardFlowinfoMapper.insert(flowInfo);
+
+		logger.info("个人绑卡参数拼装入库结束【end】");
 		return reqDataMap;
 	}
 
@@ -146,7 +154,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("bankcardNo", lcbcDto.getBankcardNo());
 		reqDataMap.put("mobile", lcbcDto.getMobile());
 		reqDataMap.put("checkType", Constants.CHECK_TYPE);
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmChangeCardmobileFlowinfoMapper.insert(flowInfo);
 		return reqDataMap;
@@ -180,7 +188,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("platformUserNo", lcpDto.getPlatformUserNo());
 		reqDataMap.put("requestNo", trxNo);
 		reqDataMap.put("isSkip", lcpDto.getIsSkip());
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
 		return reqDataMap;
@@ -213,7 +221,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("platformUserNo", lcpDto.getPlatformUserNo());
 		reqDataMap.put("requestNo", trxNo);
 		reqDataMap.put("bizTypeDescription", lcpDto.getBizTypeDescription());
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
 		return reqDataMap;
@@ -248,7 +256,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("requestNo", trxNo);
 		reqDataMap.put("mobile", lcmpDto.getMobile());
 		reqDataMap.put("checkType", Constants.CHECK_TYPE);
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
 		return reqDataMap;
@@ -283,7 +291,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("checkType", Constants.CHECK_TYPE);
 		reqDataMap.put("failTime", laapDto.getFailTime());
 		reqDataMap.put("amount", MoneyUtils.toDollar(laapDto.getAuthAmount()));
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
 		return reqDataMap;

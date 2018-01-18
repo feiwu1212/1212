@@ -59,6 +59,8 @@ public final class AppConfig {
 	 */
 	private String lmPublicKey;
 
+	private String callBackUrl;
+
 	private int connectionTimeout;
 
 	private int readTimeout;
@@ -126,6 +128,10 @@ public final class AppConfig {
 		value = pro.getProperty("url");
 		if (!StringUtils.isEmpty(value)) {
 			this.url = value.trim();
+		}
+		value = pro.getProperty("callBackUrl");
+		if (!StringUtils.isEmpty(value)) {
+			this.callBackUrl = value.trim();
 		}
 		value = pro.getProperty("platformNo");
 		if (!StringUtils.isEmpty(value)) {
@@ -232,5 +238,13 @@ public final class AppConfig {
 
 	public void setLmPublicKey(String lmPublicKey) {
 		this.lmPublicKey = lmPublicKey;
+	}
+
+	public String getCallBackUrl() {
+		return callBackUrl;
+	}
+
+	public void setCallBackUrl(String callBackUrl) {
+		this.callBackUrl = callBackUrl;
 	}
 }

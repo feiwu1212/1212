@@ -26,6 +26,8 @@ import com.crfchina.cdg.core.service.LmAccountService;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +49,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/account")
 public class AccountController {
 
+	public static final Logger logger = LoggerFactory
+			.getLogger(AccountController.class);
+
 	@Autowired
 	LmAccountService lmAccountService;
 
@@ -57,8 +62,8 @@ public class AccountController {
 	 */
 	@RequestMapping("/personOpen")
 	public ModelAndView personOpen(HttpServletRequest request) {
+		logger.info("个人绑卡拼装参数开始【begin】");
 		LmOpenAccountParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountParamDTO.class);
-
 		Map<String, Object> personOpenReqDataMap = lmAccountService.personBindCard(paramDto);
 		// 获取properties参数
 		AppConfig config = AppConfig.getConfig();
@@ -67,8 +72,10 @@ public class AccountController {
 		try {
 			result = AppUtil.createPostParam(ApiType.PERSONAL_REGISTER_EXPAND.getCode(), personOpenReqDataMap, paramDto.getUserDevice().getCode());
 		}catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
+		logger.info("个人绑卡拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
@@ -83,7 +90,7 @@ public class AccountController {
 		LmEnterpriseOpenAccountDTO reqDto = JSONObject.parseObject(JSONObject.toJSONString(paramDto), LmEnterpriseOpenAccountDTO.class);
 		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(reqDto));
 		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo(Constants.COMPANY_OPEN_ACCOUNT));
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));
 		
 		AppConfig config = AppConfig.getConfig();

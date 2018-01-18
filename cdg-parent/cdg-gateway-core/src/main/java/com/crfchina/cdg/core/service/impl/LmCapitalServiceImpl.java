@@ -20,6 +20,7 @@ import com.crfchina.cdg.common.enums.business.TransferResultType;
 import com.crfchina.cdg.common.enums.business.WithdrawForm;
 import com.crfchina.cdg.common.enums.business.WithdrawalType;
 import com.crfchina.cdg.common.enums.common.ResultCode;
+import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
@@ -149,7 +150,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 	    //reqDataMap.put("projectNo",);//暂无此应用场景
 
 		//TODO 配置本地回调地址
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
 		reqDataMap.put("expired", lmrpDto.getExpired());
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
@@ -241,7 +242,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		reqDataMap.put("withdrawType", WithdrawalType.URGENT.getCode());
       		reqDataMap.put("withdrawForm", WithdrawForm.IMMEDIATE.getCode());
       		//TODO 配置本地回调地址
-      		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
+      		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
       		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
       		reqDataMap.put("expired", df.format(paramDto.getExpired()) );
       		int txnId = txnInfoMapper.insert(txnInfo);
@@ -352,7 +353,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
             if(!StringUtils.isEmpty(paramDto.getOriginFcpTrxNo()))
             reqDataMap.put("creditsaleRequestNo", paramDto.getOriginFcpTrxNo());
       		//TODO 配置本地回调地址
-      		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
+      		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
       		int txnId = txnInfoMapper.insert(txnInfo);
       		//赋值detail中主表主键字段
       		txnDetail.setTransferInfoId(String.valueOf(txnId));
@@ -423,7 +424,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		reqDataMap.put("customDefine", paramDTO.getCustomDefine());
 		reqDataMap.put("targetPlatformUserNo", paramDTO.getTargetPlatformUserNo());
 		//TODO 配置本地回调地址
-		reqDataMap.put("redirectUrl", "http://127.0.0.1:8080/cdg-geteway/callBack/pageCallBack");//需要配置
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
 		reqDataMap.put("expired", paramDTO.getExpired());
 

@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/callBack")
 public class CallBackController {
 
+
 	@Autowired
 	LmCallBackService callBackService;
 
@@ -43,7 +44,7 @@ public class CallBackController {
 			resultFromRequest = getResultFromRequest(request);
 			mav = callBackService.dealCallBack(resultFromRequest);
 		} else {
-			//TODO 验签不通过
+			return new ModelAndView("error");
 		}
 		return mav;
 	}

@@ -111,11 +111,15 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmFreezePreTransactionResultDTO rsp = new LmFreezePreTransactionResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-				
-		
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -284,10 +288,15 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmAutoRechargeResultDTO rsp = new LmAutoRechargeResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-		
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -507,6 +516,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmAutoWithdrawResultDTO rsp = new LmAutoWithdrawResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
@@ -727,9 +742,15 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmUnFreezePreTransactionResultDTO rsp = new LmUnFreezePreTransactionResultDTO();
-				rsp.setRequestRefNo(paramDTO.getRequestRefNo());
-				rsp.setFcpTrxNo(fcpTrxNo);
-				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
+		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+		rsp.setFcpTrxNo(fcpTrxNo);
+		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
@@ -940,9 +961,15 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmAutoPreTransactionResultDTO rsp = new LmAutoPreTransactionResultDTO();
-				rsp.setRequestRefNo(paramDTO.getRequestRefNo());
-				rsp.setFcpTrxNo(fcpTrxNo);
-				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
+		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+		rsp.setFcpTrxNo(fcpTrxNo);
+		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
@@ -965,8 +992,6 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		txnLog.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
 		if(!StringUtils.isEmpty(paramDTO.getShare()))
 		txnLog.setRightShare(paramDTO.getRemark());
-
-		
 		
 		lmVaccountTransferLogMapper.insert(txnLog);
 
@@ -1234,6 +1259,12 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmRepayPreTransactionResultDTO rsp = new LmRepayPreTransactionResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());

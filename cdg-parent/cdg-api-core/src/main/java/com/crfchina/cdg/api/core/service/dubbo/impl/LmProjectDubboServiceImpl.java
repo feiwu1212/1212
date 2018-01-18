@@ -98,6 +98,12 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 
 		//返回结果预封装
 		LmCreateProjectResultDTO rsp = new LmCreateProjectResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
@@ -216,6 +222,12 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 
 				//返回结果预封装
 		        LmUpdateProjectResultDTO rsp = new LmUpdateProjectResultDTO();
+				if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+					rsp.setFailCode("CDG10002");
+					rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+					rsp.setResult(ResultCode.FAIL);
+					return rsp;
+				}
 			    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 				rsp.setFcpTrxNo(fcpTrxNo);
 				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
@@ -329,6 +341,12 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 
 		//返回结果预封装
         LmAuthorizationEntrustPayResultDTO rsp = new LmAuthorizationEntrustPayResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 	    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
@@ -419,9 +437,5 @@ public class LmProjectDubboServiceImpl implements LmProjectDubboService {
 		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
 	}
-
-
-	
-
 	
 }

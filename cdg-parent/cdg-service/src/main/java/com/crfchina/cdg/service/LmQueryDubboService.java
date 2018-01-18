@@ -7,7 +7,9 @@
  */
 package com.crfchina.cdg.service;
 
+import com.crfchina.cdg.dto.param.LmQueryTransferInfoParamDTO;
 import com.crfchina.cdg.dto.param.LmQueryUserInformationParamDTO;
+import com.crfchina.cdg.dto.result.LmQueryTransferInfoResultDTO;
 import com.crfchina.cdg.dto.result.LmQueryUserInformationResultDTO;
 
 /**    
@@ -35,5 +37,15 @@ public interface LmQueryDubboService {
 	 */
 	LmQueryUserInformationResultDTO querUserInformation(LmQueryUserInformationParamDTO paramDTO);
 	
+	/**
+	 * 
+	 * @Title: querTransferInfo  
+	 * @Description: 交易信息查询
+	 * @param paramDTO
+	 * @return
+	 * LmQueryTransferInfoResultDTO
+	 * @throws
+	 */
+	LmQueryTransferInfoResultDTO querTransferInfo(LmQueryTransferInfoParamDTO paramDTO);
 	
 }

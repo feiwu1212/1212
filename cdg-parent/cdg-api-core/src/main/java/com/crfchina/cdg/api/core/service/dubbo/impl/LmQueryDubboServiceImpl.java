@@ -22,8 +22,12 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.api.cache.SysCodeService;
+import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
+import com.crfchina.cdg.common.enums.business.TransactionQueryTypeMapped;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.exception.CdgException;
@@ -33,8 +37,10 @@ import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.common.utils.TrxNoUtils;
+import com.crfchina.cdg.dto.param.LmQueryTransferInfoParamDTO;
 import com.crfchina.cdg.dto.param.LmQueryUserInformationParamDTO;
 import com.crfchina.cdg.dto.result.AuthLimitResultList;
+import com.crfchina.cdg.dto.result.LmQueryTransferInfoResultDTO;
 import com.crfchina.cdg.dto.result.LmQueryUserInformationResultDTO;
 import com.crfchina.cdg.service.LmQueryDubboService;
 
@@ -59,6 +65,8 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 	@Autowired
 	SysCodeService sysCodeSrv;
 	
+	@Autowired
+	LmVaccountTransferInfoMapper lmVaccountTransferInfoMapper;
 	/**
 	 * 用户信息查询
 	 */
@@ -70,6 +78,12 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 
 		//返回结果预封装
 		LmQueryUserInformationResultDTO rsp = new LmQueryUserInformationResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
 	    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
@@ -147,6 +161,80 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 		}
 		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
+	}
+
+	/**
+	 * 交易信息查询
+	 */
+	@Override
+	public LmQueryTransferInfoResultDTO querTransferInfo(
+			LmQueryTransferInfoParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
+		//返回结果预封装
+		LmQueryTransferInfoResultDTO rsp = new LmQueryTransferInfoResultDTO();
+		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
+			rsp.setFailCode("CDG10002");
+			rsp.setFailReason(sysCodeSrv.getExplain("CDG10002"));
+			rsp.setResult(ResultCode.FAIL);
+			return rsp;
+		}
+	    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+		
+	    //通过原交易流水信息查询本地交易信息
+	    LmVaccountTransferInfo transferInfo = null;
+		 LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();
+		 infoExample.createCriteria().andRequestRefNoEqualTo(paramDTO.getRequestRefNo());
+		 List<LmVaccountTransferInfo> infoList = lmVaccountTransferInfoMapper.selectByExample(infoExample);
+		 if(infoList.size() == 0){
+			 rsp.setFailCode("CDG10004");
+			 rsp.setFailReason(sysCodeSrv.getExplain("CDG10004"));
+			 rsp.setResult(ResultCode.FAIL);
+			 return rsp;
+		 }
+		 transferInfo = infoList.get(0);
+         //如果交易是最终状态直接返回结果
+		 if(transferInfo.getResult().equals(ResultCode.SUCCESS.getCode())){
+			 rsp.setResult(ResultCode.SUCCESS);
+			 return rsp;
+		 }
+		 else if(transferInfo.getResult().equals(ResultCode.FAIL.getCode())){
+			 rsp.setFailCode(transferInfo.getFailCode());
+			 rsp.setFailReason(transferInfo.getFailReason());
+			 rsp.setResult(ResultCode.FAIL);
+			 return rsp;
+		 }
+		//调用懒猫接口
+		    Map<String, Object> reqDataMap = new LinkedHashMap<>();
+			reqDataMap.put("requestNo", paramDTO.getRequestRefNo());	
+			reqDataMap.put("transactionType",TransactionQueryTypeMapped.valueOf(transferInfo.getCrfBizType()).getCode());
+			
+			
+			AppConfig config = AppConfig.getConfig();
+			List<BasicNameValuePair> postParam = null;
+			JSONObject result = null;
+			try {
+				postParam = AppUtil.createServicePostParam(ApiType.QUERY_TRANSACTION.getCode(), reqDataMap);
+				result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+			} catch (CdgException e) {
+				//异常流程处理
+				 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
+					 rsp.setFailCode(CdgExceptionCode.CDG10023.getCode());
+					 rsp.setFailReason(sysCodeSrv.getExplain(CdgExceptionCode.CDG10023.getCode()));
+				 }
+				 else{
+					 rsp.setFailCode(e.getCode());
+					 rsp.setFailReason(e.getMsg());
+				 }
+				 return rsp;
+			}
+			String code = result.getString("code");
+			String status = result.getString("status");
+			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+				
+			}
+		 
+		 
+		return null;
 	}
 
 	

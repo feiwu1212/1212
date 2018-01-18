@@ -9,36 +9,46 @@ package com.crfchina.cdg.notify.taskwork;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.crfchina.csf.task.AbstractTaskWorker;
+import com.crfchina.csf.task.TaskWorker;
 import com.crfchina.csf.task.TaskWorkerManager;
+import com.crfchina.csf.task.nodetask.BusinessContext;
 import com.crfchina.csf.task.nodetask.NodeTaskResult;
+import com.crfchina.csf.task.nodetask.NodeTaskSequenceQueue;
 
 /**    
  * 
  * @ProjectName：cdg-notify
  * @ClassName：NotifyTaskWorkManager 
- * @Description:
+ * @Description:异步通知业务系统加入task队列
  * @author: William
  * @date：2018年1月17日 下午5:54:59
  * @updateBy：William
  * @updateDate：2018年1月17日 下午5:54:59
  * @remarks：
  */
+@TaskWorker(namespace="cdg-api-core")
+@Service
 public class NotifyTaskWorkManager extends AbstractTaskWorker {
 
 	 private static Logger Logger = LoggerFactory.getLogger(NotifyTaskWorkManager.class);
-	
-	public NotifyTaskWorkManager(int workerNum, TaskWorkerManager taskWorkerManager) {
-		super(workerNum, taskWorkerManager);
-		// TODO Auto-generated constructor stub
+	 @Autowired 
+	private NodeTaskSequenceQueue taskQueue; 
+	 
+	 
+	public NotifyTaskWorkManager(TaskWorkerManager taskWorkerManager) {
+		super(taskWorkerManager);
 	}
 
 	@Override
-	protected NodeTaskResult execute(String taskId) {
-		Logger.info("异步通知业务系统加入开始,taskworkd="+taskId);
+	protected NodeTaskResult execute(String fcpTrxNo) {
+		Logger.info("异步通知业务系统加入队列开始,taskworkd="+fcpTrxNo);
 		
-		Logger.info("异步通知业务系统加入结束,taskworkd="+taskId);
+
+		Logger.info("异步通知业务系统加入队列结束,taskworkd="+fcpTrxNo);
 		return null;
 	}
 

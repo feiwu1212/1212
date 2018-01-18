@@ -7,9 +7,7 @@
  */
 package com.crfchina.cdg.dto.param;
 
-import com.crfchina.cdg.common.enums.common.AccountSubject;
-
-/**    
+/**
  * 
  * @ProjectName：cdg-service
  * @ClassName：FundTransferDetailDTO 
@@ -22,7 +20,7 @@ import com.crfchina.cdg.common.enums.common.AccountSubject;
  */
 public class FundTransferDetailDTO {
 	
-	protected AccountSubject accountSubject;//交易科目
+	protected String accountSubjectCode;//交易科目
 	protected String originFcpTrxNo;//原交易冻结流水号(通常是投资申请时预冻结流水号/还款时冻结流水号)
 	protected String fromPlatformUserNo;//付款方用户号
 	protected String fromUserName;//付款方用户姓名
@@ -33,12 +31,12 @@ public class FundTransferDetailDTO {
 	protected Long share;//债权转让份额（债权转让时填写）
 	protected String remark;//备注
 
-	public AccountSubject getAccountSubject() {
-		return accountSubject;
+	public String getAccountSubjectCode() {
+		return accountSubjectCode;
 	}
 
-	public void setAccountSubject(AccountSubject accountSubject) {
-		this.accountSubject = accountSubject;
+	public void setAccountSubjectCode(String accountSubjectCode) {
+		this.accountSubjectCode = accountSubjectCode;
 	}
 
 	public String getOriginFcpTrxNo() {

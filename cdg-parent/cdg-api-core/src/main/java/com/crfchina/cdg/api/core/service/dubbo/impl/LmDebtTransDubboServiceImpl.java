@@ -158,12 +158,11 @@ public class LmDebtTransDubboServiceImpl implements LmDebtTransferDubboService {
 		reqDataMap.put("projectNo", paramDTO.getProjectNo());
         reqDataMap.put("share", paramDTO.getSaleShare());
 		
-		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.DEBENTURE_SALE.getCode(), reqDataMap);
-			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+			result = LmHttpUtils.postServiceResult(postParam);
 		} catch (CdgException e) {
 			//异常流程处理
 			 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
@@ -322,12 +321,11 @@ public class LmDebtTransDubboServiceImpl implements LmDebtTransferDubboService {
 		reqDataMap.put("requestNo", fcpTrxNo);
         reqDataMap.put("creditsaleRequestNo", paramDTO.getOriginFcpTrxNo());
 		
-		AppConfig config = AppConfig.getConfig();
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;
 		try {
 			postParam = AppUtil.createServicePostParam(ApiType.CANCEL_DEBENTURE_SALE.getCode(), reqDataMap);
-			result = LmHttpUtils.postServiceResult(config.getUrl(), postParam);
+			result = LmHttpUtils.postServiceResult(postParam);
 		} catch (CdgException e) {
 			//异常流程处理
 			 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){

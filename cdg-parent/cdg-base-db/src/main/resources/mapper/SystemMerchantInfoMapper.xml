@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crfchina.cdg.basedb.dao.SystemMerchantInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="system_no" property="systemNo" jdbcType="VARCHAR" />
+    <result column="system_name" property="systemName" jdbcType="VARCHAR" />
+    <result column="sand" property="sand" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" extends="BaseResultMap" >
+    <result column="private_key" property="privateKey" jdbcType="LONGVARCHAR" />
+    <result column="public_key" property="publicKey" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, system_no, system_name, sand, status, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    private_key, public_key
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from system_merchant_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from system_merchant_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from system_merchant_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from system_merchant_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" >
+    insert into system_merchant_info (id, system_no, system_name, 
+      sand, status, create_time, 
+      update_time, private_key, public_key
+      )
+    values (#{id,jdbcType=BIGINT}, #{systemNo,jdbcType=VARCHAR}, #{systemName,jdbcType=VARCHAR}, 
+      #{sand,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{privateKey,jdbcType=LONGVARCHAR}, #{publicKey,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" >
+    insert into system_merchant_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="systemNo != null" >
+        system_no,
+      </if>
+      <if test="systemName != null" >
+        system_name,
+      </if>
+      <if test="sand != null" >
+        sand,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="privateKey != null" >
+        private_key,
+      </if>
+      <if test="publicKey != null" >
+        public_key,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="systemNo != null" >
+        #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="systemName != null" >
+        #{systemName,jdbcType=VARCHAR},
+      </if>
+      <if test="sand != null" >
+        #{sand,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="privateKey != null" >
+        #{privateKey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="publicKey != null" >
+        #{publicKey,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfoExample" resultType="java.lang.Integer" >
+    select count(*) from system_merchant_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" >
+    update system_merchant_info
+    <set >
+      <if test="systemNo != null" >
+        system_no = #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="systemName != null" >
+        system_name = #{systemName,jdbcType=VARCHAR},
+      </if>
+      <if test="sand != null" >
+        sand = #{sand,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="privateKey != null" >
+        private_key = #{privateKey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="publicKey != null" >
+        public_key = #{publicKey,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" >
+    update system_merchant_info
+    set system_no = #{systemNo,jdbcType=VARCHAR},
+      system_name = #{systemName,jdbcType=VARCHAR},
+      sand = #{sand,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      private_key = #{privateKey,jdbcType=LONGVARCHAR},
+      public_key = #{publicKey,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crfchina.cdg.basedb.entity.SystemMerchantInfo" >
+    update system_merchant_info
+    set system_no = #{systemNo,jdbcType=VARCHAR},
+      system_name = #{systemName,jdbcType=VARCHAR},
+      sand = #{sand,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

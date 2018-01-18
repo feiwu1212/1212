@@ -22,4 +22,8 @@ public interface LmVaccountTransferDetailMapper {
     int updateByPrimaryKeySelective(LmVaccountTransferDetail record);
 
     int updateByPrimaryKey(LmVaccountTransferDetail record);
+
+    int insertBatch(List<LmVaccountTransferDetail> list);
+
+    int updateResultByTransferInfoId(LmVaccountTransferDetail record);
 }

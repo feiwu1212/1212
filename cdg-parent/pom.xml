@@ -115,8 +115,14 @@
         <dependency>
 	        <groupId>com.crfchina.csf</groupId> 
 				<artifactId>csf-task</artifactId> 
-			<version>1.0.11-SNAPSHOT</version>
+			<version>1.0.10-SNAPSHOT</version>
       	</dependency>
+      	
+      	<dependency> 
+			<groupId>com.crfchina</groupId> 
+			<artifactId>CrfRsa4j</artifactId> 
+			<version>1.02</version> 
+		</dependency>
       	
         <!-- CRFLOG 
 		<dependency>

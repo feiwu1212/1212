@@ -16,7 +16,7 @@ import com.crfchina.csf.task.nodetask.service.NodeTaskService;
  * 
  * @ProjectName：cdg-notify
  * @ClassName：NotifyTaskWorkExec 
- * @Description:
+ * @Description:task队列数据处理
  * @author: William
  * @date：2018年1月17日 下午5:57:21
  * @updateBy：William

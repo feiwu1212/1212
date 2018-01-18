@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.ImportResource;
 
 /**    
  * 
@@ -31,6 +32,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching  //缓存使用
 @MapperScan("com.crfchina.cdg.basedb.dao")//Mybatis扫包
+@ImportResource({"classpath*:spring-disconf.xml"})//导入spring配置
 public class CdgAPICoreApplication extends SpringBootServletInitializer{
 	
 	public static void main(String[] args) {

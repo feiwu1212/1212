@@ -111,27 +111,38 @@
 
 	<profiles>
 		<profile>
+			<id>local</id>
+			<properties>
+				<environment>local</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
+			</properties>
+		</profile>
+		<profile>
 			<id>ci</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<environment>ci</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
 			</properties>
 		</profile>
 		<profile>
 			<id>uat</id>
 			<properties>
 				<environment>uat</environment>
+				<zookeeper>disconf.crfchina.com</zookeeper>
 			</properties>
 		</profile>
 		<profile>
 			<id>pro</id>
 			<properties>
 				<environment>pro</environment>
+				<zookeeper>cfg.crfchina.com</zookeeper>
 			</properties>
 		</profile>
 	</profiles>
+	
 	<build>
 		<plugins>
 			<plugin>

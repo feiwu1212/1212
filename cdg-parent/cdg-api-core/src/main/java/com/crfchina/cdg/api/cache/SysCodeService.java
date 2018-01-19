@@ -12,4 +12,12 @@ public interface SysCodeService {
 	String getExplainByLm(String lmResCode);
 	String getResCodeByLm(String lmResCode);
 	String getExplain(String resCode);
+	
+	String getLmBankCode(String bankCode);
+	
+	String getSysPubKey(String sysNo);
+	
+	String getSysPriKey(String sysNo);
+	
+	String getSysSand(String sysNo);
 }

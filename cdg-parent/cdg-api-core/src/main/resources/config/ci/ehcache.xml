@@ -7,7 +7,10 @@
 
 	<cache name="systemStatusCodeMetadataCache" maxElementsInMemory="200" />
 	<cache name="systemStatusCodeCache" maxElementsInMemory="200" />
-
+	<cache name="bankInfoCache" maxElementsInMemory="200" />
+	<cache name="sysPubKey" maxElementsInMemory="200" />
+	<cache name="sysPriKey" maxElementsInMemory="200" />
+	<cache name="sysSand" maxElementsInMemory="200" />
 	
 	<defaultCache maxElementsInMemory="10000" eternal="false"
 		overflowToDisk="true" timeToIdleSeconds="43200" timeToLiveSeconds="86400"

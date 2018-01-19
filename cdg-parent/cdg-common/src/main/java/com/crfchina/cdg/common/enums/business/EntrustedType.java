@@ -6,6 +6,8 @@
  */
 package com.crfchina.cdg.common.enums.business;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @ProjectName：cdg-parent
  * @ClassName：EntrustedType
@@ -49,4 +51,14 @@ public enum EntrustedType {
 		this.code = code;
 		this.desc = desc;
 	}
+	
+	public static EntrustedType getEnumByCode(String code){
+		for (EntrustedType item : EntrustedType.values()) {
+			if(StringUtils.equals(code, item.getCode())){
+				return item;
+			}
+		}
+		return null;
+	}
+	
 }

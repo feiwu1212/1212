@@ -7,6 +7,8 @@
  */
 package com.crfchina.cdg.common.enums.business;
 
+import org.apache.commons.lang.StringUtils;
+
 /**    
  * 
  * @ProjectName：lanmaoly-common
@@ -30,6 +32,13 @@ public enum TransactionType {
 	FUNDS_TRANSFER("FUNDS_TRANSFER","平台资金划拨"),
 	APPEND_FREEZE("APPEND_FREEZE","追加冻结"),
 	INTELLIGENT_APPEND("INTELLIGENT_APPEND","批量追加冻结"),
+	
+	COMPEN_FREEZE("COMPEN_FREEZE","追加代偿"),
+	AUTO_COMPENSATORY("AUTO_COMPENSATORY","可用余额代偿"),
+	AUTO_INDIRECT_COMPENSATORY("AUTO_INDIRECT_COMPENSATORY","可用余额间接代偿"),
+	AUTO_TENDER("AUTO_TENDER","可用余额放款"),
+	AUTO_CREDIT_ASSIGNMENT("AUTO_CREDIT_ASSIGNMENT","可用余额债权认购"),
+	AUTO_REPAYMENT("AUTO_REPAYMENT","可用余额还款"),
 	;
 	
 	private String code;
@@ -60,4 +69,14 @@ public enum TransactionType {
 		this.code = code;
 		this.desc = desc;
 	}
+	
+	public static TransactionType getEnumByCode(String code){
+		for (TransactionType item : TransactionType.values()) {
+			if(StringUtils.equals(code, item.getCode())){
+				return item;
+			}
+		}
+		return null;
+	}
+	
 }

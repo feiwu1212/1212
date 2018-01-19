@@ -10,6 +10,8 @@
 
 package com.crfchina.cdg.common.enums.business;
 
+import org.apache.commons.lang.StringUtils;
+
 /** 
  * @Description 懒猫存管系统-还款方式
  * @author William
@@ -53,4 +55,16 @@ public enum RepaymentType {
 		this.code = code;
 		this.desc = desc;
 	}
+	
+
+	public static RepaymentType getEnumByCode(String code){
+		for (RepaymentType item : RepaymentType.values()) {
+			if(StringUtils.equals(code, item.getCode())){
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	
 }

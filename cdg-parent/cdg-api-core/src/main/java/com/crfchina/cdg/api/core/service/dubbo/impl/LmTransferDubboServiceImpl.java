@@ -106,6 +106,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 	@Autowired
 	SysCodeService sysCodeSrv;
+	
 	/**
 	 * 冻结预处理
 	 */
@@ -397,7 +398,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 	    	reqDataMap.put("expectPayCompany","FUIOU");
 	    }
         if(!StringUtils.isEmpty(paramDTO.getBankCode()))
-        reqDataMap.put("bankcode",paramDTO.getBankCode());
+        reqDataMap.put("bankcode",sysCodeSrv.getLmBankCode(paramDTO.getBankCode()));
         
 		List<BasicNameValuePair> postParam = null;
 		JSONObject result = null;

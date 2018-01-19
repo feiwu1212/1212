@@ -19,14 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.api.cache.SysCodeService;
+import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
+import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLogExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
+import com.crfchina.cdg.common.enums.business.TransactionQueryType;
 import com.crfchina.cdg.common.enums.business.TransactionQueryTypeMapped;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
@@ -66,6 +74,12 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 	
 	@Autowired
 	LmVaccountTransferInfoMapper lmVaccountTransferInfoMapper;
+	
+	@Autowired
+	LmVaccountTransferDetailMapper lmVaccountTransferDetailMapper;
+	
+	@Autowired
+	LmVaccountTransferLogMapper lmVaccountTransferLogMapper;
 	/**
 	 * 用户信息查询
 	 */
@@ -190,48 +204,19 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 			 return rsp;
 		 }
 		 transferInfo = infoList.get(0);
-         //如果交易是最终状态直接返回结果
 		 if(transferInfo.getResult().equals(ResultCode.SUCCESS.getCode())){
 			 rsp.setResult(ResultCode.SUCCESS);
-			 return rsp;
 		 }
 		 else if(transferInfo.getResult().equals(ResultCode.FAIL.getCode())){
 			 rsp.setFailCode(transferInfo.getFailCode());
 			 rsp.setFailReason(transferInfo.getFailReason());
 			 rsp.setResult(ResultCode.FAIL);
-			 return rsp;
+		 }else if(transferInfo.getResult().equals(ResultCode.ACCEPTED.getCode())){
+			 rsp.setResult(ResultCode.ACCEPTED);
 		 }
-		//调用懒猫接口
-		    Map<String, Object> reqDataMap = new LinkedHashMap<>();
-			reqDataMap.put("requestNo", paramDTO.getRequestRefNo());	
-			reqDataMap.put("transactionType",TransactionQueryTypeMapped.valueOf(transferInfo.getCrfBizType()).getCode());
-			
-			List<BasicNameValuePair> postParam = null;
-			JSONObject result = null;
-			try {
-				postParam = AppUtil.createServicePostParam(ApiType.QUERY_TRANSACTION.getCode(), reqDataMap);
-				result = LmHttpUtils.postServiceResult( postParam);
-			} catch (CdgException e) {
-				//异常流程处理
-				 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
-					 rsp.setFailCode(CdgExceptionCode.CDG10023.getCode());
-					 rsp.setFailReason(sysCodeSrv.getExplain(CdgExceptionCode.CDG10023.getCode()));
-				 }
-				 else{
-					 rsp.setFailCode(e.getCode());
-					 rsp.setFailReason(e.getMsg());
-				 }
-				 return rsp;
-			}
-			String code = result.getString("code");
-			String status = result.getString("status");
-			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
-				//按照不同业务类型进行不同的判断
-				
-			
-			}
-		 
-		 
+		 else {
+			 rsp.setResult(ResultCode.UNKNOWN);
+		 }
 		return rsp;
 	}
 

@@ -6,7 +6,8 @@
  */
 package com.crfchina.cdg.dto.result;
 
-import java.util.List;
+
+import java.util.Date;
 
 import com.crfchina.cdg.dto.base.LmBaseResultDTO;
 
@@ -24,13 +25,13 @@ public class LmQueryTransferInfoResultDTO extends LmBaseResultDTO {
 
 	private static final long serialVersionUID = 1L;
  
-    protected String transactionTime ;
+    protected Date transactionTime ;
 
-	public String getTransactionTime() {
+	public Date getTransactionTime() {
 		return transactionTime;
 	}
 
-	public void setTransactionTime(String transactionTime) {
+	public void setTransactionTime(Date transactionTime) {
 		this.transactionTime = transactionTime;
 	}
     

@@ -7,6 +7,8 @@
  */
 package com.crfchina.cdg.common.enums.business;
 
+import org.apache.commons.lang.StringUtils;
+
 /**    
  * 
  * @ProjectName：lanmaoly-common
@@ -52,4 +54,14 @@ public enum ProjectType {
 		this.code = code;
 		this.desc = desc;
 	}
+	
+	public static ProjectType getEnumByCode(String code){
+		for (ProjectType item : ProjectType.values()) {
+			if(StringUtils.equals(code, item.getCode())){
+				return item;
+			}
+		}
+		return null;
+	}
+	
 }

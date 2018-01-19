@@ -10,6 +10,8 @@
 
 package com.crfchina.cdg.common.enums.business;
 
+import org.apache.commons.lang.StringUtils;
+
 /** 
  * @Description 懒猫存管系统-业务类型
  * @author William
@@ -28,6 +30,15 @@ public enum ProjectStatus {
 	private String code;
 	
 	private String desc;
+	
+	public static ProjectStatus getEnumByCode(String code){
+		for (ProjectStatus item : ProjectStatus.values()) {
+			if(StringUtils.equals(code, item.getCode())){
+				return item;
+			}
+		}
+		return null;
+	}
 
 	public String getCode() {
 		return code;

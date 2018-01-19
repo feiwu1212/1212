@@ -2,8 +2,12 @@ package com.crfchina.cdg.basedb.dao;
 
 import com.crfchina.cdg.basedb.entity.SystemMerchantInfo;
 import com.crfchina.cdg.basedb.entity.SystemMerchantInfoExample;
+
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
 public interface SystemMerchantInfoMapper {
     int countByExample(SystemMerchantInfoExample example);
 

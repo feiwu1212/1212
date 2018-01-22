@@ -5,12 +5,12 @@
   <parent>
     <groupId>com.crfchina</groupId>
     <artifactId>cdg-parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
   </parent>
   
   <groupId>com.crfchina</groupId>
   <artifactId>cdg-common</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   
   <name>cdg-common</name>
   <url>http://maven.apache.org</url>

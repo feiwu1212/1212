@@ -7,6 +7,8 @@
  */
 package com.crfchina.cdg.dto.result;
 
+import java.util.Date;
+
 import com.crfchina.cdg.dto.base.LmBaseResultDTO;
 
 /**    
@@ -30,6 +32,18 @@ public class LmFundTransferResultDTO extends LmBaseResultDTO{
 	private static final long serialVersionUID = 1L;
 	
 	protected String platformUserNo;//平台用户编号
+	
+	protected Date transactionTime;// 交易完成时间
+
+
+	public Date getTransactionTime() {
+		return transactionTime;
+	}
+
+
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
+	}
 
 	
 }

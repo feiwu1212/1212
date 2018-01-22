@@ -1,6 +1,8 @@
 package com.crfchina.cdg.common.utils;
 
 import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
+import com.crfchina.cdg.common.exception.CdgException;
+import com.crfchina.cdg.common.exception.CdgExceptionCode;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,11 +23,16 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 签名验签类
  */
 public class SignatureUtils {
+
+	public static final Logger logger = LoggerFactory
+			.getLogger(SignatureUtils.class);
 
 	private static final String RSA = "RSA";
 	
@@ -158,7 +165,8 @@ public class SignatureUtils {
 		} while (c != -1);
 	}
 
-	public static boolean checkSign(String sign, String signData) {
+	public static boolean checkSign(String sign, String signData) throws CdgException{
+		logger.info("网关页面回调验签开始sign-->{},signData-->{}", sign, signData);
 		//验签
 		AppConfig config = AppConfig.getConfig();
 		PublicKey publicKey = null;
@@ -168,16 +176,10 @@ public class SignatureUtils {
 			boolean verify = SignatureUtils.verify(
 					SignatureAlgorithm.SHA1WithRSA, publicKey, signData,
 					Base64.decodeBase64(sign));
+			logger.info("网关页面回调验签结束verify-->{}", verify);
 			return verify;
-		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
+			throw new CdgException(CdgExceptionCode.CDG10021, e);
 		}
-		return false;
 	}
 }

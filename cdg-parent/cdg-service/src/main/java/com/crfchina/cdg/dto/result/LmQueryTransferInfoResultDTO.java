@@ -25,7 +25,7 @@ public class LmQueryTransferInfoResultDTO extends LmBaseResultDTO {
 
 	private static final long serialVersionUID = 1L;
  
-    protected Date transactionTime ;
+    protected Date transactionTime ;//交易完成时间
 
 	public Date getTransactionTime() {
 		return transactionTime;

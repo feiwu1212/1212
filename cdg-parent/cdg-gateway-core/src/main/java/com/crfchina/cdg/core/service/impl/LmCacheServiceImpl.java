@@ -36,7 +36,7 @@ public class LmCacheServiceImpl implements LmCacheService {
 	BankInfoMapper bankInfoMapper;
 	
 	
-	@Cacheable(cacheNames = "bankInfoCache")
+	@Cacheable(cacheNames = "lmBankInfoCache")
 	@Override
 	public String getLmBankCode(String bankCode) {
 		System.out.println("123123123");
@@ -96,4 +96,18 @@ public class LmCacheServiceImpl implements LmCacheService {
 		return sysSnd;
 	}
 
+	@Cacheable(cacheNames = "bankInfoCache")
+	@Override
+	public String getBankCode(String lmBankCode) {
+		String bankCode = null;
+		BankInfo bankinfo = new BankInfo();
+		BankInfoExample example = new BankInfoExample();
+		example.createCriteria().andLmBankCodeEqualTo(lmBankCode);
+		List<BankInfo> list = bankInfoMapper.selectByExample(example);
+		if(list.size()>0){
+			bankinfo = list.get(0);
+			bankCode = bankinfo.getBankCode();
+		}
+		return bankCode;
+	}
 }

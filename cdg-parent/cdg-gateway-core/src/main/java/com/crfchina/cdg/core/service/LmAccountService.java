@@ -8,6 +8,7 @@ import com.crfchina.cdg.core.dto.param.LmChangeBankCardParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangeMobileParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangePwdParamDTO;
 import com.crfchina.cdg.core.dto.param.LmCheckPwdParamDTO;
+import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import java.util.Map;
 public interface LmAccountService {
 
 	Map<String, Object> personBindCard(LmOpenAccountParamDTO loapDto);
+
+	Map<String, Object> enterpriseBindCard(LmOpenAccountCompanyParamDTO leoaDto);
 
 	Map<String, Object> changeCard(LmChangeBankCardParamDTO lcbcDto);
 

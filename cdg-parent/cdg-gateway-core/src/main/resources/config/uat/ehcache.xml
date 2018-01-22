@@ -4,10 +4,11 @@
 
 	<!-- 设定缓存的默认数据过期策略 -->
 
-	<cache name="bankInfoCache" maxElementsInMemory="200" />
+	<cache name="lmBankInfoCache" maxElementsInMemory="200" />
 	<cache name="sysPubKey" maxElementsInMemory="200" />
 	<cache name="sysPriKey" maxElementsInMemory="200" />
 	<cache name="sysSand" maxElementsInMemory="200" />
+	<cache name="bankInfoCache" maxElementsInMemory="200" />
 
 	
 	<defaultCache maxElementsInMemory="10000" eternal="false"

@@ -87,9 +87,9 @@ public class LmDebtTransDubboServiceImpl implements LmDebtTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmDebentureSaleResultDTO rsp = new LmDebentureSaleResultDTO();
-				rsp.setRequestRefNo(paramDTO.getRequestRefNo());
-				rsp.setFcpTrxNo(fcpTrxNo);
-				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+		rsp.setFcpTrxNo(fcpTrxNo);
+		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
@@ -251,9 +251,9 @@ public class LmDebtTransDubboServiceImpl implements LmDebtTransferDubboService {
 		Date now = new Date();
 		//返回结果预封装
 		LmCancelDebentureSaleResultDTO rsp = new LmCancelDebentureSaleResultDTO();
-				rsp.setRequestRefNo(paramDTO.getRequestRefNo());
-				rsp.setFcpTrxNo(fcpTrxNo);
-				rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+		rsp.setFcpTrxNo(fcpTrxNo);
+		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
 		
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();

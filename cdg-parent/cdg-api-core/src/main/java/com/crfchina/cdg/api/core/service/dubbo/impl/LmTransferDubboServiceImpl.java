@@ -125,6 +125,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		rsp.setTransactionTime(now);
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -253,6 +254,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			lmVaccountTransferLogMapper.updateByPrimaryKey(txnLog);
 			//返回成功结果
 			rsp.setResult(ResultCode.SUCCESS);
+			rsp.setTransactionTime(now);
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
 			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
@@ -278,6 +280,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			 rsp.setResult(ResultCode.FAIL);
 			 rsp.setFailReason(failCode);
 			 rsp.setFailCode(failCode);
+			 rsp.setTransactionTime(now);
 		}
 		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
@@ -301,6 +304,8 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
+		rsp.setTransactionTime(now);
+
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -528,7 +533,8 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-		
+		rsp.setTransactionTime(now);
+
 
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
@@ -753,7 +759,8 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-		
+		rsp.setTransactionTime(now);
+
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());
@@ -971,7 +978,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-		
+
 		// 新增LOG
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
 		txnLog.setRequestRefNo(paramDTO.getRequestRefNo());

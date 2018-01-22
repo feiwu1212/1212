@@ -6,6 +6,7 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 	    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
 		rsp.setFcpTrxNo(fcpTrxNo);
 		rsp.setPlatformUserNo(paramDTO.getPlatformUserNo());
-	
+
 		//调用懒猫接口
 	    Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("platformUserNo", paramDTO.getPlatformUserNo());	
@@ -182,6 +183,8 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 	public LmQueryTransferInfoResultDTO querTransferInfo(
 			LmQueryTransferInfoParamDTO paramDTO) {
 		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
+		Date now = new Date();
+
 		//返回结果预封装
 		LmQueryTransferInfoResultDTO rsp = new LmQueryTransferInfoResultDTO();
 		if(StringUtils.isEmpty(paramDTO.getRequestRefNo())){
@@ -191,7 +194,8 @@ public class LmQueryDubboServiceImpl implements LmQueryDubboService {
 			return rsp;
 		}
 	    rsp.setRequestRefNo(paramDTO.getRequestRefNo());
-		
+		rsp.setTransactionTime(now);
+
 	    //通过原交易流水信息查询本地交易信息
 	    LmVaccountTransferInfo transferInfo = null;
 		 LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();

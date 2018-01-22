@@ -7,6 +7,8 @@
  */
 package com.crfchina.cdg.dto.result;
 
+import java.util.Date;
+
 import com.crfchina.cdg.dto.base.LmBaseResultDTO;
 
 /**    
@@ -28,6 +30,18 @@ public class LmFreezePreTransactionResultDTO extends LmBaseResultDTO {
 	 */    
 	
 	private static final long serialVersionUID = 1L;
+	
+	protected Date transactionTime;// 交易完成时间
+
+	public Date getTransactionTime() {
+		return transactionTime;
+	}
+
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
+	}
+	
+	
 	
 	
 	

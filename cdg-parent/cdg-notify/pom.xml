@@ -7,12 +7,12 @@
 	<parent>
 		<groupId>com.crfchina</groupId>
 		<artifactId>cdg-parent</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.crfchina</groupId>
 	<artifactId>cdg-notify</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 
 	<packaging>war</packaging>
 	<name>cdg-notify Maven Webapp</name>
@@ -36,9 +36,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<springfox.version>2.6.1</springfox.version>
-		<cdg.common.version>0.0.2-SNAPSHOT</cdg.common.version>
-		<cdg.basedb.version>0.0.2-SNAPSHOT</cdg.basedb.version>
-		<cdg.service.version>0.0.2-SNAPSHOT</cdg.service.version>
+		<cdg.common.version>0.0.4-SNAPSHOT</cdg.common.version>
+		<cdg.basedb.version>0.0.4-SNAPSHOT</cdg.basedb.version>
+		<cdg.service.version>0.0.4-SNAPSHOT</cdg.service.version>
 	</properties>
 
 	<dependencies>

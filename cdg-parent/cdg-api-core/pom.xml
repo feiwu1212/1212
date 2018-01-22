@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>com.crfchina</groupId>
 		<artifactId>cdg-parent</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.crfchina</groupId>
 	<artifactId>cdg-api-core</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 
 	<packaging>war</packaging>
 	<name>cdg-api-core Maven Webapp</name>
@@ -34,9 +34,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<cdg.common.version>0.0.2-SNAPSHOT</cdg.common.version>
-		<cdg.basedb.version>0.0.2-SNAPSHOT</cdg.basedb.version>
-		<cdg.service.version>0.0.2-SNAPSHOT</cdg.service.version>
+		<cdg.common.version>0.0.4-SNAPSHOT</cdg.common.version>
+		<cdg.basedb.version>0.0.4-SNAPSHOT</cdg.basedb.version>
+		<cdg.service.version>0.0.4-SNAPSHOT</cdg.service.version>
 		<com.alibaba.dubbo.version>2.5.3</com.alibaba.dubbo.version>
 		<org.apache.zookeeper.version>3.4.6</org.apache.zookeeper.version>
 		<com.github.sgroschupf.zkclient.version>0.1</com.github.sgroschupf.zkclient.version>

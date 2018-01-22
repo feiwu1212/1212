@@ -104,7 +104,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setTransferAmount(String.valueOf(lmrpDto.getAmount()));
 		txnInfo.setTransferType(crfBizType);
 		txnInfo.setUpdateTime(now);//异步通知时候更新
-		int txnId = txnInfoMapper.insert(txnInfo);
+		 txnInfoMapper.insert(txnInfo);
 
 		//txnDetail封装
 		LmVaccountTransferDetail txnDetail = new LmVaccountTransferDetail();
@@ -133,7 +133,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnDetail.setTransferInfoId("");//交易表主键 交易表新增成功则获取此值
 		txnDetail.setUpdateTime(now);
 		//赋值detail中主表主键字段
-		txnDetail.setTransferInfoId(String.valueOf(txnId));
+		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
 		txnDetailMapper.insert(txnDetail);
 		
 		if(null != lmrpDto.getCommissionAmount()){
@@ -251,15 +251,15 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
       		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
       		reqDataMap.put("expired", df.format(paramDto.getExpired()) );
-      		int txnId = txnInfoMapper.insert(txnInfo);
+      		 txnInfoMapper.insert(txnInfo);
       		//赋值detail中主表主键字段
-      		txnDetail.setTransferInfoId(String.valueOf(txnId));
+      		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
       	   //判断佣金是否存在，存在新增佣金明细记录表
       		if(null != paramDto.getCommissionAmount()){
       			LmVaccountTransferDetail txnDetail2 = txnDetail;
           		txnDetail2.setTransferAmount(String.valueOf(paramDto.getCommissionAmount()));
           		reqDataMap.put("commission", MoneyUtils.toDollar(paramDto.getCommissionAmount()));
-          		txnDetail2.setTransferInfoId(String.valueOf(txnId));
+          		txnDetail2.setTransferInfoId(String.valueOf(txnInfo.getId()));
           		txnDetailMapper.insert(txnDetail2);
       		}
       		txnDetailMapper.insert(txnDetail);
@@ -360,9 +360,9 @@ public class LmCapitalServiceImpl implements LmCapitalService {
             reqDataMap.put("creditsaleRequestNo", paramDto.getOriginFcpTrxNo());
       		//TODO 配置本地回调地址
       		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
-      		int txnId = txnInfoMapper.insert(txnInfo);
+      		 txnInfoMapper.insert(txnInfo);
       		//赋值detail中主表主键字段
-      		txnDetail.setTransferInfoId(String.valueOf(txnId));
+      		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
       		txnDetailMapper.insert(txnDetail);
       		return reqDataMap;
 	}
@@ -434,9 +434,9 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
 		reqDataMap.put("expired", paramDTO.getExpired());
 
-		int txnId = txnInfoMapper.insert(txnInfo);
+		 txnInfoMapper.insert(txnInfo);
 		//赋值detail中主表主键字段
-		txnDetail.setTransferInfoId(String.valueOf(txnId));
+		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
 		txnDetailMapper.insert(txnDetail);
 		lmVaccountTransferLogMapper.insert(txnLog);
 		return reqDataMap;

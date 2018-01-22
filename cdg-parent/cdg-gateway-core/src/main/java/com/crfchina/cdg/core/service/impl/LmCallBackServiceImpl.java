@@ -280,12 +280,17 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 		if (flowInfoList != null && flowInfoList.size() == 1) {
 			LmVaccountTransferInfo flow = flowInfoList.get(0);
 			LmVaccountTransferDetail txnDtl = null;
+			LmVaccountTransferDetail txnDtl2 = null;
 			//获取交易明细表
 			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
 			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
-			if (txnDtlList != null && txnDtlList.size() == 1) {
+			if (txnDtlList != null ) {
 				 txnDtl = txnDtlList.get(0);
+				 //如果返回字段中有佣金字段，则获取第二条dtl记录
+				 if(!StringUtils.isEmpty(respData.getString("commission"))){
+					 txnDtl2 = txnDtlList.get(1);
+				 }
 			}
 			else{
 				logger.info("未找到对应的历史订单记录");
@@ -305,11 +310,20 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 				txnDtl.setSettleDate(now);
 				
+				 if(!StringUtils.isEmpty(respData.getString("commission"))){
+					 txnDtl2.setResult(ResultCode.ACCEPTED.getCode());
+					 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+					 txnDtl2.setUpdateTime(now);
+					 txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+					 txnDtl2.setSettleDate(now);
+					 txnDetailMapper.updateByPrimaryKey(txnDtl2);
+				 }
+				
 				txnInfoMapper.updateByPrimaryKey(flow);
 				txnDetailMapper.updateByPrimaryKey(txnDtl);
 				
 				CallBackParam callBackParam = new CallBackParam();
-				callBackParam.setResult(ResultCode.SUCCESS.getCode());
+				callBackParam.setResult(ResultCode.ACCEPTED.getCode());
 				callBackParam.setRequestRefNo(flow.getRequestRefNo());
 				respData.put("fcpTrxNo", flow.getFcpTrxNo());
 				callBackParam.setData(respData.toJSONString());
@@ -324,6 +338,15 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				txnDtl.setFailCode(respData.getString("errorCode"));
 				txnDtl.setFailReason(respData.getString("errorCode"));
 				txnDtl.setUpdateTime(now);
+				
+				 if(!StringUtils.isEmpty(respData.getString("commission"))){
+					 txnDtl2.setResult(ResultCode.FAIL.getCode());
+					 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+					 txnDtl2.setUpdateTime(now);
+					 txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+					 txnDtl2.setSettleDate(now);
+					 txnDetailMapper.updateByPrimaryKey(txnDtl2);
+				 }
 				
 				txnInfoMapper.updateByPrimaryKey(flow);
 				txnDetailMapper.updateByPrimaryKey(txnDtl);

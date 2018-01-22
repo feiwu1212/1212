@@ -82,35 +82,38 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 	@Override
 	public ModelAndView dealCallBack(LmGatewayPageCallbackResult result) {
 		ApiType apiType = ApiType.valueOf(result.getServiceName());
-		if (apiType.equals(ApiType.PERSONAL_REGISTER_EXPAND)) {
+		if (ApiType.PERSONAL_REGISTER_EXPAND.equals(apiType)) {
 			return dealPersonOpenAccount(result.getRespData());
 		}
-		if (apiType.equals(ApiType.ENTERPRISE_REGISTER)) {
+		if (ApiType.ENTERPRISE_REGISTER.equals(apiType)) {
 			return dealEnterpriseOpenCallBack(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.RECHARGE)) { //充值业务回调入口
+		else if (ApiType.RECHARGE.equals(apiType)) { //充值业务回调入口
 			return dealRechargeCallBack(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.WITHDRAW)) { //充值业务回调入口
+		else if (ApiType.WITHDRAW.equals(apiType)) { //充值业务回调入口
 			return dealWithdrawCallBack(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.USERPRETRANSACTION)) { //用户预处理业务回调入口
+		else if (ApiType.USERPRETRANSACTION.equals(apiType)) { //用户预处理业务回调入口
 			return dealUserPreTransactionCallBack(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.PERSONAL_BIND_BANKCARD_EXPAND)) {
+		else if (ApiType.PERSONAL_BIND_BANKCARD_EXPAND.equals(apiType)) {
 			return dealChangeCard(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.CHECK_PASSWORD)) {
+		else if (ApiType.CHECK_PASSWORD.equals(apiType)) {
 			return dealCheckPwd(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.MODIFY_MOBILE_EXPAND)) {
+		else if (ApiType.MODIFY_MOBILE_EXPAND.equals(apiType)) {
 			return dealChangeMobile(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.RESET_PASSWORD)) {
+		else if (ApiType.RESET_PASSWORD.equals(apiType)) {
 			return dealChangePwd(result.getRespData());
 		}
-		else if (apiType.equals(ApiType.ACTIVATE_STOCKED_USER)) {
+		else if (ApiType.ACTIVATE_STOCKED_USER.equals(apiType)) {
 			return dealActiveAccount(result.getRespData());
+		}
+		else if (ApiType.VERIFY_DEDUCT.equals(apiType)) {
+
 		}
 
 		return null;
@@ -811,4 +814,62 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 		}
 	}
 
+	/**
+	 * 验密扣费页面回调
+	 * @param respData
+	 * @return
+	 */
+	private ModelAndView dealVerifyDeduct(JSONObject respData) {
+//		logger.info("验密扣费页面回调开始【begin】参数{}", respData.toJSONString());
+//		Date now = new Date();
+//		CallBackParam callBackParam = new CallBackParam();
+//		String fcpTrxNo = respData.getString("requestNo");
+//		String code = respData.getString("code");
+//		String status = respData.getString("status");
+//		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
+//		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+//		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
+//		if (flowInfoList != null || flowInfoList.size() == 1) {
+//			LmVaccountTransferInfo flow = flowInfoList.get(0);
+//			if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+//				flow.setResult(ResultCode.ACCEPTED.getCode());
+//				flow.setUpdateTime(now);
+//				txnInfoMapper.updateByPrimaryKey(flow);
+//
+//				callBackParam.setResult(ResultCode.ACCEPTED.getCode());
+//				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+//				JSONObject data = new JSONObject();
+//				data.put("fcpTrxNo", flow.getFcpTrxNo());
+//				data.put("platformUserNo", flow.getPlatformUserId());
+//				data.put("bankCardNo", respData.getString("bankcardNo"));
+//				data.put("bankCode", respData.getString("bankcode"));
+//				data.put("mobile", respData.getString("mobile"));
+////				data.put("idCardType", respData.getString())
+//				data.put("accessType", respData.getString("accessType"));
+//				data.put("userRole", respData.getString("userRole"));
+//				data.put("cardNolsChange", respData.getString("cardNolsChange"));
+//				data.put("auditStatus", respData.getString("auditStatus"));
+//				data.put("failTime", respData.getString("failTime"));
+//				data.put("authAmount", respData.getString("amount"));
+//				callBackParam.setData(data.toJSONString());
+//			} else {
+//				flow.setResult(ResultCode.FAIL.getCode());
+//				flow.setFailCode(respData.getString("errorCode"));
+//				flow.setFailReason(respData.getString("errorMessage"));
+//				flow.setUpdateTime(now);
+//				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
+//
+//				callBackParam.setResult(ResultCode.FAIL.getCode());
+//				callBackParam.setRequestRefNo(flow.getRequestRefNo());
+//				callBackParam.setFailCode(respData.getString("errorCode"));
+//				callBackParam.setFailReason(respData.getString("errorMessage"));
+//			}
+//			logger.info("用户激活页面回调结束【begin】结果{}", JSONObject.toJSONString(callBackParam));
+//			return new ModelAndView("callback").addObject("url", flow.getCallbackUrl()).addObject("paramDto", callBackParam);
+//		} else {
+////			logger.info("未找到对应的历史订单记录fcpTrxNo-->{}", fcpTrxNo);
+////			return new ModelAndView("error");
+//		}
+		return null;
+	}
 }

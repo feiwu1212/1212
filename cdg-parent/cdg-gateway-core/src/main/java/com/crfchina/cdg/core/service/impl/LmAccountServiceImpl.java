@@ -146,7 +146,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		flowInfo.setSystemNo(String.valueOf(leoaDto.getSystemNo().getValue()));
 		flowInfo.setPlatformUserId(leoaDto.getPlatformUserNo());
 		flowInfo.setUserRealName(leoaDto.getEnterpriseName());
-		flowInfo.setBankcardNo(leoaDto.getBandCardNo());
+		flowInfo.setBankcardNo(leoaDto.getBankCardNo());
 		flowInfo.setMobile(leoaDto.getContactPhone());
 		flowInfo.setIdNo(leoaDto.getLegalIdCardNo());
 		flowInfo.setIdType(EnumsDBMap.ID_CARD_TYPE_MAP.get(leoaDto.getIdCardType().getCode()));
@@ -179,10 +179,11 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("contact", leoaDto.getContact());
 		reqDataMap.put("contactPhone", leoaDto.getContactPhone());
 		reqDataMap.put("userRole", leoaDto.getUserRole().getCode());
-		reqDataMap.put("bankcardNo", leoaDto.getBandCardNo());
+		reqDataMap.put("bankcardNo", leoaDto.getBankCardNo());
 		reqDataMap.put("bankcode", cacheService.getLmBankCode(leoaDto.getBankCode()));
 		// 本地调试配置本地回调地址
-		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
+//		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
+		reqDataMap.put("redirectUrl", "http://10.194.11.253:8080/cdg-gateway/callBack/pageCallBack");
 		reqDataMap.put("authList", authStr);
 		reqDataMap.put("failTime", leoaDto.getFailTime());
 		reqDataMap.put("amount", MoneyUtils.toDollar(leoaDto.getAuthAmount()));

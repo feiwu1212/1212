@@ -59,6 +59,27 @@ public class LmBindCardFlowinfo {
 
     private Integer partitionDate;
 
+    private Integer notifyStatus;
+
+    private Integer notifyCount;
+
+
+    public Integer getNotifyStatus() {
+        return notifyStatus;
+    }
+
+    public void setNotifyStatus(Integer notifyStatus) {
+        this.notifyStatus = notifyStatus;
+    }
+
+    public Integer getNotifyCount() {
+        return notifyCount;
+    }
+
+    public void setNotifyCount(Integer notifyCount) {
+        this.notifyCount = notifyCount;
+    }
+
     public Long getId() {
         return id;
     }

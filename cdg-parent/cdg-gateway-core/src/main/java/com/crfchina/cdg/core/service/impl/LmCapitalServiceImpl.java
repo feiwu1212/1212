@@ -429,9 +429,8 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		reqDataMap.put("amount", MoneyUtils.toDollar(paramDTO.getAmount()));
 		reqDataMap.put("customDefine", paramDTO.getCustomDefine());
 		reqDataMap.put("targetPlatformUserNo", paramDTO.getTargetPlatformUserNo());
-		//TODO 配置本地回调地址
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
-		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		reqDataMap.put("expired", paramDTO.getExpired());
 
 		 txnInfoMapper.insert(txnInfo);

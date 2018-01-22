@@ -11,12 +11,15 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.business.Terminal;
+import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.notify.dto.LmNotifyResult;
 import com.crfchina.cdg.notify.service.LmNotifyService;
@@ -35,26 +38,40 @@ import com.crfchina.cdg.notify.service.LmNotifyService;
 @RequestMapping("/notify")
 public class LmNotifyController {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(LmNotifyController.class);
+
 	@Autowired
 	LmNotifyService lmNotifyService;
 
 	@RequestMapping("/notify")
 	public String notify(HttpServletRequest request, HttpServletResponse response) {
-		boolean verify = SignatureUtils.checkSign(request.getParameter("sign"), request.getParameter("respData"));
-		LmNotifyResult resultFromRequest = getResultFromRequest(request);
 		try {
-		if (verify) {
-			lmNotifyService.dealNotify(resultFromRequest);
-			//异步通知返回SUCCESS
+			boolean verify = SignatureUtils.checkSign(request.getParameter("sign"), request.getParameter("respData"));
+			if (verify) {
+				LmNotifyResult resultFromRequest = getResultFromRequest(request);
+				logger.info("懒猫异步通知返回参数为{}", JSONObject.toJSONString(resultFromRequest));
+				lmNotifyService.dealNotify(resultFromRequest);
+			} else {
+				logger.info("验签结果为false");
+				response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write("FAIL");
+			}
 			response.setContentType("text/html;charset=utf-8");
 			response.getWriter().write("SUCCESS");
-		} else {
-			//TODO 验签不通过
-		}
 			return null;
 		}catch (IOException e) {
-			e.printStackTrace();
+			logger.error("返回异常", e);
+		}catch (CdgException e) {
+			logger.error("系统异常，代码为{}", e.getCode());
+			response.setContentType("text/html;charset=utf-8");
+			try {
+				response.getWriter().write("FAIL");
+			}catch (IOException e1) {
+				logger.error("返回异常", e1);
+			}
 		}
+		logger.info("懒猫异步通知结束【end】");
 		return null;
 	}
 

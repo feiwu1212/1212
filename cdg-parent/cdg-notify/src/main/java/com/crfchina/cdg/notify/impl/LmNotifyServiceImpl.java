@@ -35,9 +35,10 @@ import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.MoneyUtils;
-import com.crfchina.cdg.notify.dto.BaseResultDTO;
 import com.crfchina.cdg.notify.dto.LmNotifyResult;
 import com.crfchina.cdg.notify.service.LmNotifyService;
+import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
+import com.crfchina.csf.task.TaskWorkerManager;
 
 /**
  * @ProjectName：cdg-parent
@@ -52,15 +53,15 @@ import com.crfchina.cdg.notify.service.LmNotifyService;
 @Service
 public class LmNotifyServiceImpl implements LmNotifyService {
 	
-	public static final Logger logger = LoggerFactory
+
+	private static final Logger logger = LoggerFactory
 			.getLogger(LmNotifyServiceImpl.class);
-	
+
 	@Autowired
 	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
 
 	@Autowired
 	LmBindCardListMapper lmBindCardListMapper;
-
 
 	@Autowired
 	LmVaccountTransferInfoMapper txnInfoMapper;
@@ -71,17 +72,25 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 	@Autowired
 	LmVaccountTransferLogMapper txnLogMapper;
 
+	@Autowired
+	TaskWorkerManager taskWorkerManager;
+
 	@Override
 	public void dealNotify(LmNotifyResult result) {
 		ApiType apiType = ApiType.valueOf(result.getServiceName());
-		if (apiType.equals(ApiType.PERSONAL_REGISTER_EXPAND)) {
+		if (ApiType.PERSONAL_REGISTER_EXPAND.equals(apiType)) {
 			dealPersonOpenAccount(result.getRespData());
 		}else if(apiType.equals(ApiType.RECHARGE)){
 			dealRecharge(result.getRespData());
 		}
 	}
 
+	/**
+	 * 个人绑卡异步通知
+	 * @param respData
+	 */
 	private void dealPersonOpenAccount(JSONObject respData) {
+		logger.info("个人绑卡异步通知开始【begin】respData-->{}", respData.toJSONString());
 		Date now = new Date();
 		String fcpTrxNo = respData.getString("requestNo");
 		String code = respData.getString("code");
@@ -111,27 +120,16 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				lmBindCardList.setCreateTime(now);
 				lmBindCardList.setUpdateTime(now);
 				lmBindCardListMapper.insert(lmBindCardList);
-
-				BaseResultDTO<String> result = new BaseResultDTO();
-				result.setResult(ResultCode.SUCCESS);
-				result.setRequestRefNo(flow.getRequestRefNo());
-				respData.put("fcpTrxNo", flow.getFcpTrxNo());
-				result.setData(respData.toJSONString());
-
-				//TODO 通知业务系统
-				String notifyUrl = flow.getNotifyUrl();
-
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
 				flow.setFailReason(respData.getString("errorMessage"));
 				flow.setUpdateTime(now);
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(flow);
-
-				//TODO 通知业务系统
 			}
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, BindCardTaskWorker.class);
 		} else {
-			//TODO 通知业务系统
+			logger.error("不存在此订单");
 		}
 	}
 	

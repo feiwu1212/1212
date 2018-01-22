@@ -61,7 +61,7 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping("/personOpen")
-	public ModelAndView personOpen(HttpServletRequest request) {
+	public ModelAndView personOpen(String request) {
 		logger.info("个人绑卡拼装参数开始【begin】");
 		LmOpenAccountParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountParamDTO.class);
 		Map<String, Object> personOpenReqDataMap = lmAccountService.personBindCard(paramDto);
@@ -85,7 +85,7 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping("/enterpriseOpen")
-	public ModelAndView enterpriseOpen(HttpServletRequest request) {
+	public ModelAndView enterpriseOpen(String request) {
 		LmOpenAccountCompanyParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountCompanyParamDTO.class);
 		LmEnterpriseOpenAccountDTO reqDto = JSONObject.parseObject(JSONObject.toJSONString(paramDto), LmEnterpriseOpenAccountDTO.class);
 		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(reqDto));
@@ -111,7 +111,7 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping("/changeCard")
-	public ModelAndView changeCard(HttpServletRequest request) {
+	public ModelAndView changeCard(String request) {
 		LmChangeBankCardParamDTO changeCardDto = AppUtil.getParamDto(request, LmChangeBankCardParamDTO.class);
 		Map<String, Object> changeCardReqDataMap = lmAccountService.changeCard(changeCardDto);
 		AppConfig config = AppConfig.getConfig();
@@ -129,7 +129,7 @@ public class AccountController {
 	 * 个人用户修改交易密码
 	 */
 	@RequestMapping("/changePwd")
-	public ModelAndView changePwd(HttpServletRequest request) {
+	public ModelAndView changePwd(String request) {
 		LmChangePwdParamDTO changePwdDto = AppUtil.getParamDto(request, LmChangePwdParamDTO.class);
 		Map<String, Object> changePwdReqDataMap = lmAccountService.changePwd(changePwdDto);
 		AppConfig config = AppConfig.getConfig();
@@ -147,7 +147,7 @@ public class AccountController {
 	 * 个人用户验证交易密码
 	 */
 	@RequestMapping("/checkpwd")
-	public ModelAndView checkpwd(HttpServletRequest request) {
+	public ModelAndView checkpwd(String request) {
 		LmCheckPwdParamDTO checkPwdDto = AppUtil.getParamDto(request, LmCheckPwdParamDTO.class);
 		Map<String, Object> checkPwdReqDataMap = lmAccountService.checkPwd(checkPwdDto);
 		AppConfig config = AppConfig.getConfig();
@@ -165,7 +165,7 @@ public class AccountController {
 	 * 个人用户验证交易密码
 	 */
 	@RequestMapping("/changemobile")
-	public ModelAndView changemobile(HttpServletRequest request) {
+	public ModelAndView changemobile(String request) {
 		LmChangeMobileParamDTO changeMobileDto = AppUtil.getParamDto(request, LmChangeMobileParamDTO.class);
 		Map<String, Object> changeMobileReqDataMap = lmAccountService.changeMobile(changeMobileDto);
 		AppConfig config = AppConfig.getConfig();
@@ -183,7 +183,7 @@ public class AccountController {
 	 * 会员激活
 	 */
 	@RequestMapping("/activeaccount")
-	public ModelAndView activeaccount(HttpServletRequest request) {
+	public ModelAndView activeaccount(String request) {
 		LmActiveAccountParamDTO activeAccountDto = AppUtil.getParamDto(request, LmActiveAccountParamDTO.class);
 		Map<String, Object> activeAccountReqDataMap = lmAccountService.activeAccount(activeAccountDto);
 		AppConfig config = AppConfig.getConfig();

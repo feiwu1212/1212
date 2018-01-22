@@ -77,7 +77,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setAccountDate(now);
 		txnInfo.setBatchNo("");
 		txnInfo.setCallbackUrl(lmrpDto.getCallbackUrl());
-		txnInfo.setChannelFeeAmount(String.valueOf(lmrpDto.getCommissionAmount()));
+		txnInfo.setChannelFeeAmount("");
 		txnInfo.setCreateTime(now);
 		txnInfo.setCrfBizType(crfBizType);
 		txnInfo.setCurrency(1);
@@ -104,7 +104,8 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setTransferAmount(String.valueOf(lmrpDto.getAmount()));
 		txnInfo.setTransferType(crfBizType);
 		txnInfo.setUpdateTime(now);//异步通知时候更新
-		
+		int txnId = txnInfoMapper.insert(txnInfo);
+
 		//txnDetail封装
 		LmVaccountTransferDetail txnDetail = new LmVaccountTransferDetail();
 		txnDetail.setAccountDate(now);
@@ -126,17 +127,26 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnDetail.setRequestRefNo(lmrpDto.getRequestRefNo());
 		txnDetail.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
 		txnDetail.setRightShare("");
-		txnDetail.setSettleAmount(String.valueOf(lmrpDto.getAmount()));
+		txnDetail.setSettleAmount("");
 		txnDetail.setSettleDate(null);
 		txnDetail.setTransferAmount(String.valueOf(lmrpDto.getAmount()));
 		txnDetail.setTransferInfoId("");//交易表主键 交易表新增成功则获取此值
 		txnDetail.setUpdateTime(now);
+		//赋值detail中主表主键字段
+		txnDetail.setTransferInfoId(String.valueOf(txnId));
+		txnDetailMapper.insert(txnDetail);
 		
-			//拼接reqData
+		if(null != lmrpDto.getCommissionAmount()){
+			LmVaccountTransferDetail txnDetail2 = txnDetail;
+			txnDetail2.setTransferAmount(String.valueOf(lmrpDto.getCommissionAmount()));
+			txnDetailMapper.insert(txnDetail2);
+		}
+		//拼接reqData
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("platformUserNo", lmrpDto.getPlatformUserNo());
 		reqDataMap.put("requestNo", trxNo);
 		reqDataMap.put("amount", MoneyUtils.toDollar(lmrpDto.getAmount()));
+		if(null != lmrpDto.getCommissionAmount())
 		reqDataMap.put("commission", MoneyUtils.toDollar(lmrpDto.getCommissionAmount()));
 		reqDataMap.put("expectPayCompany", lmrpDto.getExpectPayCompany());
 		reqDataMap.put("rechargeWay", lmrpDto.getRechargeWay().getCode());
@@ -154,11 +164,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
 		reqDataMap.put("expired", lmrpDto.getExpired());
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
-
-		int txnId = txnInfoMapper.insert(txnInfo);
-		//赋值detail中主表主键字段
-		txnDetail.setTransferInfoId(String.valueOf(txnId));
-		txnDetailMapper.insert(txnDetail);
+	
 		return reqDataMap;
 	}
 	

@@ -53,7 +53,7 @@ public class CaptialController {
 	 * @throws
 	 */
 	@RequestMapping("/recharge")
-	public ModelAndView recharge(HttpServletRequest request) {
+	public ModelAndView recharge(String request) {
 		LmRechargeParamDTO paramDto = AppUtil.getParamDto(request, LmRechargeParamDTO.class);
 		Map<String, Object> rechargeReqDataMap = lmCapitalService.recharge(paramDto);
 		// 获取properties参数
@@ -79,7 +79,7 @@ public class CaptialController {
 	 * @throws
 	 */
 	@RequestMapping("/withdraw")
-	public ModelAndView withdraw(HttpServletRequest request) {
+	public ModelAndView withdraw(String request) {
 		LmWithdrawParamDTO paramDto = AppUtil.getParamDto(request, LmWithdrawParamDTO.class);
 		Map<String, Object> withdrawReqDataMap = lmCapitalService.withdraw(paramDto);
 		// 获取properties参数
@@ -104,7 +104,7 @@ public class CaptialController {
 	 * @throws
 	 */
 	@RequestMapping("/userPreTransaction")
-	public ModelAndView userPreTransaction(HttpServletRequest request) {
+	public ModelAndView userPreTransaction(String request) {
 		LmUserPreTransactionParamDTO paramDto = AppUtil.getParamDto(request, LmUserPreTransactionParamDTO.class);
 		Map<String, Object> userPreTransactionReqDataMap = lmCapitalService.userPreTransaction(paramDto);
 		// 获取properties参数
@@ -125,7 +125,7 @@ public class CaptialController {
 	 * @return
 	 */
 	@RequestMapping("/verifyDeduct")
-	public ModelAndView verifyDeduct(HttpServletRequest request) {
+	public ModelAndView verifyDeduct(String request) {
 		LmVerifyDeductParamDTO paramDto = AppUtil.getParamDto(request, LmVerifyDeductParamDTO.class);
 		Map<String, Object> verifyDeductReqDataMap = lmCapitalService.verifyDeduct(paramDto);
 		// 获取properties参数

@@ -59,7 +59,7 @@ public class LmCacheServiceImpl implements LmCacheService {
 		SystemMerchantInfo sysMerInfo = new SystemMerchantInfo();
 		SystemMerchantInfoExample example = new SystemMerchantInfoExample();
 		example.createCriteria().andSystemNoEqualTo(sysNo);
-		List<SystemMerchantInfo> list = sysMerInfoMapper.selectByExample(example);
+		List<SystemMerchantInfo> list = sysMerInfoMapper.selectByExampleWithBLOBs(example);
 		if(list.size()>0){
 			sysMerInfo = list.get(0);
 			sysPubKey = sysMerInfo.getPublicKey();
@@ -74,7 +74,7 @@ public class LmCacheServiceImpl implements LmCacheService {
 		SystemMerchantInfo sysMerInfo = new SystemMerchantInfo();
 		SystemMerchantInfoExample example = new SystemMerchantInfoExample();
 		example.createCriteria().andSystemNoEqualTo(sysNo);
-		List<SystemMerchantInfo> list = sysMerInfoMapper.selectByExample(example);
+		List<SystemMerchantInfo> list = sysMerInfoMapper.selectByExampleWithBLOBs(example);
 		if(list.size()>0){
 			sysMerInfo = list.get(0);
 			sysPriKey = sysMerInfo.getPrivateKey();

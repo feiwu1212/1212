@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.common.SignatureAlgorithm;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.exception.CdgExceptionCode;
+
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.text.DateFormat;
@@ -15,12 +16,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rsautil.RSAUtils;
 
 /**
  * 
@@ -34,6 +39,9 @@ public class AppUtil {
 
 	private static final DateFormat format = new SimpleDateFormat(
 			"yyyyMMddHHmmss");
+	
+
+	
 	/**
 	 * 生成参数<br>
 	 * 签名加密
@@ -111,14 +119,16 @@ public class AppUtil {
 		while (parameterNames.hasMoreElements()) {
 			String key = parameterNames.nextElement();
 			String value = request.getParameter(key);
-			if (!StringUtils.isBlank(value)) {
-				if (value.contains(",") || "authList".equals(key)) {
-					paramObj.put(key, value.split(","));
-				} else {
-					paramObj.put(key, value);
-				}
+			if (!StringUtils.isBlank(value)&&key.equals("reqData")) {
+				paramObj.put(key, value);
 			}
 		}
+		T object = JSONObject.parseObject(paramObj.toJSONString(), clazz);
+		return object;
+	}
+	
+	public static <T> T getParamDto(String request, Class<T> clazz) {
+		JSONObject paramObj = JSONObject.parseObject(request);
 		T object = JSONObject.parseObject(paramObj.toJSONString(), clazz);
 		return object;
 	}

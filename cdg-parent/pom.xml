@@ -52,6 +52,13 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>1.3.0</version>
         </dependency>
+        <!--  ADD Sping Aop dependency -->
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+        
+        
         <!-- 添加缓存依赖 -->
   <dependency>  
     <groupId>net.sf.ehcache</groupId>  

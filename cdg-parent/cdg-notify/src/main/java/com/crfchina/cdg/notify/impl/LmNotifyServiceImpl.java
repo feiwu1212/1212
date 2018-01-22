@@ -18,11 +18,14 @@ import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.common.EnumsDBMap;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.common.enums.common.SystemBackCode;
-import com.crfchina.cdg.notify.dto.BaseResultDTO;
 import com.crfchina.cdg.notify.dto.LmNotifyResult;
 import com.crfchina.cdg.notify.service.LmNotifyService;
+import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
+import com.crfchina.csf.task.TaskWorkerManager;
 import java.util.Date;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,12 +43,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class LmNotifyServiceImpl implements LmNotifyService {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(LmNotifyServiceImpl.class);
+
 	@Autowired
 	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
 
 	@Autowired
 	LmBindCardListMapper lmBindCardListMapper;
-
 
 	@Autowired
 	LmVaccountTransferInfoMapper txnInfoMapper;
@@ -53,15 +58,23 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 	@Autowired
 	LmVaccountTransferDetailMapper txnDetailMapper;
 
+	@Autowired
+	TaskWorkerManager taskWorkerManager;
+
 	@Override
 	public void dealNotify(LmNotifyResult result) {
 		ApiType apiType = ApiType.valueOf(result.getServiceName());
-		if (apiType.equals(ApiType.PERSONAL_REGISTER_EXPAND)) {
+		if (ApiType.PERSONAL_REGISTER_EXPAND.equals(apiType)) {
 			dealPersonOpenAccount(result.getRespData());
 		}
 	}
 
+	/**
+	 * 个人绑卡异步通知
+	 * @param respData
+	 */
 	private void dealPersonOpenAccount(JSONObject respData) {
+		logger.info("个人绑卡异步通知开始【begin】respData-->{}", respData.toJSONString());
 		Date now = new Date();
 		String fcpTrxNo = respData.getString("requestNo");
 		String code = respData.getString("code");
@@ -91,27 +104,16 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				lmBindCardList.setCreateTime(now);
 				lmBindCardList.setUpdateTime(now);
 				lmBindCardListMapper.insert(lmBindCardList);
-
-				BaseResultDTO<String> result = new BaseResultDTO();
-				result.setResult(ResultCode.SUCCESS);
-				result.setRequestRefNo(flow.getRequestRefNo());
-				respData.put("fcpTrxNo", flow.getFcpTrxNo());
-				result.setData(respData.toJSONString());
-
-				//TODO 通知业务系统
-				String notifyUrl = flow.getNotifyUrl();
-
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
 				flow.setFailReason(respData.getString("errorMessage"));
 				flow.setUpdateTime(now);
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(flow);
-
-				//TODO 通知业务系统
 			}
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, BindCardTaskWorker.class);
 		} else {
-			//TODO 通知业务系统
+			logger.error("不存在此订单");
 		}
 	}
 }

@@ -7,13 +7,11 @@
  */
 package com.crfchina.cdg.core.dto.param;
 
-import java.util.List;
-
-import com.alibaba.fastjson.annotation.JSONField;
 import com.crfchina.cdg.common.enums.business.IDCardType;
 import com.crfchina.cdg.common.enums.business.UserAuthType;
 import com.crfchina.cdg.common.enums.business.UserRoles;
 import com.crfchina.cdg.core.dto.base.LmGatewayBaseParamDTO;
+import java.util.List;
 
 /**    
  * 
@@ -42,7 +40,7 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	protected String contact;//企业联系人
 	protected String contactPhone;//联系人手机号
 	protected UserRoles userRole;//用户角色
-	protected String bandCardNo;//银行卡号
+	protected String bankCardNo;//银行卡号
 	protected String bankCode;//银行编码
 	
 	protected List<UserAuthType> authList;//用户授权集合
@@ -129,21 +127,12 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 	public void setUserRole(UserRoles userRole) {
 		this.userRole = userRole;
 	}
-	@JSONField(name = "bankcardNo")
-	public String getBandCardNo() {
-		return bandCardNo;
-	}
-	public void setBandCardNo(String bandCardNo) {
-		this.bandCardNo = bandCardNo;
-	}
-	@JSONField(name = "bankcode")
 	public String getBankCode() {
 		return bankCode;
 	}
 	public void setBankCode(String bankCode) {
 		this.bankCode = bankCode;
 	}
-	@JSONField(name = "amount")
 	public String getAuthAmount() {
 		return authAmount;
 	}
@@ -163,4 +152,11 @@ public class LmOpenAccountCompanyParamDTO  extends LmGatewayBaseParamDTO{
 		this.failTime = failTime;
 	}
 
+	public String getBankCardNo() {
+		return bankCardNo;
+	}
+
+	public void setBankCardNo(String bankCardNo) {
+		this.bankCardNo = bankCardNo;
+	}
 }

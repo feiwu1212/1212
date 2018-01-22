@@ -145,4 +145,9 @@ public class Constants {
 	 * 绑卡类型
 	 */
 	public static final String UPDATE_BANKCARD = "UPDATE_BANKCARD";
+
+	/**
+	 * 绑卡taskContext
+	 */
+	public static final String CONTEXT_BIND_CARD = "CONTEXT_BIND_CARD";
 }

@@ -8,10 +8,13 @@ package com.crfchina.cdg.core.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.common.enums.business.Terminal;
+import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.core.dto.base.LmGatewayPageCallbackResult;
 import com.crfchina.cdg.core.service.LmCallBackService;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,19 +34,28 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/callBack")
 public class CallBackController {
 
+	public static final Logger logger = LoggerFactory
+			.getLogger(CallBackController.class);
 
 	@Autowired
 	LmCallBackService callBackService;
 
 	@RequestMapping("/pageCallBack")
 	public ModelAndView pageCallBack(HttpServletRequest request) {
-		boolean verify = SignatureUtils.checkSign(request.getParameter("sign"), request.getParameter("respData"));
+		logger.info("网关接口页面回调开始【begin】");
 		LmGatewayPageCallbackResult resultFromRequest = null;
 		ModelAndView mav = null;
-		if (verify) {
-			resultFromRequest = getResultFromRequest(request);
-			mav = callBackService.dealCallBack(resultFromRequest);
-		} else {
+		try {
+			boolean verify = SignatureUtils.checkSign(request.getParameter("sign"), request.getParameter("respData"));
+			if (verify) {
+				resultFromRequest = getResultFromRequest(request);
+				mav = callBackService.dealCallBack(resultFromRequest);
+			} else {
+				logger.info("验签结果为false");
+				return new ModelAndView("error");
+			}
+		}catch (CdgException e) {
+			logger.error("网关接口页面回调异常", e);
 			return new ModelAndView("error");
 		}
 		return mav;

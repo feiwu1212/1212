@@ -13,19 +13,16 @@ import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.AppConfig;
 import com.crfchina.cdg.common.utils.AppUtil;
-import com.crfchina.cdg.common.utils.TrxNoUtils;
 import com.crfchina.cdg.core.dto.param.LmActiveAccountParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangeBankCardParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangeMobileParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangePwdParamDTO;
 import com.crfchina.cdg.core.dto.param.LmCheckPwdParamDTO;
-import com.crfchina.cdg.core.dto.param.LmEnterpriseOpenAccountDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.service.LmAccountService;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,24 +81,21 @@ public class AccountController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/enterpriseOpen")
+	@RequestMapping("/companyopenaccount")
 	public ModelAndView enterpriseOpen(HttpServletRequest request) {
+		logger.info("企业绑卡拼装参数开始【begin】");
 		LmOpenAccountCompanyParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountCompanyParamDTO.class);
-		LmEnterpriseOpenAccountDTO reqDto = JSONObject.parseObject(JSONObject.toJSONString(paramDto), LmEnterpriseOpenAccountDTO.class);
-		Map<String, Object> reqDataMap = JSONObject.parseObject(JSONObject.toJSONString(reqDto));
-		reqDataMap.put("requestNo", TrxNoUtils.getTrxNo(Constants.COMPANY_OPEN_ACCOUNT));
-		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
-		reqDataMap.put("authList", StringUtils.join(paramDto.getAuthList(), ","));
-		
+		Map<String, Object> enterpriseOpenReqDataMap = lmAccountService.enterpriseBindCard(paramDto);
 		AppConfig config = AppConfig.getConfig();
 		String url = config.getUrl() + Constants.GATEWAY_SUFFIX;
 		Map<String, String> result = null;
 		try {
-			result = AppUtil.createPostParam(ApiType.ENTERPRISE_REGISTER.getCode(), reqDataMap, paramDto.getUserDevice().getCode());
+			result = AppUtil.createPostParam(ApiType.ENTERPRISE_REGISTER.getCode(), enterpriseOpenReqDataMap, paramDto.getUserDevice().getCode());
 		} catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
-		
+		logger.info("企业绑卡拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
@@ -112,6 +106,7 @@ public class AccountController {
 	 */
 	@RequestMapping("/changeCard")
 	public ModelAndView changeCard(HttpServletRequest request) {
+		logger.info("个人换绑卡拼装参数开始【begin】");
 		LmChangeBankCardParamDTO changeCardDto = AppUtil.getParamDto(request, LmChangeBankCardParamDTO.class);
 		Map<String, Object> changeCardReqDataMap = lmAccountService.changeCard(changeCardDto);
 		AppConfig config = AppConfig.getConfig();
@@ -120,8 +115,10 @@ public class AccountController {
 		try {
 			result = AppUtil.createPostParam(ApiType.PERSONAL_BIND_BANKCARD_EXPAND.getCode(), changeCardReqDataMap, changeCardDto.getUserDevice().getCode());
 		}catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
+		logger.info("个人换绑卡拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
@@ -130,6 +127,7 @@ public class AccountController {
 	 */
 	@RequestMapping("/changePwd")
 	public ModelAndView changePwd(HttpServletRequest request) {
+		logger.info("修改密码拼装参数开始【begin】");
 		LmChangePwdParamDTO changePwdDto = AppUtil.getParamDto(request, LmChangePwdParamDTO.class);
 		Map<String, Object> changePwdReqDataMap = lmAccountService.changePwd(changePwdDto);
 		AppConfig config = AppConfig.getConfig();
@@ -138,8 +136,10 @@ public class AccountController {
 		try {
 			result = AppUtil.createPostParam(ApiType.RESET_PASSWORD.getCode(), changePwdReqDataMap, changePwdDto.getUserDevice().getCode());
 		}catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
+		logger.info("修改密码拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
@@ -148,6 +148,7 @@ public class AccountController {
 	 */
 	@RequestMapping("/checkpwd")
 	public ModelAndView checkpwd(HttpServletRequest request) {
+		logger.info("验证密码拼装参数开始【begin】");
 		LmCheckPwdParamDTO checkPwdDto = AppUtil.getParamDto(request, LmCheckPwdParamDTO.class);
 		Map<String, Object> checkPwdReqDataMap = lmAccountService.checkPwd(checkPwdDto);
 		AppConfig config = AppConfig.getConfig();
@@ -156,16 +157,19 @@ public class AccountController {
 		try {
 			result = AppUtil.createPostParam(ApiType.CHECK_PASSWORD.getCode(), checkPwdReqDataMap, checkPwdDto.getUserDevice().getCode());
 		}catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
+		logger.info("验证密码拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
 	/**
-	 * 个人用户验证交易密码
+	 * 更换预留手机号
 	 */
 	@RequestMapping("/changemobile")
 	public ModelAndView changemobile(HttpServletRequest request) {
+		logger.info("更换预留手机号拼装参数开始【begin】");
 		LmChangeMobileParamDTO changeMobileDto = AppUtil.getParamDto(request, LmChangeMobileParamDTO.class);
 		Map<String, Object> changeMobileReqDataMap = lmAccountService.changeMobile(changeMobileDto);
 		AppConfig config = AppConfig.getConfig();
@@ -174,8 +178,10 @@ public class AccountController {
 		try {
 			result = AppUtil.createPostParam(ApiType.MODIFY_MOBILE_EXPAND.getCode(), changeMobileReqDataMap, changeMobileDto.getUserDevice().getCode());
 		}catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
+		logger.info("更换预留手机号拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 
@@ -184,6 +190,7 @@ public class AccountController {
 	 */
 	@RequestMapping("/activeaccount")
 	public ModelAndView activeaccount(HttpServletRequest request) {
+		logger.info("会员激活拼装参数开始【begin】");
 		LmActiveAccountParamDTO activeAccountDto = AppUtil.getParamDto(request, LmActiveAccountParamDTO.class);
 		Map<String, Object> activeAccountReqDataMap = lmAccountService.activeAccount(activeAccountDto);
 		AppConfig config = AppConfig.getConfig();
@@ -192,8 +199,10 @@ public class AccountController {
 		try {
 			result = AppUtil.createPostParam(ApiType.ACTIVATE_STOCKED_USER.getCode(), activeAccountReqDataMap, activeAccountDto.getUserDevice().getCode());
 		}catch (CdgException e) {
+			logger.error("拼装请求参数异常", e);
 			return new ModelAndView("error");
 		}
+		logger.info("会员激活拼装参数结束【end】result---->{}", JSONObject.toJSONString(result));
 		return new ModelAndView("gateway").addObject("url", url).addObject("result", result);
 	}
 }

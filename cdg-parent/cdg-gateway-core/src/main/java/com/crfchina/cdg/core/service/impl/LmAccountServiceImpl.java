@@ -6,6 +6,7 @@
  */
 package com.crfchina.cdg.core.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmBindCardListMapper;
 import com.crfchina.cdg.basedb.dao.LmChangeCardmobileFlowinfoMapper;
@@ -26,8 +27,10 @@ import com.crfchina.cdg.core.dto.param.LmChangeBankCardParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangeMobileParamDTO;
 import com.crfchina.cdg.core.dto.param.LmChangePwdParamDTO;
 import com.crfchina.cdg.core.dto.param.LmCheckPwdParamDTO;
+import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.service.LmAccountService;
+import com.crfchina.cdg.core.service.LmCacheService;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,13 +67,17 @@ public class LmAccountServiceImpl implements LmAccountService {
 
 	@Autowired
 	LmUserOperationFlowinfoMapper lmUserOperationFlowinfoMapper;
+
+	@Autowired
+	LmCacheService cacheService;
+
 	/**
 	 * 个人绑卡申请
 	 * @param loapDto
 	 */
 	@Override
 	public Map<String, Object> personBindCard(LmOpenAccountParamDTO loapDto) {
-		logger.info("个人绑卡参数拼装入库开始【begin】");
+		logger.info("个人绑卡参数拼装入库开始【begin】loapDto-->{}", JSONObject.toJSONString(loapDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_OPEN_ACCOUNT);
 		Date now = new Date();
 		LmBindCardFlowinfo flowInfo = new LmBindCardFlowinfo();
@@ -118,7 +125,71 @@ public class LmAccountServiceImpl implements LmAccountService {
 
 		lmBindCardFlowinfoMapper.insert(flowInfo);
 
-		logger.info("个人绑卡参数拼装入库结束【end】");
+		logger.info("个人绑卡参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
+		return reqDataMap;
+	}
+
+	/**
+	 * 企业绑卡
+	 * @param leoaDto
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> enterpriseBindCard(LmOpenAccountCompanyParamDTO leoaDto) {
+		logger.info("企业绑卡参数拼装入库开始【begin】loapDto-->{}", JSONObject.toJSONString(leoaDto));
+		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_OPEN_ACCOUNT);
+		Date now = new Date();
+		LmBindCardFlowinfo flowInfo = new LmBindCardFlowinfo();
+		flowInfo.setRequestRefNo(leoaDto.getRequestRefNo());
+		flowInfo.setFcpTrxNo(trxNo);
+		flowInfo.setRequestTime(now);
+		flowInfo.setSystemNo(String.valueOf(leoaDto.getSystemNo().getValue()));
+		flowInfo.setPlatformUserId(leoaDto.getPlatformUserNo());
+		flowInfo.setUserRealName(leoaDto.getEnterpriseName());
+		flowInfo.setBankcardNo(leoaDto.getBandCardNo());
+		flowInfo.setMobile(leoaDto.getContactPhone());
+		flowInfo.setIdNo(leoaDto.getLegalIdCardNo());
+		flowInfo.setIdType(EnumsDBMap.ID_CARD_TYPE_MAP.get(leoaDto.getIdCardType().getCode()));
+		flowInfo.setBindcardTime(now);
+		flowInfo.setResult(ResultCode.UNKNOWN.getCode()); // 新创建绑卡申请结果为unknown
+		flowInfo.setUserRole(leoaDto.getUserRole().getCode());
+		List<String> authStrList = leoaDto.getAuthList().stream().map(o -> o.getCode()).collect(Collectors.toList());
+		String authStr = String.join(",", authStrList);
+		flowInfo.setAuthList(authStr);
+		flowInfo.setCallbackUrl(leoaDto.getCallbackUrl());
+		flowInfo.setNotifyUrl(leoaDto.getNotifyUrl());
+		flowInfo.setCreateTime(now);
+		flowInfo.setUpdateTime(now);
+		flowInfo.setPartitionDate(Integer.valueOf(DateUtils.dateToString(now, "yyyyMM")));
+
+		//拼接reqData
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		reqDataMap.put("platformUserNo", leoaDto.getPlatformUserNo());
+		reqDataMap.put("requestNo", trxNo);
+		reqDataMap.put("enterpriseName", leoaDto.getEnterpriseName());
+		reqDataMap.put("bankLicense", leoaDto.getBankLicense());
+		reqDataMap.put("orgNo", leoaDto.getOrgNo());
+		reqDataMap.put("businessLicense", leoaDto.getBusinessLicense());
+		reqDataMap.put("taxNo", leoaDto.getTaxNo());
+		reqDataMap.put("unifiedCode", leoaDto.getUnifiedCode());
+		reqDataMap.put("creditCode", leoaDto.getCreditCode());
+		reqDataMap.put("legal", leoaDto.getLegal());
+		reqDataMap.put("idCardType", leoaDto.getIdCardType().getCode());
+		reqDataMap.put("legalIdCardNo", leoaDto.getLegalIdCardNo());
+		reqDataMap.put("contact", leoaDto.getContact());
+		reqDataMap.put("contactPhone", leoaDto.getContactPhone());
+		reqDataMap.put("userRole", leoaDto.getUserRole().getCode());
+		reqDataMap.put("bankcardNo", leoaDto.getBandCardNo());
+		reqDataMap.put("bankcode", cacheService.getLmBankCode(leoaDto.getBankCode()));
+		// 本地调试配置本地回调地址
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
+		reqDataMap.put("authList", authStr);
+		reqDataMap.put("failTime", leoaDto.getFailTime());
+		reqDataMap.put("amount", MoneyUtils.toDollar(leoaDto.getAuthAmount()));
+
+		lmBindCardFlowinfoMapper.insert(flowInfo);
+
+		logger.info("个人绑卡参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 
@@ -129,6 +200,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 	 */
 	@Override
 	public Map<String, Object> changeCard(LmChangeBankCardParamDTO lcbcDto) {
+		logger.info("用户换绑卡参数拼装入库开始【begin】lcbcDto-->{}", JSONObject.toJSONString(lcbcDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_CHANGE_CARD);
 		Date now = new Date();
 		LmChangeCardmobileFlowinfo flowInfo = new LmChangeCardmobileFlowinfo();
@@ -157,6 +229,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmChangeCardmobileFlowinfoMapper.insert(flowInfo);
+		logger.info("用户换绑卡参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 
@@ -167,6 +240,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 	 */
 	@Override
 	public Map<String, Object> changePwd(LmChangePwdParamDTO lcpDto) {
+		logger.info("用户更换密码参数拼装入库开始【begin】lcpDto-->{}", JSONObject.toJSONString(lcpDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_CHANGE_PWD);
 		Date now = new Date();
 		LmUserOperationFlowinfo flowInfo = new LmUserOperationFlowinfo();
@@ -191,6 +265,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
+		logger.info("用户更换密码参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 
@@ -201,6 +276,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 	 */
 	@Override
 	public Map<String, Object> checkPwd(LmCheckPwdParamDTO lcpDto) {
+		logger.info("验证密码参数拼装入库开始【begin】lcpDto-->{}", JSONObject.toJSONString(lcpDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_NCHECK_PWD);
 		Date now = new Date();
 		LmUserOperationFlowinfo flowInfo = new LmUserOperationFlowinfo();
@@ -224,6 +300,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
+		logger.info("验证密码参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 
@@ -234,6 +311,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 	 */
 	@Override
 	public Map<String, Object> changeMobile(LmChangeMobileParamDTO lcmpDto) {
+		logger.info("更换预留手机参数拼装入库开始【begin】lcmpDto-->{}", JSONObject.toJSONString(lcmpDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_CHANGE_MOBILE);
 		Date now = new Date();
 		LmUserOperationFlowinfo flowInfo = new LmUserOperationFlowinfo();
@@ -259,11 +337,18 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
+		logger.info("更换预留手机参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 
+	/**
+	 * 用户激活
+	 * @param laapDto
+	 * @return
+	 */
 	@Override
 	public Map<String, Object> activeAccount(LmActiveAccountParamDTO laapDto) {
+		logger.info("用户激活参数拼装入库开始【begin】laapDto-->{}", JSONObject.toJSONString(laapDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_CHANGE_MOBILE);
 		Date now = new Date();
 		LmUserOperationFlowinfo flowInfo = new LmUserOperationFlowinfo();
@@ -294,6 +379,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
 		lmUserOperationFlowinfoMapper.insert(flowInfo);
+		logger.info("用户激活参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 }

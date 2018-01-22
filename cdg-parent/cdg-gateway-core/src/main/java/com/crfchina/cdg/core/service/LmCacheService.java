@@ -18,5 +18,6 @@ public interface LmCacheService {
 	String getSysPriKey(String sysNo);
 	
 	String getSysSand(String sysNo);
-	
+
+	String getBankCode(String lmBankCode);
 }

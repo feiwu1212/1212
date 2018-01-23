@@ -37,6 +37,7 @@ import com.crfchina.cdg.notify.service.LmCacheService;
 import com.crfchina.cdg.notify.service.LmNotifyService;
 import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
 import com.crfchina.cdg.notify.taskwork.ChangeCardTaskWorker;
+import com.crfchina.cdg.notify.taskwork.UserOperationTaskWoker;
 import com.crfchina.csf.task.TaskWorkerManager;
 import java.util.Date;
 import java.util.List;
@@ -262,7 +263,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, BindCardTaskWorker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, UserOperationTaskWoker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}

@@ -44,7 +44,9 @@ public enum SystemNo {
 	/** 营销活动系统 */
 	campaign(5),
 	/** 广州小贷 */
-	gzxd(82)
+	gzxd(82),
+	/** 懒猫业务系统 */
+	lmms(9)
 	;
 
 	private int value;

@@ -65,7 +65,7 @@ public class UserOperationTaskWoker extends AbstractTaskWorker {
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmUserOperationFlowinfo> lmChangeCardFlowInfos = lmUserOperationFlowinfoMapper.selectByExample(flowinfoExample);
 		LmUserOperationFlowinfo flow = lmChangeCardFlowInfos.get(0);
-		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_CHANGE_CARD);
+		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_CHANGE_CARD_MOBILE);
 		businessContext.setParam("param", flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);

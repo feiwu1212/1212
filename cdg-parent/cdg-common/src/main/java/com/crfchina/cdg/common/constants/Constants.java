@@ -150,4 +150,19 @@ public class Constants {
 	 * 绑卡taskContext
 	 */
 	public static final String CONTEXT_BIND_CARD = "CONTEXT_BIND_CARD";
+
+	/**
+	 * 异步通知结果
+	 */
+	public static final String NOTIFY_RESP_RESULT = "result";
+
+	/**
+	 * 通知状态：待通知
+	 */
+	public static final Integer NOTIFY_STATUS_WAIT = 1;
+
+	/**
+	 * 通知状态：已通知
+	 */
+	public static final Integer NOTIFY_STATUS_FINISH = 2;
 }

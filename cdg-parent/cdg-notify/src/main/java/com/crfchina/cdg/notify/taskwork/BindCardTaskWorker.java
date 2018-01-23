@@ -18,6 +18,8 @@ import com.crfchina.csf.task.nodetask.BusinessContext;
 import com.crfchina.csf.task.nodetask.NodeTaskResult;
 import com.crfchina.csf.task.nodetask.NodeTaskSequenceQueue;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,9 @@ import org.springframework.stereotype.Service;
 @TaskWorker(namespace="cdg-api-core")
 @Service
 public class BindCardTaskWorker extends AbstractTaskWorker {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(BindCardTaskWorker.class);
 
 	@Autowired
 	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
@@ -55,6 +60,7 @@ public class BindCardTaskWorker extends AbstractTaskWorker {
 	 */
 	@Override
 	protected NodeTaskResult execute(String fcpTrxNo) {
+		logger.info("BindCardTaskWorker添加任务队列开始fcpTrxNo-->{}", fcpTrxNo);
 		LmBindCardFlowinfoExample flowinfoExample = new LmBindCardFlowinfoExample();
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmBindCardFlowinfo> lmBindCardFlowinfos = lmBindCardFlowinfoMapper.selectByExample(flowinfoExample);
@@ -63,6 +69,7 @@ public class BindCardTaskWorker extends AbstractTaskWorker {
 		businessContext.setParam("param", flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);
+		logger.info("BindCardTaskWorker添加任务队列结束");
 		return result;
 	}
 }

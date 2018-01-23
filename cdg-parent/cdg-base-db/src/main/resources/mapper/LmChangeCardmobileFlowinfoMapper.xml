@@ -27,6 +27,8 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="change_type" property="changeType" jdbcType="TINYINT" />
     <result column="partition_date" property="partitionDate" jdbcType="INTEGER" />
+    <result column="notify_status" property="notifyStatus" jdbcType="INTEGER" />
+    <result column="notify_count" property="notifyCount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -61,7 +63,7 @@
     id, fcp_trx_no, request_ref_no, request_time, system_no, platform_user_id, real_name, 
     id_no, mobile, bank_card_no, bank_code, remark, check_type, bind_type, access_type, 
     audit_status, callback_url, notify_url, result, fail_code, fail_reason, create_time, 
-    update_time, change_type, partition_date
+    update_time, change_type, partition_date, notify_status, notify_count
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfoExample" >
     select
@@ -346,6 +348,12 @@
       <if test="partitionDate != null" >
         partition_date = #{partitionDate,jdbcType=INTEGER},
       </if>
+      <if test="notifyStatus != null" >
+        notify_status = #{notifyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="notifyCount != null" >
+        notify_count = #{notifyCount,jdbcType=INTEGER}
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -374,7 +382,9 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       change_type = #{changeType,jdbcType=TINYINT},
-      partition_date = #{partitionDate,jdbcType=INTEGER}
+      partition_date = #{partitionDate,jdbcType=INTEGER},
+      notify_status = #{notifyStatus,jdbcType=INTEGER},
+      notify_count = #{notifyCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

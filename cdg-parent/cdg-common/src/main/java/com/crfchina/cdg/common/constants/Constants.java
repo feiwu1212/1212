@@ -151,6 +151,7 @@ public class Constants {
 	 */
 	public static final String CONTEXT_BIND_CARD = "CONTEXT_BIND_CARD";
 
+	public static final String CONTEXT_CHANGE_CARD = "CONTEXT_CHANGE_CARD";
 	/**
 	 * 异步通知结果
 	 */

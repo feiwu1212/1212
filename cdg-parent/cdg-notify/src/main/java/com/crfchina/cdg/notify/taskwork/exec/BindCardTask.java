@@ -59,17 +59,16 @@ public class BindCardTask extends NodeTask {
 		NodeTaskResult processResult = null;
 		if (Constants.NOTIFY_STATUS_WAIT.equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {
-				BaseResultDTO<String> resultDTO = new BaseResultDTO<>();
-				resultDTO.setRequestRefNo(param.getRequestRefNo());
-				resultDTO.setFailCode(param.getFailCode());
-				resultDTO.setFailReason(param.getFailReason());
 				// 结果落库以后插入taskWorker
 				BaseResultDTO<String> result = new BaseResultDTO<>();
-				result.setResult(ResultCode.SUCCESS);
+				result.setResult(ResultCode.valueOf(param.getResult()));
 				result.setRequestRefNo(param.getRequestRefNo());
+				result.setFailCode(param.getFailCode());
+				result.setFailReason(param.getFailReason());
 
 				JSONObject data = new JSONObject();
 				data.put("fcpTrxNo", param.getFcpTrxNo());
+				data.put("platformUserNo", param.getPlatformUserId());
 				data.put("realName", param.getUserRealName());
 				data.put("idCardNo", param.getIdNo());
 				data.put("bankCardNo", param.getBankcardNo());
@@ -80,7 +79,6 @@ public class BindCardTask extends NodeTask {
 				data.put("userRole", param.getUserRole());
 				data.put("auditStatus", param.getAuditStatus());
 				result.setData(data.toJSONString());
-				resultDTO.setData(result.toString());
 				List<BasicNameValuePair> notifyParam = NotifyUtils.createNotifyParam(result);
 				JSONObject jsonObject = NotifyUtils.httpNotify(notifyParam, param.getNotifyUrl());
 				param.setNotifyCount(param.getNotifyCount() + 1);
@@ -92,7 +90,7 @@ public class BindCardTask extends NodeTask {
 				}
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(param);
 			} else {
-				processResult = NodeTaskResult.failpause;
+				processResult = NodeTaskResult.fail;
 			}
 		} else {
 			processResult = NodeTaskResult.successandquit;

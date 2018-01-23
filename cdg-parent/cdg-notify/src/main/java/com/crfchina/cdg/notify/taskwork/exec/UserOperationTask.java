@@ -68,6 +68,9 @@ public class UserOperationTask extends NodeTask {
 				JSONObject data = new JSONObject();
 				data.put("fcpTrxNo", param.getFcpTrxNo());
 				data.put("platformUserNo", param.getPlatformUserId());
+				if (param.getOperType().equals(3)) {
+					data.put("bizTypeDescription", param.getBizTypeDesc());
+				}
 				result.setData(data.toJSONString());
 				List<BasicNameValuePair> notifyParam = NotifyUtils.createNotifyParam(result);
 				JSONObject jsonObject = NotifyUtils.httpNotify(notifyParam, param.getNotifyUrl());

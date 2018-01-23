@@ -48,7 +48,7 @@ public class ChangeCardTask extends NodeTask {
 	}
 
 	/**
-	 * 更换银行卡task
+	 * 更换银行卡或预留手机task
 	 * @param context
 	 * @return
 	 */

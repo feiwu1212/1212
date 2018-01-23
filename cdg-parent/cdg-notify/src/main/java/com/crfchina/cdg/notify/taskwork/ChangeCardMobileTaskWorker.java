@@ -37,10 +37,10 @@ import org.springframework.stereotype.Service;
  */
 @TaskWorker(namespace="cdg-api-core")
 @Service
-public class ChangeCardTaskWorker extends AbstractTaskWorker {
+public class ChangeCardMobileTaskWorker extends AbstractTaskWorker {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ChangeCardTaskWorker.class);
+			.getLogger(ChangeCardMobileTaskWorker.class);
 
 	@Autowired
 	private NodeTaskSequenceQueue taskQueue;
@@ -51,12 +51,12 @@ public class ChangeCardTaskWorker extends AbstractTaskWorker {
 	@Autowired
 	ChangeCardTask task;
 
-	public ChangeCardTaskWorker(TaskWorkerManager taskWorkerManager) {
+	public ChangeCardMobileTaskWorker(TaskWorkerManager taskWorkerManager) {
 		super(taskWorkerManager);
 	}
 
 	/**
-	 * 更换银行卡TaskWorker
+	 * 更换银行卡或预留手机TaskWorker
 	 * @param fcpTrxNo
 	 * @return
 	 */
@@ -67,7 +67,7 @@ public class ChangeCardTaskWorker extends AbstractTaskWorker {
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmChangeCardmobileFlowinfo> lmChangeCardFlowInfos = changeCardFlowMapper.selectByExample(flowinfoExample);
 		LmChangeCardmobileFlowinfo flow = lmChangeCardFlowInfos.get(0);
-		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_CHANGE_CARD);
+		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_CHANGE_CARD_MOBILE);
 		businessContext.setParam("param", flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);

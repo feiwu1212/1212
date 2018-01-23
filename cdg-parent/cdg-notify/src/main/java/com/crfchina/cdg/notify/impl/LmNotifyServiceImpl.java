@@ -36,7 +36,7 @@ import com.crfchina.cdg.notify.dto.LmNotifyResult;
 import com.crfchina.cdg.notify.service.LmCacheService;
 import com.crfchina.cdg.notify.service.LmNotifyService;
 import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
-import com.crfchina.cdg.notify.taskwork.ChangeCardTaskWorker;
+import com.crfchina.cdg.notify.taskwork.ChangeCardMobileTaskWorker;
 import com.crfchina.cdg.notify.taskwork.UserOperationTaskWoker;
 import com.crfchina.csf.task.TaskWorkerManager;
 import java.util.Date;
@@ -60,7 +60,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class LmNotifyServiceImpl implements LmNotifyService {
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(LmNotifyServiceImpl.class);
 
@@ -78,7 +78,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 
 	@Autowired
 	LmVaccountTransferDetailMapper txnDetailMapper;
-	
+
 	@Autowired
 	LmVaccountTransferLogMapper txnLogMapper;
 
@@ -104,6 +104,10 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 			dealChangeCard(result.getRespData());
 		}else if (ApiType.RESET_PASSWORD.equals(apiType)) {
 			dealChangePwd(result.getRespData());
+		}else if (ApiType.CHECK_PASSWORD.equals(apiType)) {
+			dealCheckPwd(result.getRespData());
+		}else if (ApiType.MODIFY_MOBILE_EXPAND.equals(apiType)) {
+			dealChangeMobile(result.getRespData());
 		}
 	}
 
@@ -217,7 +221,9 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 			if (SystemBackCode.SUCCESS.getCode().equals(code)
 					&& ResultCode.SUCCESS.getCode().equals(status)
 					&& AuditStatus.PASSED.getCode().equals(respData.getString("auditStatus"))) {
-				flow.setBankCode(respData.getString("bankcode"));
+				flow.setMobile(respData.getString("mobile"));
+				flow.setBankCardNo(respData.getString("bankcardNo"));
+				flow.setBankCode(lmCacheService.getBankCode(respData.getString("bankcode")));
 				flow.setAccessType(EnumsDBMap.ACCESS_TYPE_MAP.get(respData.getString("accessType"))); // idCardType
 				flow.setAuditStatus(EnumsDBMap.AUDIT_STATUS_MAP.get(respData.getString("auditStatus"))); // AuditStatus
 				flow.setResult(ResultCode.SUCCESS.getCode());
@@ -230,7 +236,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				changeCardFlowMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, ChangeCardTaskWorker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, ChangeCardMobileTaskWorker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -268,9 +274,79 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
 	}
+
 	/**
-	 * 
-	 * @Title: dealRecharge  
+	 * 验证交易密码异步通知处理
+	 * @param respData
+	 */
+	private void dealCheckPwd(JSONObject respData) {
+		logger.info("验证交易密码异步通知开始【begin】respData-->{}", respData.toJSONString());
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		LmUserOperationFlowinfoExample example = new LmUserOperationFlowinfoExample();
+		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmUserOperationFlowinfo> flowInfoList = lmUserOperationFlowinfoMapper.selectByExample(example);
+		if (flowInfoList != null || flowInfoList.size() == 1) {
+			LmUserOperationFlowinfo flow = flowInfoList.get(0);
+			if (SystemBackCode.SUCCESS.getCode().equals(code)
+					&& ResultCode.SUCCESS.getCode().equals(status)) {
+				flow.setResult(ResultCode.SUCCESS.getCode());
+				flow.setBizTypeDesc(respData.getString("bizTypeDescription"));
+				flow.setUpdateTime(now);
+				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
+			} else {
+				flow.setResult(ResultCode.FAIL.getCode());
+				flow.setFailCode(respData.getString("errorCode"));
+				flow.setFailReason(respData.getString("errorMessage"));
+				flow.setUpdateTime(now);
+				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
+			}
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, UserOperationTaskWoker.class);
+		} else {
+			logger.error("订单异常-->{}", fcpTrxNo);
+		}
+	}
+
+	/**
+	 * 更换预留手机异步通知
+	 * @param respData
+	 */
+	private void dealChangeMobile(JSONObject respData) {
+		logger.info("个人换绑卡异步通知开始【begin】respData-->{}", respData.toJSONString());
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		LmChangeCardmobileFlowinfoExample example = new LmChangeCardmobileFlowinfoExample();
+		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmChangeCardmobileFlowinfo> flowInfoList = changeCardFlowMapper.selectByExample(example);
+		if (flowInfoList != null || flowInfoList.size() == 1) {
+			LmChangeCardmobileFlowinfo flow = flowInfoList.get(0);
+			if (SystemBackCode.SUCCESS.getCode().equals(code)
+					&& ResultCode.SUCCESS.getCode().equals(status)) {
+				flow.setBankCardNo(respData.getString("bankcardNo"));
+				flow.setMobile(respData.getString("mobile"));
+				flow.setBankCode(lmCacheService.getBankCode(respData.getString("bankcode")));
+				flow.setResult(ResultCode.SUCCESS.getCode());
+				flow.setUpdateTime(now);
+				changeCardFlowMapper.updateByPrimaryKey(flow);
+			} else {
+				flow.setResult(ResultCode.FAIL.getCode());
+				flow.setFailCode(respData.getString("errorCode"));
+				flow.setFailReason(respData.getString("errorMessage"));
+				flow.setUpdateTime(now);
+				changeCardFlowMapper.updateByPrimaryKey(flow);
+			}
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, ChangeCardMobileTaskWorker.class);
+		} else {
+			logger.error("订单异常-->{}", fcpTrxNo);
+		}
+	}
+	/**
+	 *
+	 * @Title: dealRecharge
 	 * @Description: 充值异步通知处理
 	 * @param respData
 	 * void
@@ -313,7 +389,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						flow.setUpdateTime(now);
 						flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 						flow.setSettleDate(now);
-						
+
 						if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
 							txnDtl.setResult(ResultCode.SUCCESS.getCode());
 						}else if(respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
@@ -326,7 +402,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnDtl.setUpdateTime(now);
 						txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 						txnDtl.setSettleDate(now);
-						
+
 						 if(!StringUtils.isEmpty(respData.getString("commission"))){
 							 if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
 								 txnDtl2.setResult(ResultCode.SUCCESS.getCode());
@@ -345,18 +421,18 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台通知信息
-						
+
 					} else {
 						flow.setResult(ResultCode.FAIL.getCode());
 						flow.setFailCode(respData.getString("errorCode"));
 						flow.setFailReason(respData.getString("errorMessage"));
 						flow.setUpdateTime(now);
-						
+
 						txnDtl.setResult(ResultCode.FAIL.getCode());
 						txnDtl.setFailCode(respData.getString("errorCode"));
 						txnDtl.setFailReason(respData.getString("errorCode"));
 						txnDtl.setUpdateTime(now);
-						
+
 						 if(!StringUtils.isEmpty(respData.getString("commission"))){
 							 txnDtl2.setResult(ResultCode.FAIL.getCode());
 							 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
@@ -368,9 +444,9 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						
-						
-					} 
+
+
+					}
 			}
 			else{
 				logger.info("未找到对应的txnDtl订单记录");
@@ -379,7 +455,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 			logger.info("未找到对应的txnInfo订单记录");
 		}
 	}
-	
-	
-	
+
+
+
 }

@@ -145,4 +145,11 @@ public class EnumsDBMap {
 			put("REPAYMENT", "HKHB");
 		}
 	};
+
+	public static Map<String, Integer> CHANGE_TYPE_MAP = new HashMap<String, Integer>() {
+		{
+			put("PERSONAL_BIND_BANKCARD_EXPAND", 1);
+			put("MODIFY_MOBILE_EXPAND", 2);
+		}
+	};
 }

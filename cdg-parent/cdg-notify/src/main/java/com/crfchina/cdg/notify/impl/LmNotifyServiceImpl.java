@@ -38,6 +38,7 @@ import com.crfchina.cdg.common.utils.MoneyUtils;
 import com.crfchina.cdg.notify.dto.LmNotifyResult;
 import com.crfchina.cdg.notify.service.LmNotifyService;
 import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
+import com.crfchina.cdg.notify.taskwork.RechargeTaskWorker;
 import com.crfchina.csf.task.TaskWorkerManager;
 
 /**
@@ -216,12 +217,14 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						flow.setFailCode(respData.getString("errorCode"));
 						flow.setFailReason(respData.getString("errorMessage"));
 						flow.setUpdateTime(now);
-						
+						flow.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+
 						txnDtl.setResult(ResultCode.FAIL.getCode());
 						txnDtl.setFailCode(respData.getString("errorCode"));
 						txnDtl.setFailReason(respData.getString("errorCode"));
 						txnDtl.setUpdateTime(now);
-						
+						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+
 						 if(!StringUtils.isEmpty(respData.getString("commission"))){
 							 txnDtl2.setResult(ResultCode.FAIL.getCode());
 							 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
@@ -233,8 +236,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						
-						
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, RechargeTaskWorker.class);
 					} 
 			}
 			else{

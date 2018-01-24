@@ -150,4 +150,10 @@ public class Constants {
 	 * 绑卡taskContext
 	 */
 	public static final String CONTEXT_BIND_CARD = "CONTEXT_BIND_CARD";
+	
+	/**
+	 * 充值taskContext
+	 */
+	public static final String CONTEXT_RECHARGE = "CONTEXT_RECHARGE";
+	
 }

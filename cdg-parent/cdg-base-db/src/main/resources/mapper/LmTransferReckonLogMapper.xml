@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crfchina.cdg.basedb.dao.LmTransferReckonLogMapper" >
+  <resultMap id="BaseResultMap" type="com.crfchina.cdg.basedb.entity.LmTransferReckonLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="reckon_id" property="reckonId" jdbcType="VARCHAR" />
+    <result column="reckon_date" property="reckonDate" jdbcType="VARCHAR" />
+    <result column="reckon_type" property="reckonType" jdbcType="VARCHAR" />
+    <result column="lm_reckon_file" property="lmReckonFile" jdbcType="VARCHAR" />
+    <result column="success_count" property="successCount" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="VARCHAR" />
+    <result column="lm_count" property="lmCount" jdbcType="VARCHAR" />
+    <result column="lm_amount" property="lmAmount" jdbcType="VARCHAR" />
+    <result column="crf_count" property="crfCount" jdbcType="VARCHAR" />
+    <result column="crf_amount" property="crfAmount" jdbcType="VARCHAR" />
+    <result column="lm_fall_count" property="lmFallCount" jdbcType="VARCHAR" />
+    <result column="lm_fall_amount" property="lmFallAmount" jdbcType="VARCHAR" />
+    <result column="crf_fall_count" property="crfFallCount" jdbcType="VARCHAR" />
+    <result column="crf_fall_amount" property="crfFallAmount" jdbcType="VARCHAR" />
+    <result column="misc" property="misc" jdbcType="VARCHAR" />
+    <result column="statue" property="statue" jdbcType="TINYINT" />
+    <result column="reckon_result" property="reckonResult" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, reckon_id, reckon_date, reckon_type, lm_reckon_file, success_count, success_amount, 
+    lm_count, lm_amount, crf_count, crf_amount, lm_fall_count, lm_fall_amount, crf_fall_count, 
+    crf_fall_amount, misc, statue, reckon_result, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from lm_transfer_reckon_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from lm_transfer_reckon_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from lm_transfer_reckon_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLog" >
+    insert into lm_transfer_reckon_log (id, reckon_id, reckon_date,
+      reckon_type, lm_reckon_file, success_count,
+      success_amount, lm_count, lm_amount,
+      crf_count, crf_amount, lm_fall_count,
+      lm_fall_amount, crf_fall_count, crf_fall_amount,
+      misc, statue, reckon_result,
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{reckonId,jdbcType=VARCHAR}, #{reckonDate,jdbcType=VARCHAR},
+      #{reckonType,jdbcType=VARCHAR}, #{lmReckonFile,jdbcType=VARCHAR}, #{successCount,jdbcType=VARCHAR},
+      #{successAmount,jdbcType=VARCHAR}, #{lmCount,jdbcType=VARCHAR}, #{lmAmount,jdbcType=VARCHAR},
+      #{crfCount,jdbcType=VARCHAR}, #{crfAmount,jdbcType=VARCHAR}, #{lmFallCount,jdbcType=VARCHAR},
+      #{lmFallAmount,jdbcType=VARCHAR}, #{crfFallCount,jdbcType=VARCHAR}, #{crfFallAmount,jdbcType=VARCHAR},
+      #{misc,jdbcType=VARCHAR}, #{statue,jdbcType=TINYINT}, #{reckonResult,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLog" >
+    insert into lm_transfer_reckon_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="reckonId != null" >
+        reckon_id,
+      </if>
+      <if test="reckonDate != null" >
+        reckon_date,
+      </if>
+      <if test="reckonType != null" >
+        reckon_type,
+      </if>
+      <if test="lmReckonFile != null" >
+        lm_reckon_file,
+      </if>
+      <if test="successCount != null" >
+        success_count,
+      </if>
+      <if test="successAmount != null" >
+        success_amount,
+      </if>
+      <if test="lmCount != null" >
+        lm_count,
+      </if>
+      <if test="lmAmount != null" >
+        lm_amount,
+      </if>
+      <if test="crfCount != null" >
+        crf_count,
+      </if>
+      <if test="crfAmount != null" >
+        crf_amount,
+      </if>
+      <if test="lmFallCount != null" >
+        lm_fall_count,
+      </if>
+      <if test="lmFallAmount != null" >
+        lm_fall_amount,
+      </if>
+      <if test="crfFallCount != null" >
+        crf_fall_count,
+      </if>
+      <if test="crfFallAmount != null" >
+        crf_fall_amount,
+      </if>
+      <if test="misc != null" >
+        misc,
+      </if>
+      <if test="statue != null" >
+        statue,
+      </if>
+      <if test="reckonResult != null" >
+        reckon_result,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="reckonId != null" >
+        #{reckonId,jdbcType=VARCHAR},
+      </if>
+      <if test="reckonDate != null" >
+        #{reckonDate,jdbcType=VARCHAR},
+      </if>
+      <if test="reckonType != null" >
+        #{reckonType,jdbcType=VARCHAR},
+      </if>
+      <if test="lmReckonFile != null" >
+        #{lmReckonFile,jdbcType=VARCHAR},
+      </if>
+      <if test="successCount != null" >
+        #{successCount,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        #{successAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmCount != null" >
+        #{lmCount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmAmount != null" >
+        #{lmAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfCount != null" >
+        #{crfCount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfAmount != null" >
+        #{crfAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmFallCount != null" >
+        #{lmFallCount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmFallAmount != null" >
+        #{lmFallAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfFallCount != null" >
+        #{crfFallCount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfFallAmount != null" >
+        #{crfFallAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="misc != null" >
+        #{misc,jdbcType=VARCHAR},
+      </if>
+      <if test="statue != null" >
+        #{statue,jdbcType=TINYINT},
+      </if>
+      <if test="reckonResult != null" >
+        #{reckonResult,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLogExample" resultType="java.lang.Integer" >
+    select count(*) from lm_transfer_reckon_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLog" >
+    update lm_transfer_reckon_log
+    <set >
+      <if test="reckonId != null" >
+        reckon_id = #{reckonId,jdbcType=VARCHAR},
+      </if>
+      <if test="reckonDate != null" >
+        reckon_date = #{reckonDate,jdbcType=VARCHAR},
+      </if>
+      <if test="reckonType != null" >
+        reckon_type = #{reckonType,jdbcType=VARCHAR},
+      </if>
+      <if test="lmReckonFile != null" >
+        lm_reckon_file = #{lmReckonFile,jdbcType=VARCHAR},
+      </if>
+      <if test="successCount != null" >
+        success_count = #{successCount,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        success_amount = #{successAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmCount != null" >
+        lm_count = #{lmCount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmAmount != null" >
+        lm_amount = #{lmAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfCount != null" >
+        crf_count = #{crfCount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfAmount != null" >
+        crf_amount = #{crfAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmFallCount != null" >
+        lm_fall_count = #{lmFallCount,jdbcType=VARCHAR},
+      </if>
+      <if test="lmFallAmount != null" >
+        lm_fall_amount = #{lmFallAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfFallCount != null" >
+        crf_fall_count = #{crfFallCount,jdbcType=VARCHAR},
+      </if>
+      <if test="crfFallAmount != null" >
+        crf_fall_amount = #{crfFallAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="misc != null" >
+        misc = #{misc,jdbcType=VARCHAR},
+      </if>
+      <if test="statue != null" >
+        statue = #{statue,jdbcType=TINYINT},
+      </if>
+      <if test="reckonResult != null" >
+        reckon_result = #{reckonResult,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLog" >
+    update lm_transfer_reckon_log
+    set reckon_id = #{reckonId,jdbcType=VARCHAR},
+      reckon_date = #{reckonDate,jdbcType=VARCHAR},
+      reckon_type = #{reckonType,jdbcType=VARCHAR},
+      lm_reckon_file = #{lmReckonFile,jdbcType=VARCHAR},
+      success_count = #{successCount,jdbcType=VARCHAR},
+      success_amount = #{successAmount,jdbcType=VARCHAR},
+      lm_count = #{lmCount,jdbcType=VARCHAR},
+      lm_amount = #{lmAmount,jdbcType=VARCHAR},
+      crf_count = #{crfCount,jdbcType=VARCHAR},
+      crf_amount = #{crfAmount,jdbcType=VARCHAR},
+      lm_fall_count = #{lmFallCount,jdbcType=VARCHAR},
+      lm_fall_amount = #{lmFallAmount,jdbcType=VARCHAR},
+      crf_fall_count = #{crfFallCount,jdbcType=VARCHAR},
+      crf_fall_amount = #{crfFallAmount,jdbcType=VARCHAR},
+      misc = #{misc,jdbcType=VARCHAR},
+      statue = #{statue,jdbcType=TINYINT},
+      reckon_result = #{reckonResult,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

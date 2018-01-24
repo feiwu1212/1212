@@ -22,7 +22,6 @@ import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;
 import com.crfchina.cdg.core.service.LmAccountService;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class AccountController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/personOpen")
+	@RequestMapping("/openaccount")
 	public ModelAndView personOpen(String request) {
 		logger.info("个人绑卡拼装参数开始【begin】");
 		LmOpenAccountParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountParamDTO.class);
@@ -81,7 +80,7 @@ public class AccountController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/enterpriseOpen")
+	@RequestMapping("/companyopenaccount")
 	public ModelAndView enterpriseOpen(String request) {
 		logger.info("企业绑卡拼装参数开始【begin】");
 		LmOpenAccountCompanyParamDTO paramDto = AppUtil.getParamDto(request, LmOpenAccountCompanyParamDTO.class);

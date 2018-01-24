@@ -1,16 +1,16 @@
 /**
  * @Title：
  * @Package com.crfchina.cdg.notify.taskwork
- * @date 2018/1/22 16:59
+ * @date 2018/1/23 16:05
  * @version V1.0
  */
 package com.crfchina.cdg.notify.taskwork;
 
-import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
-import com.crfchina.cdg.basedb.entity.LmBindCardFlowinfo;
-import com.crfchina.cdg.basedb.entity.LmBindCardFlowinfoExample;
+import com.crfchina.cdg.basedb.dao.LmUserOperationFlowinfoMapper;
+import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
+import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfoExample;
 import com.crfchina.cdg.common.constants.Constants;
-import com.crfchina.cdg.notify.taskwork.exec.BindCardTask;
+import com.crfchina.cdg.notify.taskwork.exec.UserOperationTask;
 import com.crfchina.csf.task.AbstractTaskWorker;
 import com.crfchina.csf.task.TaskWorker;
 import com.crfchina.csf.task.TaskWorkerManager;
@@ -25,51 +25,51 @@ import org.springframework.stereotype.Service;
 
 /**
  * @ProjectName：cdg-parent
- * @ClassName：BindCardTaskWorker
+ * @ClassName：UserOperationTaskWoker
  * @Description:
  * @author: Administrator
- * @date：2018/1/22 16:59
+ * @date：2018/1/23 16:05
  * @updateBy：但锐轩
- * @updateDate：2018/1/22 16:59
+ * @updateDate：2018/1/23 16:05
  * @remarks：
  */
 @TaskWorker(namespace="cdg-api-core")
 @Service
-public class BindCardTaskWorker extends AbstractTaskWorker {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(BindCardTaskWorker.class);
+public class UserOperationTaskWoker extends AbstractTaskWorker {
 
 	@Autowired
-	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
+	LmUserOperationFlowinfoMapper lmUserOperationFlowinfoMapper;
 
 	@Autowired
 	private NodeTaskSequenceQueue taskQueue;
 
 	@Autowired
-	BindCardTask task;
+	UserOperationTask task;
 
-	public BindCardTaskWorker(TaskWorkerManager taskWorkerManager) {
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserOperationTaskWoker.class);
+
+	public UserOperationTaskWoker(TaskWorkerManager taskWorkerManager) {
 		super(taskWorkerManager);
 	}
 
 	/**
-	 * 绑卡异步通知taskworker
+	 * 个人操作TaskWoker
 	 * @param fcpTrxNo
 	 * @return
 	 */
 	@Override
 	protected NodeTaskResult execute(String fcpTrxNo) {
-		logger.info("BindCardTaskWorker添加任务队列开始fcpTrxNo-->{}", fcpTrxNo);
-		LmBindCardFlowinfoExample flowinfoExample = new LmBindCardFlowinfoExample();
+		logger.info("UserOperationTaskWoker添加任务队列开始fcpTrxNo-->{}", fcpTrxNo);
+		LmUserOperationFlowinfoExample flowinfoExample = new LmUserOperationFlowinfoExample();
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
-		List<LmBindCardFlowinfo> lmBindCardFlowinfos = lmBindCardFlowinfoMapper.selectByExample(flowinfoExample);
-		LmBindCardFlowinfo flow = lmBindCardFlowinfos.get(0);
-		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_BIND_CARD);
+		List<LmUserOperationFlowinfo> lmChangeCardFlowInfos = lmUserOperationFlowinfoMapper.selectByExample(flowinfoExample);
+		LmUserOperationFlowinfo flow = lmChangeCardFlowInfos.get(0);
+		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_CHANGE_CARD_MOBILE);
 		businessContext.setParam("param", flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);
-		logger.info("BindCardTaskWorker添加任务队列结束");
+		logger.info("UserOperationTaskWoker添加任务队列结束");
 		return result;
 	}
 }

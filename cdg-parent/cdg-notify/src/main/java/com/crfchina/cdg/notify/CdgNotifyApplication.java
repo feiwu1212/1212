@@ -24,7 +24,7 @@ import org.springframework.context.annotation.ImportResource;
  * @remarks：
  */
 @SpringBootApplication
-@MapperScan("com.crfchina")
+@MapperScan("com.crfchina.cdg.basedb.dao")
 @ComponentScan(basePackages = {"com.crfchina"})
 @ImportResource({"classpath*:spring-disconf.xml"})//导入spring配置
 public class CdgNotifyApplication extends SpringBootServletInitializer {

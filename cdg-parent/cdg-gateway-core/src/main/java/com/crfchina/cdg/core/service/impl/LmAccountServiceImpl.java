@@ -212,6 +212,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		flowInfo.setPlatformUserId(lcbcDto.getPlatformUserNo());
 		flowInfo.setMobile(lcbcDto.getMobile());
 		flowInfo.setBankCardNo(lcbcDto.getBankcardNo());
+		flowInfo.setChangeType(EnumsDBMap.CHANGE_TYPE_MAP.get(ApiType.PERSONAL_BIND_BANKCARD_EXPAND.getCode()));
 		flowInfo.setBindType(EnumsDBMap.BIND_TYPE_MAP.get(Constants.UPDATE_BANKCARD));
 		flowInfo.setCallbackUrl(lcbcDto.getCallbackUrl());
 		flowInfo.setNotifyUrl(lcbcDto.getNotifyUrl());
@@ -315,13 +316,13 @@ public class LmAccountServiceImpl implements LmAccountService {
 		logger.info("更换预留手机参数拼装入库开始【begin】lcmpDto-->{}", JSONObject.toJSONString(lcmpDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.PERSON_CHANGE_MOBILE);
 		Date now = new Date();
-		LmUserOperationFlowinfo flowInfo = new LmUserOperationFlowinfo();
+		LmChangeCardmobileFlowinfo flowInfo = new LmChangeCardmobileFlowinfo();
 		flowInfo.setRequestRefNo(lcmpDto.getRequestRefNo());
 		flowInfo.setFcpTrxNo(trxNo);
 		flowInfo.setRequestTime(now);
 		flowInfo.setSystemNo(String.valueOf(lcmpDto.getSystemNo().getValue()));
 		flowInfo.setPlatformUserId(lcmpDto.getPlatformUserNo());
-		flowInfo.setOperType(EnumsDBMap.OPER_TYPE_MAP.get(ApiType.MODIFY_MOBILE_EXPAND.getCode()));
+		flowInfo.setChangeType(EnumsDBMap.CHANGE_TYPE_MAP.get(ApiType.MODIFY_MOBILE_EXPAND.getCode()));
 		flowInfo.setCallbackUrl(lcmpDto.getCallbackUrl());
 		flowInfo.setNotifyUrl(lcmpDto.getNotifyUrl());
 		flowInfo.setResult(ResultCode.UNKNOWN.getCode());
@@ -337,7 +338,7 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("checkType", Constants.CHECK_TYPE);
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 
-		lmUserOperationFlowinfoMapper.insert(flowInfo);
+		lmChangeCardmobileFlowinfoMapper.insert(flowInfo);
 		logger.info("更换预留手机参数拼装入库结束【end】拼接结果-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}

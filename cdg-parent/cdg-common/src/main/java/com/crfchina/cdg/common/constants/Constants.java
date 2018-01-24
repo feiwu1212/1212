@@ -156,4 +156,20 @@ public class Constants {
 	 */
 	public static final String CONTEXT_RECHARGE = "CONTEXT_RECHARGE";
 	
+
+	public static final String CONTEXT_CHANGE_CARD_MOBILE = "CONTEXT_CHANGE_CARD_MOBILE";
+	/**
+	 * 异步通知结果
+	 */
+	public static final String NOTIFY_RESP_RESULT = "result";
+
+	/**
+	 * 通知状态：待通知
+	 */
+	public static final Integer NOTIFY_STATUS_WAIT = 1;
+
+	/**
+	 * 通知状态：已通知
+	 */
+	public static final Integer NOTIFY_STATUS_FINISH = 2;
 }

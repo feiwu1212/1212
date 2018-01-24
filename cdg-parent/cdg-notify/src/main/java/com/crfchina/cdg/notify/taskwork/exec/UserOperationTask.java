@@ -1,14 +1,14 @@
 /**
  * @Title：
  * @Package com.crfchina.cdg.notify.taskwork.exec
- * @date 2018/1/22 17:03
+ * @date 2018/1/23 16:10
  * @version V1.0
  */
 package com.crfchina.cdg.notify.taskwork.exec;
 
 import com.alibaba.fastjson.JSONObject;
-import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
-import com.crfchina.cdg.basedb.entity.LmBindCardFlowinfo;
+import com.crfchina.cdg.basedb.dao.LmUserOperationFlowinfoMapper;
+import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.notify.dto.BaseResultDTO;
@@ -26,40 +26,39 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ProjectName：cdg-parent
- * @ClassName：BindCard
+ * @ClassName：UserOperationTask
  * @Description:
  * @author: Administrator
- * @date：2018/1/22 17:03
+ * @date：2018/1/23 16:10
  * @updateBy：但锐轩
- * @updateDate：2018/1/22 17:03
+ * @updateDate：2018/1/23 16:10
  * @remarks：
  */
 @Component
-public class BindCardTask extends NodeTask {
+public class UserOperationTask extends NodeTask {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(BindCardTask.class);
+			.getLogger(UserOperationTask.class);
 
-	public BindCardTask(NodeTaskService nodeTaskService) {
+	@Autowired
+	LmUserOperationFlowinfoMapper lmUserOperationFlowinfoMapper;
+
+	public UserOperationTask(NodeTaskService nodeTaskService) {
 		super(nodeTaskService);
 	}
 
-	@Autowired
-	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
-
 	/**
-	 * 绑卡异步通知task
+	 * 个人操作task
 	 * @param context
 	 * @return
 	 */
 	@Override
 	protected NodeTaskResult process(BusinessContext context) {
-		logger.info("BindCardTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
-		LmBindCardFlowinfo param = (LmBindCardFlowinfo) context.getParam("param");
+		logger.info("UserOperationTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
+		LmUserOperationFlowinfo param = (LmUserOperationFlowinfo) context.getParam("param");
 		NodeTaskResult processResult = null;
 		if (Constants.NOTIFY_STATUS_WAIT.equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {
-				// 结果落库以后插入taskWorker
 				BaseResultDTO<String> result = new BaseResultDTO<>();
 				result.setResult(ResultCode.valueOf(param.getResult()));
 				result.setRequestRefNo(param.getRequestRefNo());
@@ -69,15 +68,9 @@ public class BindCardTask extends NodeTask {
 				JSONObject data = new JSONObject();
 				data.put("fcpTrxNo", param.getFcpTrxNo());
 				data.put("platformUserNo", param.getPlatformUserId());
-				data.put("realName", param.getUserRealName());
-				data.put("idCardNo", param.getIdNo());
-				data.put("bankCardNo", param.getBankcardNo());
-				data.put("bankCode", param.getBankCode());
-				data.put("mobile", param.getMobile());
-				data.put("idCardType", param.getIdType());
-				data.put("accessType", param.getAccessType());
-				data.put("userRole", param.getUserRole());
-				data.put("auditStatus", param.getAuditStatus());
+				if (param.getOperType().equals(3)) {
+					data.put("bizTypeDescription", param.getBizTypeDesc());
+				}
 				result.setData(data.toJSONString());
 				List<BasicNameValuePair> notifyParam = NotifyUtils.createNotifyParam(result);
 				JSONObject jsonObject = NotifyUtils.httpNotify(notifyParam, param.getNotifyUrl());
@@ -88,14 +81,14 @@ public class BindCardTask extends NodeTask {
 				} else {
 					processResult = NodeTaskResult.failretry;
 				}
-				lmBindCardFlowinfoMapper.updateByPrimaryKey(param);
+				lmUserOperationFlowinfoMapper.updateByPrimaryKey(param);
 			} else {
 				processResult = NodeTaskResult.fail;
 			}
 		} else {
 			processResult = NodeTaskResult.successandquit;
 		}
-		logger.info("BindCardTask执行结束processResult-->{}", processResult);
+		logger.info("UserOperationTask执行结束processResult-->{}", processResult);
 		return processResult;
 	}
 }

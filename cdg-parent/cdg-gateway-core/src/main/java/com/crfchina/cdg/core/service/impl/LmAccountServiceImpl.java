@@ -182,10 +182,9 @@ public class LmAccountServiceImpl implements LmAccountService {
 		reqDataMap.put("bankcardNo", leoaDto.getBankCardNo());
 		reqDataMap.put("bankcode", cacheService.getLmBankCode(leoaDto.getBankCode()));
 		// 本地调试配置本地回调地址
-//		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
-		reqDataMap.put("redirectUrl", "http://10.194.11.253:8080/cdg-gateway/callBack/pageCallBack");
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());
 		reqDataMap.put("authList", authStr);
-		reqDataMap.put("failTime", leoaDto.getFailTime());
+		reqDataMap.put("failTime", leoaDto.getFailTime().replace("-", ""));
 		reqDataMap.put("amount", MoneyUtils.toDollar(leoaDto.getAuthAmount()));
 
 		lmBindCardFlowinfoMapper.insert(flowInfo);

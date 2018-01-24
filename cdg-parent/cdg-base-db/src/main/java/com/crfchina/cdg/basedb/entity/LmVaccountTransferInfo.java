@@ -67,7 +67,28 @@ public class LmVaccountTransferInfo {
 
     private Integer partitionDate;
 
-    public Long getId() {
+    private int notifyStatus;
+    
+    private int notifyCount;
+    
+
+	public int getNotifyStatus() {
+		return notifyStatus;
+	}
+
+	public void setNotifyStatus(int notifyStatus) {
+		this.notifyStatus = notifyStatus;
+	}
+
+	public int getNotifyCount() {
+		return notifyCount;
+	}
+
+	public void setNotifyCount(int notifyCount) {
+		this.notifyCount = notifyCount;
+	}
+
+	public Long getId() {
         return id;
     }
 

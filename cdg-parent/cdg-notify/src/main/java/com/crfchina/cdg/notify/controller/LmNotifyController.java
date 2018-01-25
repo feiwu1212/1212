@@ -7,7 +7,6 @@
 package com.crfchina.cdg.notify.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.crfchina.cdg.common.enums.business.Terminal;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.SignatureUtils;
 import com.crfchina.cdg.notify.dto.LmNotifyResult;
@@ -76,7 +75,6 @@ public class LmNotifyController {
 		LmNotifyResult result = new LmNotifyResult();
 		result.setServiceName(request.getParameter("serviceName"));
 		result.setPlatformNo(request.getParameter("platformNo"));
-		result.setUserDevice(Terminal.valueOf(request.getParameter("userDevice")));
 		result.setRespData(JSONObject.parseObject(request.getParameter("respData")));
 		result.setKeySerial(request.getParameter("keySerial"));
 		result.setSign(request.getParameter("sign"));

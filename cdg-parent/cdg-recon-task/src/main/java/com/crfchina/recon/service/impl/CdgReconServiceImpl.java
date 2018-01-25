@@ -7,6 +7,8 @@
  */
 package com.crfchina.recon.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.crfchina.recon.service.ICdgReconService;
 
 /**    
@@ -20,6 +22,8 @@ import com.crfchina.recon.service.ICdgReconService;
  * @updateDate：2018年1月9日 上午10:08:37
  * @remarks：
  */
+@Service("ICdgReconService")
 public class CdgReconServiceImpl implements ICdgReconService {
 
+	
 }

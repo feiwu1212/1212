@@ -121,6 +121,9 @@ public class Constants {
 	public static final String GATEWAY_SUFFIX = "/gateway";
 
 	public static final String SERVICE_SUFFIX = "/service";
+	
+	public static final String DOWNLOAD_SUFFIX = "/download";
+
 	/**
 	 * 流水号前缀
 	 */

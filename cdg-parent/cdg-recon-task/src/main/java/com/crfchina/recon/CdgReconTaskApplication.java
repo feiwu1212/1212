@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = {"com.crfchina"})
 @MapperScan("com.crfchina.cdg.basedb.dao")//Mybatis扫包
 @ImportResource({"classpath*:spring-disconf.xml"})//导入spring配置
-@EnableTransactionManagement
 public class CdgReconTaskApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

@@ -164,9 +164,8 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 	    //reqDataMap.put("projectNo",);//暂无此应用场景
 
 		//TODO 配置本地回调地址
-//		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
-		reqDataMap.put("redirectUrl", "http://10.194.11.253:8080/cdg-gateway/callBack/pageCallBack");
-		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		reqDataMap.put("expired", lmrpDto.getExpired());
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
 	

@@ -7,9 +7,9 @@
 package com.crfchina.cdg.notify.taskwork.exec;
 
 import com.alibaba.fastjson.JSONObject;
-import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
-import com.crfchina.cdg.basedb.entity.LmBindCardFlowinfo;
+import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
+import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.common.ResultCode;
 import com.crfchina.cdg.notify.dto.BaseResultDTO;
 import com.crfchina.cdg.notify.util.NotifyUtils;
@@ -17,10 +17,10 @@ import com.crfchina.csf.task.nodetask.BusinessContext;
 import com.crfchina.csf.task.nodetask.NodeTask;
 import com.crfchina.csf.task.nodetask.NodeTaskResult;
 import com.crfchina.csf.task.nodetask.service.NodeTaskService;
-
 import java.util.List;
-
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,12 +37,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class RechargeTask extends NodeTask {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(RechargeTask.class);
+
 	public RechargeTask(NodeTaskService nodeTaskService) {
 		super(nodeTaskService);
 	}
 
 	@Autowired
-	LmBindCardFlowinfoMapper lmBindCardFlowinfoMapper;
+	LmVaccountTransferInfoMapper txnInfoMapper;
 
 	/**
 	 * 充值异步通知task
@@ -51,23 +54,24 @@ public class RechargeTask extends NodeTask {
 	 */
 	@Override
 	protected NodeTaskResult process(BusinessContext context) {
+		logger.info("RechargeTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
 		LmVaccountTransferInfo param = (LmVaccountTransferInfo) context.getParam("param");
+		NodeTaskResult processResult = null;
 		if (Integer.valueOf(1).equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {
-				BaseResultDTO<String> resultDTO = new BaseResultDTO<>();
-				resultDTO.setRequestRefNo(param.getRequestRefNo());
-				resultDTO.setFailCode(param.getFailCode());
-				resultDTO.setFailReason(param.getFailReason());
 				// 结果落库以后插入taskWorker
 				BaseResultDTO<String> result = new BaseResultDTO<>();
 				result.setResult(ResultCode.valueOf(param.getResult()));
 				result.setRequestRefNo(param.getRequestRefNo());
+				result.setFailCode(param.getFailCode());
+				result.setFailReason(param.getFailReason());
 
 				JSONObject data = new JSONObject();
 				data.put("fcpTrxNo", param.getFcpTrxNo());
 				data.put("platformUserNo ", param.getInExternalAccount());
 				data.put("amount", param.getTransferAmount());
-//				data.put("commission", );
+				data.put("transactionTime", param.getFinishDate());
+//				data.put("commission", param.get);
 //				data.put("payCompany ", param.get);
 //				data.put("mobile", param.getMobile());
 //				data.put("idCardType", param.getIdType());
@@ -75,23 +79,23 @@ public class RechargeTask extends NodeTask {
 //				data.put("userRole", param.getUserRole());
 //				data.put("auditStatus", param.getAuditStatus());
 				result.setData(data.toJSONString());
-				resultDTO.setData(result.toString());
 				List<BasicNameValuePair> notifyParam = NotifyUtils.createNotifyParam(result);
 				JSONObject jsonObject = NotifyUtils.httpNotify(notifyParam, param.getNotifyUrl());
 				param.setNotifyCount(param.getNotifyCount() + 1);
-				//FIXME 通知返回参数结果还未定
-				if (jsonObject != null && "SUCCESS".equals(jsonObject.getString("result"))) {
+				if (jsonObject != null && ResultCode.SUCCESS.equals(jsonObject.getString(Constants.NOTIFY_RESP_RESULT))) {
 					param.setNotifyStatus(2);
-//					lmBindCardFlowinfoMapper.updateByPrimaryKey(param);
-					return NodeTaskResult.success;
+					txnInfoMapper.updateByPrimaryKey(param);
+					processResult = NodeTaskResult.success;
 				} else {
-					return NodeTaskResult.failretry;
+					processResult = NodeTaskResult.failretry;
 				}
 			} else {
-				return NodeTaskResult.failpause;
+				processResult = NodeTaskResult.fail;
 			}
 		} else {
-			return NodeTaskResult.successandquit;
+			processResult = NodeTaskResult.success;
 		}
+		logger.info("RechargeTask执行结束processResult-->{}", processResult);
+		return processResult;
 	}
 }

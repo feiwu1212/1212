@@ -86,7 +86,7 @@ public class UserOperationTask extends NodeTask {
 				processResult = NodeTaskResult.fail;
 			}
 		} else {
-			processResult = NodeTaskResult.successandquit;
+			processResult = NodeTaskResult.success;
 		}
 		logger.info("UserOperationTask执行结束processResult-->{}", processResult);
 		return processResult;

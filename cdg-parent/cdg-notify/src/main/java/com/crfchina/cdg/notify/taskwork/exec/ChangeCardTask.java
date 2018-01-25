@@ -90,7 +90,7 @@ public class ChangeCardTask extends NodeTask {
 				processResult = NodeTaskResult.fail;
 			}
 		} else {
-			processResult = NodeTaskResult.successandquit;
+			processResult = NodeTaskResult.success;
 		}
 		logger.info("ChangeCardTask执行结束processResult-->{}", processResult);
 		return processResult;

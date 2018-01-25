@@ -93,7 +93,7 @@ public class BindCardTask extends NodeTask {
 				processResult = NodeTaskResult.fail;
 			}
 		} else {
-			processResult = NodeTaskResult.successandquit;
+			processResult = NodeTaskResult.success;
 		}
 		logger.info("BindCardTask执行结束processResult-->{}", processResult);
 		return processResult;

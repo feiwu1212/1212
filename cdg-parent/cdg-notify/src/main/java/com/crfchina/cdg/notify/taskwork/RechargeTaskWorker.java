@@ -6,11 +6,6 @@
  */
 package com.crfchina.cdg.notify.taskwork;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
@@ -22,6 +17,11 @@ import com.crfchina.csf.task.TaskWorkerManager;
 import com.crfchina.csf.task.nodetask.BusinessContext;
 import com.crfchina.csf.task.nodetask.NodeTaskResult;
 import com.crfchina.csf.task.nodetask.NodeTaskSequenceQueue;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @ProjectName：cdg-parent
@@ -36,6 +36,9 @@ import com.crfchina.csf.task.nodetask.NodeTaskSequenceQueue;
 @TaskWorker(namespace="cdg-api-core")
 @Service
 public class RechargeTaskWorker extends AbstractTaskWorker {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(RechargeTaskWorker.class);
 
 	@Autowired
 	LmVaccountTransferInfoMapper txnInfoMapper;
@@ -57,6 +60,7 @@ public class RechargeTaskWorker extends AbstractTaskWorker {
 	 */
 	@Override
 	protected NodeTaskResult execute(String fcpTrxNo) {
+		logger.info("RechargeTaskWorker添加任务队列开始fcpTrxNo-->{}", fcpTrxNo);
 		LmVaccountTransferInfoExample flowinfoExample = new LmVaccountTransferInfoExample();
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmVaccountTransferInfo> flowList = txnInfoMapper.selectByExample(flowinfoExample);
@@ -65,6 +69,7 @@ public class RechargeTaskWorker extends AbstractTaskWorker {
 		businessContext.setParam("param", flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);
+		logger.info("RechargeTaskWorker添加任务队列结束");
 		return result;
 	}
 }

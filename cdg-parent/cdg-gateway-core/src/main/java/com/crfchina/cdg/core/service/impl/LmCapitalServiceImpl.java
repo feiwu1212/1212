@@ -135,12 +135,16 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		//赋值detail中主表主键字段
 		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
 		txnDetailMapper.insert(txnDetail);
-		
+
+		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
+		BeanUtils.copyProperties(txnInfo, txnLog);
+
 		if(null != lmrpDto.getCommissionAmount()){
 			LmVaccountTransferDetail txnDetail2 = txnDetail;
 			txnDetail2.setTransferAmount(String.valueOf(lmrpDto.getCommissionAmount()));
 			txnDetailMapper.insert(txnDetail2);
 		}
+		lmVaccountTransferLogMapper.insert(txnLog);
 		//拼接reqData
 		Map<String, Object> reqDataMap = new LinkedHashMap<>();
 		reqDataMap.put("platformUserNo", lmrpDto.getPlatformUserNo());
@@ -160,7 +164,8 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 	    //reqDataMap.put("projectNo",);//暂无此应用场景
 
 		//TODO 配置本地回调地址
-		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
+//		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
+		reqDataMap.put("redirectUrl", "http://10.194.11.253:8080/cdg-gateway/callBack/pageCallBack");
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
 		reqDataMap.put("expired", lmrpDto.getExpired());
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
@@ -180,90 +185,94 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		String lmBizType=ApiType.WITHDRAW.getCode();
         int partitionDt=Integer.valueOf(DateUtils.dateToString(now, "yyyyMM"));
         
-      //txnInfo封装
-      		LmVaccountTransferInfo txnInfo = new LmVaccountTransferInfo();
-      		txnInfo.setAccountDate(now);
-      		txnInfo.setBatchNo("");
-      		txnInfo.setCallbackUrl(paramDto.getCallbackUrl());
-      		txnInfo.setChannelFeeAmount("");
-      		txnInfo.setCreateTime(now);
-      		txnInfo.setCrfBizType(crfBizType);
-      		txnInfo.setCurrency(1);
-      		txnInfo.setExpiredTime(DateUtils.parseStringToDate(paramDto.getExpired(), "yyyyMMddHHmmss"));
-      		txnInfo.setFailCode("");//异步通知时候更新
-      		txnInfo.setFailReason("");//异步通知时候更新
-      		txnInfo.setFcpTrxNo(trxNo);
-      		txnInfo.setFinishDate(null);//异步通知时候更新
-      		txnInfo.setInExternalAccount("");
-      		txnInfo.setInRealName("");
-      		txnInfo.setLmBizType(lmBizType);
-      		txnInfo.setNotifyUrl(paramDto.getNotifyUrl());
-      		txnInfo.setOriginFcpTrxno("");
-      		txnInfo.setOutExternalAccount(paramDto.getPlatformUserNo());
-      		txnInfo.setOutRealName("");
-      		txnInfo.setPartitionDate(partitionDt);
-      		txnInfo.setRemark("");
-      		txnInfo.setRequestRefNo(paramDto.getRequestRefNo());
-      		txnInfo.setRequestTime(now);
-      		txnInfo.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
-      		txnInfo.setRightShare("");
-      		txnInfo.setSettleAmount("");//异步通知成功更新
-      		txnInfo.setSystemNo(String.valueOf(paramDto.getSystemNo().getValue()));
-      		txnInfo.setTransferAmount(String.valueOf(paramDto.getAmount()));
-      		txnInfo.setTransferType(crfBizType);
-      		txnInfo.setUpdateTime(now);//异步通知时候更新
+		//txnInfo封装
+		LmVaccountTransferInfo txnInfo = new LmVaccountTransferInfo();
+		txnInfo.setAccountDate(now);
+		txnInfo.setBatchNo("");
+		txnInfo.setCallbackUrl(paramDto.getCallbackUrl());
+		txnInfo.setChannelFeeAmount("");
+		txnInfo.setCreateTime(now);
+		txnInfo.setCrfBizType(crfBizType);
+		txnInfo.setCurrency(1);
+		txnInfo.setExpiredTime(DateUtils.parseStringToDate(paramDto.getExpired(), "yyyyMMddHHmmss"));
+		txnInfo.setFailCode("");//异步通知时候更新
+		txnInfo.setFailReason("");//异步通知时候更新
+		txnInfo.setFcpTrxNo(trxNo);
+		txnInfo.setFinishDate(null);//异步通知时候更新
+		txnInfo.setInExternalAccount("");
+		txnInfo.setInRealName("");
+		txnInfo.setLmBizType(lmBizType);
+		txnInfo.setNotifyUrl(paramDto.getNotifyUrl());
+		txnInfo.setOriginFcpTrxno("");
+		txnInfo.setOutExternalAccount(paramDto.getPlatformUserNo());
+		txnInfo.setOutRealName("");
+		txnInfo.setPartitionDate(partitionDt);
+		txnInfo.setRemark("");
+		txnInfo.setRequestRefNo(paramDto.getRequestRefNo());
+		txnInfo.setRequestTime(now);
+		txnInfo.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+		txnInfo.setRightShare("");
+		txnInfo.setSettleAmount("");//异步通知成功更新
+		txnInfo.setSystemNo(String.valueOf(paramDto.getSystemNo().getValue()));
+		txnInfo.setTransferAmount(String.valueOf(paramDto.getAmount()));
+		txnInfo.setTransferType(crfBizType);
+		txnInfo.setUpdateTime(now);//异步通知时候更新
       		
-      		//txnDetail封装
-      		LmVaccountTransferDetail txnDetail = new LmVaccountTransferDetail();
-      		txnDetail.setAccountDate(now);
-      		txnDetail.setCreateTime(now);
-      		txnDetail.setCrfBizType(crfBizType);
-      		txnDetail.setCustomDefine("");
-      		txnDetail.setFailCode("");
-      		txnDetail.setFailReason("");
-      		txnDetail.setFcpTrxNo(trxNo);
-      		txnDetail.setFinishDate(null);//异步通知时候更新
-      		txnDetail.setInExternalAccount("");
-      		txnDetail.setInRealName("");
-      		txnDetail.setLmBizType(lmBizType);
-      		txnDetail.setOriginFcpTrxno("");
-      		txnDetail.setOutExternalAccount(paramDto.getPlatformUserNo());
-      		txnDetail.setOutRealName("");
-      		txnDetail.setPartitionDate(partitionDt);
-      		txnDetail.setRemark("");
-      		txnDetail.setRequestRefNo(paramDto.getRequestRefNo());
-      		txnDetail.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
-      		txnDetail.setRightShare("");
-      		txnDetail.setSettleAmount("");
-      		txnDetail.setSettleDate(null);
-      		txnDetail.setTransferAmount(String.valueOf(paramDto.getAmount()));
-      		txnDetail.setTransferInfoId("");//交易表主键 交易表新增成功则获取此值
-      		txnDetail.setUpdateTime(now);
-      		
-      		Map<String, Object> reqDataMap = new LinkedHashMap<>();
-      		//拼接reqData
-      		reqDataMap.put("platformUserNo", paramDto.getPlatformUserNo());
-      		reqDataMap.put("requestNo", trxNo);
-      		reqDataMap.put("amount", MoneyUtils.toDollar(paramDto.getAmount()));
-      		reqDataMap.put("withdrawType", WithdrawalType.URGENT.getCode());
-      		reqDataMap.put("withdrawForm", WithdrawForm.IMMEDIATE.getCode());
-      		//TODO 配置本地回调地址
-      		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
-      		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");    
-      		reqDataMap.put("expired", df.format(paramDto.getExpired()) );
-      		 txnInfoMapper.insert(txnInfo);
-      		//赋值detail中主表主键字段
-      		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
-      	   //判断佣金是否存在，存在新增佣金明细记录表
-      		if(null != paramDto.getCommissionAmount()){
-      			LmVaccountTransferDetail txnDetail2 = txnDetail;
-          		txnDetail2.setTransferAmount(String.valueOf(paramDto.getCommissionAmount()));
-          		reqDataMap.put("commission", MoneyUtils.toDollar(paramDto.getCommissionAmount()));
-          		txnDetail2.setTransferInfoId(String.valueOf(txnInfo.getId()));
-          		txnDetailMapper.insert(txnDetail2);
-      		}
-      		txnDetailMapper.insert(txnDetail);
-      		return reqDataMap;
+		//txnDetail封装
+		LmVaccountTransferDetail txnDetail = new LmVaccountTransferDetail();
+		txnDetail.setAccountDate(now);
+		txnDetail.setCreateTime(now);
+		txnDetail.setCrfBizType(crfBizType);
+		txnDetail.setCustomDefine("");
+		txnDetail.setFailCode("");
+		txnDetail.setFailReason("");
+		txnDetail.setFcpTrxNo(trxNo);
+		txnDetail.setFinishDate(null);//异步通知时候更新
+		txnDetail.setInExternalAccount("");
+		txnDetail.setInRealName("");
+		txnDetail.setLmBizType(lmBizType);
+		txnDetail.setOriginFcpTrxno("");
+		txnDetail.setOutExternalAccount(paramDto.getPlatformUserNo());
+		txnDetail.setOutRealName("");
+		txnDetail.setPartitionDate(partitionDt);
+		txnDetail.setRemark("");
+		txnDetail.setRequestRefNo(paramDto.getRequestRefNo());
+		txnDetail.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+		txnDetail.setRightShare("");
+		txnDetail.setSettleAmount("");
+		txnDetail.setSettleDate(null);
+		txnDetail.setTransferAmount(String.valueOf(paramDto.getAmount()));
+		txnDetail.setTransferInfoId("");//交易表主键 交易表新增成功则获取此值
+		txnDetail.setUpdateTime(now);
+
+		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
+		BeanUtils.copyProperties(txnInfo, txnLog);
+
+		Map<String, Object> reqDataMap = new LinkedHashMap<>();
+		//拼接reqData
+		reqDataMap.put("platformUserNo", paramDto.getPlatformUserNo());
+		reqDataMap.put("requestNo", trxNo);
+		reqDataMap.put("amount", MoneyUtils.toDollar(paramDto.getAmount()));
+		reqDataMap.put("withdrawType", WithdrawalType.URGENT.getCode());
+		reqDataMap.put("withdrawForm", WithdrawForm.IMMEDIATE.getCode());
+		//TODO 配置本地回调地址
+		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
+		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
+		reqDataMap.put("expired", df.format(paramDto.getExpired()) );
+		 txnInfoMapper.insert(txnInfo);
+		//赋值detail中主表主键字段
+		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
+	   //判断佣金是否存在，存在新增佣金明细记录表
+		if(null != paramDto.getCommissionAmount()){
+			LmVaccountTransferDetail txnDetail2 = txnDetail;
+			txnDetail2.setTransferAmount(String.valueOf(paramDto.getCommissionAmount()));
+			reqDataMap.put("commission", MoneyUtils.toDollar(paramDto.getCommissionAmount()));
+			txnDetail2.setTransferInfoId(String.valueOf(txnInfo.getId()));
+			txnDetailMapper.insert(txnDetail2);
+		}
+		txnDetailMapper.insert(txnDetail);
+		lmVaccountTransferLogMapper.insert(txnLog);
+		return reqDataMap;
 	}
 
 

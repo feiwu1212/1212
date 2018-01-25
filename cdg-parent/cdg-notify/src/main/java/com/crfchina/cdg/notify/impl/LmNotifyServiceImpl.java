@@ -421,8 +421,8 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						 }
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
-						//返回业务平台通知信息
-
+					 	//返回业务平台信息
+					 	taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, RechargeTaskWorker.class);
 					} else {
 						flow.setResult(ResultCode.FAIL.getCode());
 						flow.setFailCode(respData.getString("errorCode"));

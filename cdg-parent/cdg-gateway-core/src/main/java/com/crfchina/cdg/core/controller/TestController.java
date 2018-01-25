@@ -88,7 +88,7 @@ public class TestController {
 		oacParam.setSystemNo(SystemNo.campaign);  
 		oacParam.setNotifyUrl("http://127.0.0.1:8080/cdg-notify/notify/notiryAddr");  
 		oacParam.setUnifiedCode("13f1sd2f1sd31");  
-		oacParam.setBandCardNo("11212442124634543454");  
+		oacParam.setBankCardNo("11212442124634543454");
 		oacParam.setCallbackUrl("http://127.0.0.1:8080/cdg-gateway/callBack/pageCallBack");  
 		oacParam.setUserDevice(Terminal.PC);  
 		oacParam.setAuthList(Arrays.asList(UserAuthType.COMPENSATORY));  

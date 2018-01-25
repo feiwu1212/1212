@@ -7,12 +7,14 @@
  */
 package com.crfchina.recon;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**    
  * 
@@ -27,6 +29,7 @@ import org.springframework.context.annotation.ImportResource;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.crfchina"})
+@MapperScan("com.crfchina.cdg.basedb.dao")//Mybatis扫包
 @ImportResource({"classpath*:spring-disconf.xml"})//导入spring配置
 public class CdgReconTaskApplication extends SpringBootServletInitializer {
 

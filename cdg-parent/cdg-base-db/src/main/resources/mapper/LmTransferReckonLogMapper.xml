@@ -83,6 +83,9 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.crfchina.cdg.basedb.entity.LmTransferReckonLog" >
+   <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+          SELECT LAST_INSERT_ID()
+      </selectKey>
     insert into lm_transfer_reckon_log (id, reckon_id, reckon_date,
       reckon_type, lm_reckon_file, success_count,
       success_amount, lm_count, lm_amount,

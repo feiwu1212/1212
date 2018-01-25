@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.crfchina</groupId>
     <artifactId>cdg-parent</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
   </parent>
   <groupId>com.crfchina</groupId>
   <artifactId>cdg-base-db</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>0.0.5-SNAPSHOT</version>
   <name>cdg-base-db</name>
   <url>http://maven.apache.org</url>
   <properties>

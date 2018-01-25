@@ -6,19 +6,19 @@
 	<parent>
 		<groupId>com.crfchina</groupId>
 		<artifactId>cdg-parent</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.crfchina</groupId>
 	<artifactId>cdg-service</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 
 	<name>cdg-service</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<cdg.common.version>0.0.4-SNAPSHOT</cdg.common.version>
+		<cdg.common.version>0.0.5-SNAPSHOT</cdg.common.version>
 	</properties>
 
 

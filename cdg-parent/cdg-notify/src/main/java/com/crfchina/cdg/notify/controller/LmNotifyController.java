@@ -41,7 +41,7 @@ public class LmNotifyController {
 	@Autowired
 	LmNotifyService lmNotifyService;
 
-	@RequestMapping("/notify")
+	@RequestMapping("/asyncNotify")
 	public String notify(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			boolean verify = SignatureUtils.checkSign(request.getParameter("sign"), request.getParameter("respData"));

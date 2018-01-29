@@ -181,4 +181,19 @@ public class Constants {
 	 * 通知状态：已通知
 	 */
 	public static final Integer NOTIFY_STATUS_FINISH = 2;
+
+	/**
+	 * 退票处理状态 待处理
+	 */
+	public static final Integer TXTP_STATUS_WAIT = 1;
+
+	/**
+	 * 退票处理状态 处理中
+	 */
+	public static final Integer TXTP_STATUS_DOING = 2;
+
+	/**
+	 * 退票处理状态 处理完成
+	 */
+	public static final Integer TXTP_STATUS_FINISH = 3;
 }

@@ -11,6 +11,7 @@ import com.crfchina.cdg.basedb.dao.LmBindCardFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmBindCardListMapper;
 import com.crfchina.cdg.basedb.dao.LmChangeCardmobileFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmUserOperationFlowinfoMapper;
+import com.crfchina.cdg.basedb.dao.LmVaccountNotifyTxtpMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
@@ -21,10 +22,12 @@ import com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmChangeCardmobileFlowinfoExample;
 import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfoExample;
+import com.crfchina.cdg.basedb.entity.LmVaccountNotifyTxtp;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
+import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.AuditStatus;
 import com.crfchina.cdg.common.enums.common.EnumsDBMap;
@@ -36,9 +39,10 @@ import com.crfchina.cdg.notify.dto.LmNotifyResult;
 import com.crfchina.cdg.notify.service.LmCacheService;
 import com.crfchina.cdg.notify.service.LmNotifyService;
 import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
-import com.crfchina.cdg.notify.taskwork.RechargeTaskWorker;
 import com.crfchina.cdg.notify.taskwork.ChangeCardMobileTaskWorker;
+import com.crfchina.cdg.notify.taskwork.RechargeTaskWorker;
 import com.crfchina.cdg.notify.taskwork.UserOperationTaskWoker;
+import com.crfchina.cdg.notify.util.LmDateUtils;
 import com.crfchina.csf.task.TaskWorkerManager;
 import java.util.Date;
 import java.util.List;
@@ -92,6 +96,9 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 	@Autowired
 	LmUserOperationFlowinfoMapper lmUserOperationFlowinfoMapper;
 
+	@Autowired
+	LmVaccountNotifyTxtpMapper lmVaccountNotifyTxtpMapper;
+
 	@Override
 	public void dealNotify(LmNotifyResult result) {
 		ApiType apiType = ApiType.valueOf(result.getServiceName());
@@ -109,6 +116,8 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 			dealCheckPwd(result.getRespData());
 		}else if (ApiType.MODIFY_MOBILE_EXPAND.equals(apiType)) {
 			dealChangeMobile(result.getRespData());
+		}else if (ApiType.BACKROLL_RECHARGE.equals(apiType)) {
+			dealBackRollRecharge(result.getRespData());
 		}
 	}
 
@@ -458,6 +467,26 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 		}
 	}
 
-
+	/**
+	 * 资金回退异步处理
+	 * @param respData
+	 */
+	private void dealBackRollRecharge(JSONObject respData) {
+		logger.info("资金回退通知处理开始【begin】respData->{}", respData.toJSONString());
+		Date now = new Date();
+		LmVaccountNotifyTxtp lmVaccountNotifyTxtp = new LmVaccountNotifyTxtp();
+		lmVaccountNotifyTxtp.setLmReturnTrxNo(respData.getString("requestNo"));
+		lmVaccountNotifyTxtp.setFcpTrxNo(respData.getString("withdrawRequestNo"));
+		lmVaccountNotifyTxtp.setRollbackAmount(respData.getString("rollbackAmount"));
+		lmVaccountNotifyTxtp.setRollbackCommAmount(respData.getString("rollbackCommission"));
+		lmVaccountNotifyTxtp.setCompletedTime(LmDateUtils.getLmTime(respData.getString("completedTime")));
+		lmVaccountNotifyTxtp.setRollbackStatus(respData.getString("status"));
+		lmVaccountNotifyTxtp.setRollbackType(respData.getString("rollbackType"));
+		lmVaccountNotifyTxtp.setStatus(Constants.TXTP_STATUS_WAIT);
+		lmVaccountNotifyTxtp.setCreateTime(now);
+		lmVaccountNotifyTxtp.setUpdateTime(now);
+		lmVaccountNotifyTxtpMapper.insert(lmVaccountNotifyTxtp);
+		logger.info("资金回退通知处理结束【end】");
+	}
 
 }

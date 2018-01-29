@@ -57,7 +57,7 @@ public class RechargeTask extends NodeTask {
 		logger.info("RechargeTask开始执行-->{}", JSONObject.toJSONString(context.getParam(Constants.CONTEXT_RECHARGE)));
 		LmVaccountTransferInfo param = (LmVaccountTransferInfo) context.getParam(Constants.CONTEXT_RECHARGE);
 		NodeTaskResult processResult = null;
-		if (Integer.valueOf(1).equals(param.getNotifyStatus())) {
+		if (Constants.NOTIFY_STATUS_WAIT.equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {
 				// 结果落库以后插入taskWorker
 				BaseResultDTO<String> result = new BaseResultDTO<>();

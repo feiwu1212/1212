@@ -81,14 +81,15 @@ public class RechargeTask extends NodeTask {
 				result.setData(data.toJSONString());
 				List<BasicNameValuePair> notifyParam = NotifyUtils.createNotifyParam(result);
 				JSONObject jsonObject = NotifyUtils.httpNotify(notifyParam, param.getNotifyUrl());
+				logger.info("异步通知返回参数-->", jsonObject.toJSONString());
 				param.setNotifyCount(param.getNotifyCount() + 1);
 				if (jsonObject != null && ResultCode.SUCCESS.equals(jsonObject.getString(Constants.NOTIFY_RESP_RESULT))) {
 					param.setNotifyStatus(2);
-					txnInfoMapper.updateByPrimaryKey(param);
 					processResult = NodeTaskResult.success;
 				} else {
 					processResult = NodeTaskResult.failretry;
 				}
+				txnInfoMapper.updateByPrimaryKey(param);
 			} else {
 				processResult = NodeTaskResult.fail;
 			}

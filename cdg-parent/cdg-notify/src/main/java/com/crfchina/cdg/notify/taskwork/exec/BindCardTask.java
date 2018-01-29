@@ -81,6 +81,7 @@ public class BindCardTask extends NodeTask {
 				result.setData(data.toJSONString());
 				List<BasicNameValuePair> notifyParam = NotifyUtils.createNotifyParam(result);
 				JSONObject jsonObject = NotifyUtils.httpNotify(notifyParam, param.getNotifyUrl());
+				logger.info("异步通知返回参数-->", jsonObject.toJSONString());
 				param.setNotifyCount(param.getNotifyCount() + 1);
 				if (jsonObject != null && ResultCode.SUCCESS.equals(jsonObject.getString(Constants.NOTIFY_RESP_RESULT))) {
 					param.setNotifyStatus(Constants.NOTIFY_STATUS_FINISH);

@@ -115,6 +115,12 @@ public class Constants {
 	 */
 	public static final String VERIFY_DEDUCT = "YMKF";
 
+	
+	/**
+	 * 操作类型：对账确认
+	 */
+	public static final String RECKON_CONFIRM = "DZQR";
+	
 	/**
 	 * 网关地址后缀
 	 */

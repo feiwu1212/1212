@@ -6,15 +6,19 @@
  */
 package com.crfchina.cdg.api.core.service.dubbo.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.api.cache.SysCodeService;
 import com.crfchina.cdg.api.dto.BizDetail;
 import com.crfchina.cdg.api.dto.Detail;
+import com.crfchina.cdg.basedb.dao.LmTransferReckonLogMapper;
 import com.crfchina.cdg.basedb.dao.LmUserOperationFlowinfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferBatchMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
+import com.crfchina.cdg.basedb.entity.LmTransferReckonLog;
+import com.crfchina.cdg.basedb.entity.LmTransferReckonLogExample;
 import com.crfchina.cdg.basedb.entity.LmUserOperationFlowinfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferBatch;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
@@ -44,18 +48,22 @@ import com.crfchina.cdg.dto.param.LmAutoRechargeParamDTO;
 import com.crfchina.cdg.dto.param.LmAutoWithdrawParamDTO;
 import com.crfchina.cdg.dto.param.LmFreezePreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmFundTransferParamDTO;
+import com.crfchina.cdg.dto.param.LmReckonConfirmParamDTO;
 import com.crfchina.cdg.dto.param.LmRepayPreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmUnFreezePreTransactionParamDTO;
 import com.crfchina.cdg.dto.param.LmUnFreezePwdParamDTO;
+import com.crfchina.cdg.dto.param.ReckonFileTypeDTO;
 import com.crfchina.cdg.dto.result.LmAutoPreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoRechargeResultDTO;
 import com.crfchina.cdg.dto.result.LmAutoWithdrawResultDTO;
 import com.crfchina.cdg.dto.result.LmFreezePreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmFundTransferResultDTO;
+import com.crfchina.cdg.dto.result.LmReckonConfirmResultDTO;
 import com.crfchina.cdg.dto.result.LmRepayPreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmUnFreezePreTransactionResultDTO;
 import com.crfchina.cdg.dto.result.LmUnFreezePwdResultDTO;
 import com.crfchina.cdg.service.LmTransferDubboService;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +71,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.http.message.BasicNameValuePair;
@@ -104,6 +113,9 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 	@Autowired
 	LmUserOperationFlowinfoMapper lmUserOperationFlowinfoMapper;
 
+	@Autowired
+	LmTransferReckonLogMapper reckMapper;
+	
 	@Autowired
 	SysCodeService sysCodeSrv;
 	
@@ -1594,6 +1606,109 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		}
 		logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
 		return rsp;
+	}
+
+	/**
+	 * 对账确认
+	 */
+	@Override
+	public LmReckonConfirmResultDTO LmReckonConfirm(
+			LmReckonConfirmParamDTO paramDTO) {
+		logger.info("请求参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(paramDTO, ToStringStyle.DEFAULT_STYLE)});
+		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.RECKON_CONFIRM);
+		Date now = new Date();
+		//返回结果预封装
+		LmReckonConfirmResultDTO rsp = new LmReckonConfirmResultDTO();
+		rsp.setRequestRefNo(paramDTO.getRequestRefNo());
+		rsp.setFcpTrxNo(fcpTrxNo);
+		
+		//判断当日有否对账确认(若有并且成功，直接返回，若无则新增，若失败则返回失败的记录重新发对账确认)
+		LmTransferReckonLogExample reckLogExp = new LmTransferReckonLogExample();
+		reckLogExp.createCriteria().andReckonDateEqualTo(paramDTO.getReckonDate()).andReckonTypeEqualTo("10");
+		List<LmTransferReckonLog> reckList = reckMapper.selectByExample(reckLogExp);
+		LmTransferReckonLog reckLog = new LmTransferReckonLog();
+		if(reckList.size()==1){
+			reckLog = reckList.get(0);
+			//如果状态成功，则直接返回成功
+			if(reckLog.getStatue().equals("4")){
+				rsp.setResult(ResultCode.SUCCESS);
+				return rsp;
+			}
+		}
+		//记录对账确认日志
+		else if(reckList.size() ==0){
+			reckLog.setCreateTime(now);
+			reckLog.setReckonDate(paramDTO.getReckonDate());
+			reckLog.setReckonId(fcpTrxNo);
+			reckLog.setReckonType("10");
+			reckLog.setStatue(0);
+			reckMapper.insert(reckLog);
+		}
+		
+		//封装懒猫接口
+				Map<String, Object> reqDataMap = new LinkedHashMap<>();
+				reqDataMap.put("requestNo", fcpTrxNo);
+				reqDataMap.put("fileDate", paramDTO.getReckonDate());
+		        List<String> reckFileList = new ArrayList<>();
+		        reckFileList.add("RECHARGE");
+		        reckFileList.add("TRANSACTION");
+		        reckFileList.add("WITHDRAW");
+		        reckFileList.add("COMMISSION");
+		        reckFileList.add("BACKROLL_RECHARGE");
+		        JSONArray jsonArray = new JSONArray();
+		        JSONObject object;
+		        for(String s : reckFileList){
+		        	object = new JSONObject();
+		            object.put("fileType", s);
+		            jsonArray.add(object);
+		        }
+		        reqDataMap.put("detail", jsonArray);
+				List<BasicNameValuePair> postParam = null;
+				JSONObject result = null;
+				try {
+					postParam = AppUtil.createServicePostParam(ApiType.CONFIRM_CHECKFILE.getCode(), reqDataMap);
+					result = LmHttpUtils.postServiceResult(postParam);
+				} catch (CdgException e) {
+					logger.error("调用懒猫接口异常", e);
+					//异常流程处理
+					 if(e.getCode().equals(CdgExceptionCode.CDG10023.getCode())){
+						 //封装返回信息
+						 rsp.setFailCode(CdgExceptionCode.CDG10023.getCode());
+						 rsp.setFailReason(sysCodeSrv.getExplain(CdgExceptionCode.CDG10023.getCode()));
+						 rsp.setResult(ResultCode.FAIL);
+					 }
+					 else{
+						 rsp.setFailCode(e.getCode());
+						 rsp.setFailReason(e.getMsg());
+						 rsp.setResult(ResultCode.UNKNOWN);
+					 }
+					 return rsp;
+				}
+
+				String code = result.getString("code");
+				String status = result.getString("status");
+				now = new Date();
+				if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+					reckLog.setStatue(4);
+					reckMapper.updateByPrimaryKey(reckLog);
+					//返回成功结果
+					rsp.setResult(ResultCode.SUCCESS);
+					
+				} else {
+					String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
+					String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
+
+					reckLog.setStatue(5);
+					reckLog.setReckonResult(failReason);
+					reckMapper.updateByPrimaryKey(reckLog);
+					
+					// 返回失败结果
+					 rsp.setResult(ResultCode.FAIL);
+					 rsp.setFailReason(failReason);
+					 rsp.setFailCode(failCode);
+				}
+				logger.info("返回参数如下:{}",new Object[]{ToStringBuilder.reflectionToString(rsp, ToStringStyle.DEFAULT_STYLE)});
+				return rsp;
 	}
 	
 }

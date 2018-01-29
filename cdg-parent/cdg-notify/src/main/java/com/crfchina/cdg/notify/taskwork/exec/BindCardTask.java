@@ -54,8 +54,8 @@ public class BindCardTask extends NodeTask {
 	 */
 	@Override
 	protected NodeTaskResult process(BusinessContext context) {
-		logger.info("BindCardTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
-		LmBindCardFlowinfo param = (LmBindCardFlowinfo) context.getParam("param");
+		logger.info("BindCardTask开始执行-->{}", JSONObject.toJSONString(context.getParam(Constants.CONTEXT_BIND_CARD)));
+		LmBindCardFlowinfo param = (LmBindCardFlowinfo) context.getParam(Constants.CONTEXT_BIND_CARD);
 		NodeTaskResult processResult = null;
 		if (Constants.NOTIFY_STATUS_WAIT.equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {

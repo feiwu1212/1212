@@ -54,8 +54,8 @@ public class ChangeCardTask extends NodeTask {
 	 */
 	@Override
 	protected NodeTaskResult process(BusinessContext context) {
-		logger.info("ChangeCardTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
-		LmChangeCardmobileFlowinfo param = (LmChangeCardmobileFlowinfo) context.getParam("param");
+		logger.info("ChangeCardTask开始执行-->{}", JSONObject.toJSONString(context.getParam(Constants.CONTEXT_CHANGE_CARD_MOBILE)));
+		LmChangeCardmobileFlowinfo param = (LmChangeCardmobileFlowinfo) context.getParam(Constants.CONTEXT_CHANGE_CARD_MOBILE);
 		NodeTaskResult processResult = null;
 		if (Constants.NOTIFY_STATUS_WAIT.equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {

@@ -54,8 +54,8 @@ public class UserOperationTask extends NodeTask {
 	 */
 	@Override
 	protected NodeTaskResult process(BusinessContext context) {
-		logger.info("UserOperationTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
-		LmUserOperationFlowinfo param = (LmUserOperationFlowinfo) context.getParam("param");
+		logger.info("UserOperationTask开始执行-->{}", JSONObject.toJSONString(context.getParam(Constants.CONTEXT_CHANGE_CARD_MOBILE)));
+		LmUserOperationFlowinfo param = (LmUserOperationFlowinfo) context.getParam(Constants.CONTEXT_CHANGE_CARD_MOBILE);
 		NodeTaskResult processResult = null;
 		if (Constants.NOTIFY_STATUS_WAIT.equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {

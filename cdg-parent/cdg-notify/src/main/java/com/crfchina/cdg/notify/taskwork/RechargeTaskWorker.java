@@ -65,8 +65,8 @@ public class RechargeTaskWorker extends AbstractTaskWorker {
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmVaccountTransferInfo> flowList = txnInfoMapper.selectByExample(flowinfoExample);
 		LmVaccountTransferInfo flow = flowList.get(0);
-		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_RECHARGE);
-		businessContext.setParam("param", flow);
+		BusinessContext businessContext = new BusinessContext(fcpTrxNo);
+		businessContext.setParam(Constants.CONTEXT_RECHARGE, flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);
 		logger.info("RechargeTaskWorker添加任务队列结束");

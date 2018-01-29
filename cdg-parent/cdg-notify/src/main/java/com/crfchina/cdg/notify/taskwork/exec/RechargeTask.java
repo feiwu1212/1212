@@ -54,8 +54,8 @@ public class RechargeTask extends NodeTask {
 	 */
 	@Override
 	protected NodeTaskResult process(BusinessContext context) {
-		logger.info("RechargeTask开始执行-->{}", JSONObject.toJSONString(context.getParam("param")));
-		LmVaccountTransferInfo param = (LmVaccountTransferInfo) context.getParam("param");
+		logger.info("RechargeTask开始执行-->{}", JSONObject.toJSONString(context.getParam(Constants.CONTEXT_RECHARGE)));
+		LmVaccountTransferInfo param = (LmVaccountTransferInfo) context.getParam(Constants.CONTEXT_RECHARGE);
 		NodeTaskResult processResult = null;
 		if (Integer.valueOf(1).equals(param.getNotifyStatus())) {
 			if (param.getNotifyCount() <= 3) {

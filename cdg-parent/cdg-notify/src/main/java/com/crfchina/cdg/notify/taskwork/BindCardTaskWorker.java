@@ -65,8 +65,8 @@ public class BindCardTaskWorker extends AbstractTaskWorker {
 		flowinfoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmBindCardFlowinfo> lmBindCardFlowinfos = lmBindCardFlowinfoMapper.selectByExample(flowinfoExample);
 		LmBindCardFlowinfo flow = lmBindCardFlowinfos.get(0);
-		BusinessContext businessContext = new BusinessContext(Constants.CONTEXT_BIND_CARD);
-		businessContext.setParam("param", flow);
+		BusinessContext businessContext = new BusinessContext(fcpTrxNo);
+		businessContext.setParam(Constants.CONTEXT_BIND_CARD, flow);
 		taskQueue.addNodeTasks(task);
 		NodeTaskResult result = taskQueue.execute(businessContext);
 		logger.info("BindCardTaskWorker添加任务队列结束");

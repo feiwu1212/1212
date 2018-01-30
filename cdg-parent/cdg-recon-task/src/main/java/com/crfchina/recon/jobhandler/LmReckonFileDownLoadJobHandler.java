@@ -1,5 +1,6 @@
 package com.crfchina.recon.jobhandler;
 
+import java.io.File;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.crfchina.cdg.basedb.entity.SystemConfigExample;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.AppUtil;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
+import com.crfchina.cdg.common.utils.ZipUtil;
 import com.crfchina.recon.service.ICdgReconService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -128,6 +130,8 @@ public class LmReckonFileDownLoadJobHandler extends IJobHandler {
 				//更新流水信息为下载成功
 				reckLog.setStatue(STATUS_2);
 				reckLogMapper.updateByPrimaryKey(reckLog);
+				//解压文件:文件解压至当前目录日期文件夹下，如果当前没有日期文件夹，则新增一个
+                ZipUtil.upzipFile(reckFileDownloadPath + reckonId,reckFileDownloadPath+reckFileDt);
 				return ReturnT.SUCCESS;
 	}
 

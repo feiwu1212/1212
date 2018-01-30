@@ -16,7 +16,6 @@ import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.CurrencyType;
-import com.crfchina.cdg.common.enums.business.TransferResultType;
 import com.crfchina.cdg.common.enums.business.WithdrawForm;
 import com.crfchina.cdg.common.enums.business.WithdrawalType;
 import com.crfchina.cdg.common.enums.common.ResultCode;
@@ -97,7 +96,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setRemark("");
 		txnInfo.setRequestRefNo(lmrpDto.getRequestRefNo());
 		txnInfo.setRequestTime(now);
-		txnInfo.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+		txnInfo.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
 		txnInfo.setRightShare("");
 		txnInfo.setSettleAmount("");//异步通知成功更新
 		txnInfo.setSystemNo(String.valueOf(lmrpDto.getSystemNo().getValue()));
@@ -125,7 +124,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnDetail.setPartitionDate(partitionDt);
 		txnDetail.setRemark("");
 		txnDetail.setRequestRefNo(lmrpDto.getRequestRefNo());
-		txnDetail.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+		txnDetail.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
 		txnDetail.setRightShare("");
 		txnDetail.setSettleAmount("");
 		txnDetail.setSettleDate(null);
@@ -209,7 +208,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setRemark("");
 		txnInfo.setRequestRefNo(paramDto.getRequestRefNo());
 		txnInfo.setRequestTime(now);
-		txnInfo.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+		txnInfo.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
 		txnInfo.setRightShare("");
 		txnInfo.setSettleAmount("");//异步通知成功更新
 		txnInfo.setSystemNo(String.valueOf(paramDto.getSystemNo().getValue()));
@@ -236,7 +235,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnDetail.setPartitionDate(partitionDt);
 		txnDetail.setRemark("");
 		txnDetail.setRequestRefNo(paramDto.getRequestRefNo());
-		txnDetail.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+		txnDetail.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
 		txnDetail.setRightShare("");
 		txnDetail.setSettleAmount("");
 		txnDetail.setSettleDate(null);
@@ -312,7 +311,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		txnInfo.setRemark("");
       		txnInfo.setRequestRefNo(paramDto.getRequestRefNo());
       		txnInfo.setRequestTime(now);
-      		txnInfo.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+      		txnInfo.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
       		txnInfo.setRightShare("");
       		txnInfo.setSettleAmount("");//异步通知成功更新
       		txnInfo.setSystemNo(String.valueOf(paramDto.getSystemNo().getValue()));
@@ -340,7 +339,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
       		txnDetail.setPartitionDate(partitionDt);
       		txnDetail.setRemark("");
       		txnDetail.setRequestRefNo(paramDto.getRequestRefNo());
-      		txnDetail.setResult(TransferResultType.UNKNOW.getCode());//异步通知时候更新
+      		txnDetail.setResult(ResultCode.UNKNOWN.getCode());//异步通知时候更新
       		txnDetail.setRightShare("");
       		txnDetail.setSettleAmount(String.valueOf(paramDto.getAmount()));
       		txnDetail.setSettleDate(null);

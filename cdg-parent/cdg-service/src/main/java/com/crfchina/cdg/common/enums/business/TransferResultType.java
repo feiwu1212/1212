@@ -20,7 +20,7 @@ public enum TransferResultType {
 
 	SUCCESS("SUCCESS", "成功确认"),
 	FAIL("FAIL", "失败确认"),
-	UNKNOW("UNKNOW","未知状态(受理中)"),
+	UNKNOWN("UNKNOWN","未知状态(受理中)"),
 	ACCEPTED("ACCEPTED","受理成功")
 	;
 	private String code;

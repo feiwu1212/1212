@@ -14,7 +14,7 @@ import com.crfchina.cdg.common.enums.business.PayMode;
 import com.crfchina.cdg.common.enums.business.Terminal;
 import com.crfchina.cdg.common.enums.business.UserAuthType;
 import com.crfchina.cdg.common.enums.business.UserRoles;
-import com.crfchina.cdg.common.enums.common.SystemNo;
+import com.crfchina.csf.enums.SystemNo;
 import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountCompanyParamDTO;
 import com.crfchina.cdg.core.dto.param.LmOpenAccountParamDTO;

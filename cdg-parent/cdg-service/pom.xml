@@ -6,19 +6,20 @@
 	<parent>
 		<groupId>com.crfchina</groupId>
 		<artifactId>cdg-parent</artifactId>
-		<version>0.0.6-SNAPSHOT</version>
+		<version>0.0.7-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.crfchina</groupId>
 	<artifactId>cdg-service</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 
 	<name>cdg-service</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<cdg.common.version>0.0.6-SNAPSHOT</cdg.common.version>
+		<cdg.common.version>0.0.7-SNAPSHOT</cdg.common.version>
+		<csf.common.version>2.1.0-SNAPSHOT</csf.common.version>
 	</properties>
 
 
@@ -38,5 +39,11 @@
 			<version>${cdg.common.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.crfchina.csf</groupId>
+			<artifactId>csf-common</artifactId>
+			<version>${csf.common.version}</version>
+		</dependency>
 	</dependencies>
+
 </project>

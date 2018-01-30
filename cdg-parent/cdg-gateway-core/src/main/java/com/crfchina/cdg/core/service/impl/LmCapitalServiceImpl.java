@@ -257,7 +257,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
 		DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
 		reqDataMap.put("expired", df.format(paramDto.getExpired()) );
-		 txnInfoMapper.insert(txnInfo);
+		txnInfoMapper.insert(txnInfo);
 		//赋值detail中主表主键字段
 		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
 	   //判断佣金是否存在，存在新增佣金明细记录表

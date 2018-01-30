@@ -27,6 +27,8 @@ import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetail;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferDetailExample;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfo;
 import com.crfchina.cdg.basedb.entity.LmVaccountTransferInfoExample;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLog;
+import com.crfchina.cdg.basedb.entity.LmVaccountTransferLogExample;
 import com.crfchina.cdg.common.constants.Constants;
 import com.crfchina.cdg.common.enums.business.ApiType;
 import com.crfchina.cdg.common.enums.business.AuditStatus;
@@ -164,7 +166,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, BindCardTaskWorker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -207,7 +209,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, BindCardTaskWorker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -246,7 +248,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				changeCardFlowMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, ChangeCardMobileTaskWorker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, ChangeCardMobileTaskWorker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -279,7 +281,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, UserOperationTaskWoker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, UserOperationTaskWoker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -313,7 +315,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				lmUserOperationFlowinfoMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, UserOperationTaskWoker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, UserOperationTaskWoker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -349,7 +351,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				flow.setUpdateTime(now);
 				changeCardFlowMapper.updateByPrimaryKey(flow);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, ChangeCardMobileTaskWorker.class);
+			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, ChangeCardMobileTaskWorker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -368,44 +370,59 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 		String fcpTrxNo = respData.getString("requestNo");
 		String code = respData.getString("code");
 		String status = respData.getString("status");
-		LmVaccountTransferInfoExample example = new LmVaccountTransferInfoExample();
-		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
-		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(example);
+		LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();
+		LmVaccountTransferLogExample logExample = new LmVaccountTransferLogExample();
+		infoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		logExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(infoExample);
+		List<LmVaccountTransferLog> logInfoList = txnLogMapper.selectByExample(logExample);
 		if (flowInfoList != null && flowInfoList.size() == 1) {
 			LmVaccountTransferInfo flow = flowInfoList.get(0);
-			LmVaccountTransferDetail txnDtl = null;
-			LmVaccountTransferDetail txnDtl2 = null;
-			//获取交易明细表
-			LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
-			txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
-			List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
-			if (txnDtlList != null ) {
-				 txnDtl = txnDtlList.get(0);
-				 //如果返回字段中有佣金字段，则获取第二条dtl记录
-				 if(!StringUtils.isEmpty(respData.getString("commission"))){
-					 txnDtl2 = txnDtlList.get(1);
-				 }
-				 if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+			if (logInfoList != null && logInfoList.size() == 1) {
+				LmVaccountTransferLog log = logInfoList.get(0);
+				LmVaccountTransferDetail txnDtl = null;
+				LmVaccountTransferDetail txnDtl2 = null;
+				//获取交易明细表
+				LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
+				txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+				List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
+				if (txnDtlList != null ) {
+					txnDtl = txnDtlList.get(0);
+					//如果返回字段中有佣金字段，则获取第二条dtl记录
+					if (!StringUtils.isEmpty(respData.getString("commission"))){
+						txnDtl2 = txnDtlList.get(1);
+					}
+					if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
 						//更新交易主表
-						if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
+						if (respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
 							flow.setResult(ResultCode.SUCCESS.getCode());
-						}else if(respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
+						} else if (respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
 							flow.setResult(ResultCode.FAIL.getCode());
-						}
-						else{
+						} else {
 							flow.setResult(ResultCode.ACCEPTED.getCode());
 						}
 						flow.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 						flow.setUpdateTime(now);
 						flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 						flow.setSettleDate(now);
+						//更新log表
+						if (respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
+							log.setResult(ResultCode.SUCCESS.getCode());
+						} else if (respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
+							log.setResult(ResultCode.FAIL.getCode());
+						} else {
+							log.setResult(ResultCode.ACCEPTED.getCode());
+						}
+						log.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+						log.setUpdateTime(now);
+						log.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+						log.setSettleDate(now);
 
 						if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
 							txnDtl.setResult(ResultCode.SUCCESS.getCode());
-						}else if(respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
+						} else if (respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
 							txnDtl.setResult(ResultCode.FAIL.getCode());
-						}
-						else{
+						} else {
 							txnDtl.setResult(ResultCode.ACCEPTED.getCode());
 						}
 						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
@@ -413,25 +430,26 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 						txnDtl.setSettleDate(now);
 
-						 if(!StringUtils.isEmpty(respData.getString("commission"))){
-							 if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
-								 txnDtl2.setResult(ResultCode.SUCCESS.getCode());
-								}else if(respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
+						if(!StringUtils.isEmpty(respData.getString("commission"))){
+							if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
+								txnDtl2.setResult(ResultCode.SUCCESS.getCode());
+								} else if (respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
 									txnDtl2.setResult(ResultCode.FAIL.getCode());
-								}
-								else{
+								} else {
 									txnDtl2.setResult(ResultCode.ACCEPTED.getCode());
 								}
-							 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
-							 txnDtl2.setUpdateTime(now);
-							 txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
-							 txnDtl2.setSettleDate(now);
-							 txnDetailMapper.updateByPrimaryKey(txnDtl2);
-						 }
+							txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+							txnDtl2.setUpdateTime(now);
+							txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+							txnDtl2.setSettleDate(now);
+							txnDetailMapper.updateByPrimaryKey(txnDtl2);
+						}
+
+						txnLogMapper.updateByPrimaryKey(log);
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
-					 	//返回业务平台信息
-					 	taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, RechargeTaskWorker.class);
+						//返回业务平台信息
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
 					} else {
 						flow.setResult(ResultCode.FAIL.getCode());
 						flow.setFailCode(respData.getString("errorCode"));
@@ -439,34 +457,177 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						flow.setUpdateTime(now);
 						flow.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 
+						log.setResult(ResultCode.FAIL.getCode());
+						log.setFailCode(respData.getString("errorCode"));
+						log.setFailReason(respData.getString("errorMessage"));
+						log.setUpdateTime(now);
+						log.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+
 						txnDtl.setResult(ResultCode.FAIL.getCode());
 						txnDtl.setFailCode(respData.getString("errorCode"));
 						txnDtl.setFailReason(respData.getString("errorCode"));
 						txnDtl.setUpdateTime(now);
 						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 
-						 if(!StringUtils.isEmpty(respData.getString("commission"))){
-							 txnDtl2.setResult(ResultCode.FAIL.getCode());
-							 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
-							 txnDtl2.setUpdateTime(now);
-							 txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
-							 txnDtl2.setSettleDate(now);
-							 txnDetailMapper.updateByPrimaryKey(txnDtl2);
-						 }
+						if(!StringUtils.isEmpty(respData.getString("commission"))){
+							txnDtl2.setResult(ResultCode.FAIL.getCode());
+							txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+							txnDtl2.setUpdateTime(now);
+							txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+							txnDtl2.setSettleDate(now);
+							txnDetailMapper.updateByPrimaryKey(txnDtl2);
+						}
 						txnInfoMapper.updateByPrimaryKey(flow);
+						txnLogMapper.updateByPrimaryKey(log);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 10, RechargeTaskWorker.class);
-					} 
-			}
-			else{
-				logger.info("未找到对应的txnDtl订单记录");
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+					}
+				} else {
+					logger.info("transferDetail订单异常-->{}", fcpTrxNo);
+				}
+			} else {
+				logger.info("transferLog订单异常-->{}", fcpTrxNo);
 			}
 		} else {
-			logger.info("未找到对应的txnInfo订单记录");
+			logger.info("transferInfo订单异常-->{}", fcpTrxNo);
 		}
 	}
 
+	/**
+	 * 提现异步处理
+	 * @param respData
+	 */
+	private void dealWithDraw(JSONObject respData) {
+		logger.info("提现异步处理开始【begin】respData-->{}", respData.toJSONString());
+		Date now = new Date();
+		String fcpTrxNo = respData.getString("requestNo");
+		String code = respData.getString("code");
+		String status = respData.getString("status");
+		LmVaccountTransferInfoExample infoExample = new LmVaccountTransferInfoExample();
+		LmVaccountTransferLogExample logExample = new LmVaccountTransferLogExample();
+		infoExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		logExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+		List<LmVaccountTransferInfo> flowInfoList = txnInfoMapper.selectByExample(infoExample);
+		List<LmVaccountTransferLog> logInfoList = txnLogMapper.selectByExample(logExample);
+		if (flowInfoList != null && flowInfoList.size() == 1) {
+			LmVaccountTransferInfo flow = flowInfoList.get(0);
+			if (logInfoList != null && logInfoList.size() == 1) {
+				LmVaccountTransferLog log = logInfoList.get(0);
+				LmVaccountTransferDetail txnDtl = null;
+				LmVaccountTransferDetail txnDtl2 = null;
+				//获取交易明细表
+				LmVaccountTransferDetailExample txnDtlExample = new LmVaccountTransferDetailExample();
+				txnDtlExample.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
+				List<LmVaccountTransferDetail> txnDtlList = txnDetailMapper.selectByExample(txnDtlExample);
+				if (txnDtlList != null ) {
+					txnDtl = txnDtlList.get(0);
+					//如果返回字段中有佣金字段，则获取第二条dtl记录
+					if (!StringUtils.isEmpty(respData.getString("commission"))){
+						txnDtl2 = txnDtlList.get(1);
+					}
+					if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
+						//更新交易主表
+						if (respData.getString("withdrawStatus").equals(ResultCode.SUCCESS.getCode())){
+							flow.setResult(ResultCode.SUCCESS.getCode());
+						} else if (respData.getString("withdrawStatus").equals(ResultCode.FAIL.getCode())){
+							flow.setResult(ResultCode.FAIL.getCode());
+						} else {
+							flow.setResult(ResultCode.ACCEPTED.getCode());
+						}
+						flow.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+						flow.setUpdateTime(now);
+						flow.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+						flow.setSettleDate(now);
+						//更新log表
+						if (respData.getString("withdrawStatus").equals(ResultCode.SUCCESS.getCode())){
+							log.setResult(ResultCode.SUCCESS.getCode());
+						} else if (respData.getString("withdrawStatus").equals(ResultCode.FAIL.getCode())){
+							log.setResult(ResultCode.FAIL.getCode());
+						} else {
+							log.setResult(ResultCode.ACCEPTED.getCode());
+						}
+						log.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+						log.setUpdateTime(now);
+						log.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+						log.setSettleDate(now);
+
+						if(respData.getString("withdrawStatus").equals(ResultCode.SUCCESS.getCode())){
+							txnDtl.setResult(ResultCode.SUCCESS.getCode());
+						} else if (respData.getString("withdrawStatus").equals(ResultCode.FAIL.getCode())){
+							txnDtl.setResult(ResultCode.FAIL.getCode());
+						} else {
+							txnDtl.setResult(ResultCode.ACCEPTED.getCode());
+						}
+						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+						txnDtl.setUpdateTime(now);
+						txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+						txnDtl.setSettleDate(now);
+
+						if(!StringUtils.isEmpty(respData.getString("commission"))){
+							if(respData.getString("withdrawStatus").equals(ResultCode.SUCCESS.getCode())){
+								txnDtl2.setResult(ResultCode.SUCCESS.getCode());
+							} else if (respData.getString("withdrawStatus").equals(ResultCode.FAIL.getCode())){
+								txnDtl2.setResult(ResultCode.FAIL.getCode());
+							} else {
+								txnDtl2.setResult(ResultCode.ACCEPTED.getCode());
+							}
+							txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+							txnDtl2.setUpdateTime(now);
+							txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+							txnDtl2.setSettleDate(now);
+							txnDetailMapper.updateByPrimaryKey(txnDtl2);
+						}
+
+						txnLogMapper.updateByPrimaryKey(log);
+						txnInfoMapper.updateByPrimaryKey(flow);
+						txnDetailMapper.updateByPrimaryKey(txnDtl);
+						//返回业务平台信息
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+					} else {
+						flow.setResult(ResultCode.FAIL.getCode());
+						flow.setFailCode(respData.getString("errorCode"));
+						flow.setFailReason(respData.getString("errorMessage"));
+						flow.setUpdateTime(now);
+						flow.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+
+						log.setResult(ResultCode.FAIL.getCode());
+						log.setFailCode(respData.getString("errorCode"));
+						log.setFailReason(respData.getString("errorMessage"));
+						log.setUpdateTime(now);
+						log.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+
+						txnDtl.setResult(ResultCode.FAIL.getCode());
+						txnDtl.setFailCode(respData.getString("errorCode"));
+						txnDtl.setFailReason(respData.getString("errorCode"));
+						txnDtl.setUpdateTime(now);
+						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+
+						if(!StringUtils.isEmpty(respData.getString("commission"))){
+							txnDtl2.setResult(ResultCode.FAIL.getCode());
+							txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
+							txnDtl2.setUpdateTime(now);
+							txnDtl2.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
+							txnDtl2.setSettleDate(now);
+							txnDetailMapper.updateByPrimaryKey(txnDtl2);
+						}
+
+						txnLogMapper.updateByPrimaryKey(log);
+						txnInfoMapper.updateByPrimaryKey(flow);
+						txnDetailMapper.updateByPrimaryKey(txnDtl);
+						//返回业务平台信息
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+					}
+				} else {
+					logger.info("transferDetail订单异常-->{}", fcpTrxNo);
+				}
+			} else {
+				logger.info("transferLog订单异常-->{}", fcpTrxNo);
+			}
+		} else {
+			logger.info("transferInfo订单异常-->{}", fcpTrxNo);
+		}
+	}
 	/**
 	 * 资金回退异步处理
 	 * @param respData

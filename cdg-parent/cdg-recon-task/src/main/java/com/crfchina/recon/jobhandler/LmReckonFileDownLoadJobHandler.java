@@ -1,6 +1,5 @@
 package com.crfchina.recon.jobhandler;
 
-import java.io.File;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import com.crfchina.cdg.basedb.entity.SystemConfig;
 import com.crfchina.cdg.basedb.entity.SystemConfigExample;
 import com.crfchina.cdg.common.exception.CdgException;
 import com.crfchina.cdg.common.utils.AppUtil;
+import com.crfchina.cdg.common.utils.DateUtils;
 import com.crfchina.cdg.common.utils.LmHttpUtils;
 import com.crfchina.cdg.common.utils.ZipUtil;
 import com.crfchina.recon.service.ICdgReconService;
@@ -79,6 +79,7 @@ public class LmReckonFileDownLoadJobHandler extends IJobHandler {
 		SystemConfigExample configExp = new SystemConfigExample();
 		configExp.createCriteria().andParamKeyEqualTo("reckFileDate");
 		List<SystemConfig> configList = sysConfigMapper.selectByExample(configExp);
+		SystemConfig sysConfig = configList.get(0);
 		String reckFileDt = configList.get(0).getParamValue();
 		logger.info("懒猫对账文件下载任务开始！Reckon File Date="+reckFileDt);
 		
@@ -132,6 +133,11 @@ public class LmReckonFileDownLoadJobHandler extends IJobHandler {
 				reckLogMapper.updateByPrimaryKey(reckLog);
 				//解压文件:文件解压至当前目录日期文件夹下，如果当前没有日期文件夹，则新增一个
                 ZipUtil.upzipFile(reckFileDownloadPath + reckonId,reckFileDownloadPath+reckFileDt);
+                //更新对账文件下载日期+1日
+                String nextDt = DateUtils.dateToString(DateUtils.dateAddDay(DateUtils.parseStringToDate(reckFileDt, "yyyyMMdd"), 1));
+                sysConfig.setParamValue(nextDt);
+                sysConfig.setUpdateTime(now);
+                sysConfigMapper.updateByPrimaryKey(sysConfig);
 				return ReturnT.SUCCESS;
 	}
 

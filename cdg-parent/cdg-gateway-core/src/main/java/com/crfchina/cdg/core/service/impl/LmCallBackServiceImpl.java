@@ -356,7 +356,9 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				data.put("fcptrxNo", fcpTrxNo);
 				data.put("platformUserNo", respData.getString("platformUserNo"));
 				data.put("amount", MoneyUtils.toCent(respData.getString("amount")));
-				data.put("commission", MoneyUtils.toCent(respData.getString("commission")));
+				if (!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)) {
+					data.put("commission", MoneyUtils.toCent(respData.getString("commission")));
+				}
 				data.put("payCompany", respData.getString("payCompany"));
 				data.put("rechargeWay", respData.getString("rechargeWay"));
 				data.put("bankCode", respData.getString("bankcode"));

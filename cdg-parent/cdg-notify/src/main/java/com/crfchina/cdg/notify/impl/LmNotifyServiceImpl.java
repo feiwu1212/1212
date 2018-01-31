@@ -389,7 +389,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				if (txnDtlList != null ) {
 					txnDtl = txnDtlList.get(0);
 					//如果返回字段中有佣金字段，则获取第二条dtl记录
-					if (!StringUtils.isEmpty(respData.getString("commission"))){
+					if (!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 						txnDtl2 = txnDtlList.get(1);
 					}
 					if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
@@ -430,7 +430,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnDtl.setSettleAmount(MoneyUtils.toCent(respData.getString("amount")));
 						txnDtl.setSettleDate(now);
 
-						if(!StringUtils.isEmpty(respData.getString("commission"))){
+						if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 							if(respData.getString("rechargeStatus").equals(ResultCode.SUCCESS.getCode())){
 								txnDtl2.setResult(ResultCode.SUCCESS.getCode());
 								} else if (respData.getString("rechargeStatus").equals(ResultCode.FAIL.getCode())){
@@ -469,7 +469,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnDtl.setUpdateTime(now);
 						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 
-						if(!StringUtils.isEmpty(respData.getString("commission"))){
+						if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 							txnDtl2.setResult(ResultCode.FAIL.getCode());
 							txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 							txnDtl2.setUpdateTime(now);

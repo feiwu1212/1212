@@ -299,7 +299,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 			if (txnDtlList != null ) {
 				 txnDtl = txnDtlList.get(0);
 				 //如果返回字段中有佣金字段，则获取第二条dtl记录
-				 if(!StringUtils.isEmpty(respData.getString("commission")) || !Integer.valueOf(respData.getString("commission")).equals(0)){
+				 if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 					 txnDtl2 = txnDtlList.get(1);
 				 }
 			}
@@ -328,7 +328,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				}
 
 				
-				 if(!StringUtils.isEmpty(respData.getString("commission")) || !Integer.valueOf(respData.getString("commission")).equals(0)){
+				 if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 					 if (ResultCode.UNKNOWN.equals(txnDtl2.getResult())) {
 						 txnDtl2.setResult(ResultCode.ACCEPTED.getCode());
 						 txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
@@ -377,7 +377,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				txnDtl.setUpdateTime(now);
 				txnDetailMapper.updateByPrimaryKey(txnDtl);
 
-				if(!StringUtils.isEmpty(respData.getString("commission")) || !Integer.valueOf(respData.getString("commission")).equals(0)){
+				if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 					txnDtl2.setResult(ResultCode.FAIL.getCode());
 					txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 					txnDtl2.setUpdateTime(now);

@@ -7,8 +7,6 @@
  */
 package com.crfchina.cdg.dto.result;
 
-import java.util.Date;
-
 import com.crfchina.cdg.dto.base.LmBaseResultDTO;
 
 /**    
@@ -35,7 +33,6 @@ public class LmAutoRechargeResultDTO extends LmBaseResultDTO {
 	protected Long amount; // 充值金额
 	protected Long commissionAmount;// 平台佣金
 	protected String payMobile;// 本次充值手机号
-	protected Date transactionTime;// 交易完成时间
 	protected String channelErrorCode;// 【支付通道错误码】
 	protected String channelErrorMessage;// 【支付通道返回错误消息】
 	public String getPlatformUserNo() {
@@ -61,12 +58,6 @@ public class LmAutoRechargeResultDTO extends LmBaseResultDTO {
 	}
 	public void setPayMobile(String payMobile) {
 		this.payMobile = payMobile;
-	}
-	public Date getTransactionTime() {
-		return transactionTime;
-	}
-	public void setTransactionTime(Date transactionTime) {
-		this.transactionTime = transactionTime;
 	}
 	public String getChannelErrorCode() {
 		return channelErrorCode;

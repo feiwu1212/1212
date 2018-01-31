@@ -7,6 +7,8 @@
  */
 package com.crfchina.cdg.dto.base;
 
+import java.util.Date;
+
 /**    
  * 
  * @ProjectName：cdg-service
@@ -32,6 +34,17 @@ public class LmBaseResultDTO extends BaseResultDTO{
 	protected String fcpTrxNo;//资金通道对懒猫交易流水号
 
 	protected String platformUserNo;//平台用户编号
+	
+	protected Date transactionTime;// 交易完成时间
+
+	public Date getTransactionTime() {
+		return transactionTime;
+	}
+
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
+	}
+	
 	
 	public String getPlatformUserNo() {
 		return platformUserNo;

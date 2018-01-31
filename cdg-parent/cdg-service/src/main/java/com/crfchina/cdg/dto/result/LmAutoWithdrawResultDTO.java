@@ -7,8 +7,6 @@
  */
 package com.crfchina.cdg.dto.result;
 
-import java.util.Date;
-
 import com.crfchina.cdg.dto.base.LmBaseResultDTO;
 
 /**    
@@ -36,7 +34,6 @@ public class LmAutoWithdrawResultDTO extends LmBaseResultDTO {
 	protected String withdrawWay;//提现方式
 	protected String bankcardNo;//提现银行卡号
 	protected String bankcode;//【银行编码】
-	protected Date transactionTime;//交易完成时间
 	protected String remitType; //出款类型;NORMAL:T1 出款;NORMAL_URGENT:普通 T0 出款;URGENT: 实时 T0 出款;
 	protected String withdrawForm; //提现类型:IMMEDIATE 为直接提现，提现类型：CONFIRMED为待确认提现
 	protected Long floatAmount; //垫资金额
@@ -75,12 +72,6 @@ public class LmAutoWithdrawResultDTO extends LmBaseResultDTO {
 	}
 	public void setBankcode(String bankcode) {
 		this.bankcode = bankcode;
-	}
-	public Date getTransactionTime() {
-		return transactionTime;
-	}
-	public void setTransactionTime(Date transactionTime) {
-		this.transactionTime = transactionTime;
 	}
 	public String getRemitType() {
 		return remitType;

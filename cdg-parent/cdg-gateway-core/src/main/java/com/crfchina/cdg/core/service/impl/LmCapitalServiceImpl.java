@@ -7,6 +7,7 @@
 package com.crfchina.cdg.core.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferDetailMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferInfoMapper;
 import com.crfchina.cdg.basedb.dao.LmVaccountTransferLogMapper;
@@ -33,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +53,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class LmCapitalServiceImpl implements LmCapitalService {
 
+	public static final Logger logger = LoggerFactory
+			.getLogger(LmCapitalServiceImpl.class);
+
 	@Autowired
 	LmVaccountTransferInfoMapper txnInfoMapper;
 
@@ -64,7 +70,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 	 */
 	@Override
 	public Map<String, Object> recharge(LmRechargeParamDTO lmrpDto) {
-		
+		logger.info("充值参数拼装入库开始【begin】lmrpDto-->{}", JSONObject.toJSONString(lmrpDto));
 		String trxNo = TrxNoUtils.getTrxNo(Constants.RECHARGE);//获取当前交易流水
 		Date now = new Date();
 		String crfBizType=Constants.RECHARGE;
@@ -167,7 +173,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		reqDataMap.put("expired", lmrpDto.getExpired());
 		reqDataMap.put("callbackMode", lmrpDto.getCallbackMode());
-	
+		logger.info("充值参数拼装入库结束【end】reqDataMap-->{}", JSONObject.toJSONString(reqDataMap));
 		return reqDataMap;
 	}
 	

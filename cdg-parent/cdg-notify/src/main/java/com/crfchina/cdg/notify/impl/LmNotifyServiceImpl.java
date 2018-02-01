@@ -42,7 +42,7 @@ import com.crfchina.cdg.notify.service.LmCacheService;
 import com.crfchina.cdg.notify.service.LmNotifyService;
 import com.crfchina.cdg.notify.taskwork.BindCardTaskWorker;
 import com.crfchina.cdg.notify.taskwork.ChangeCardMobileTaskWorker;
-import com.crfchina.cdg.notify.taskwork.RechargeTaskWorker;
+import com.crfchina.cdg.notify.taskwork.TransferTaskWorker;
 import com.crfchina.cdg.notify.taskwork.UserOperationTaskWoker;
 import com.crfchina.cdg.notify.util.LmDateUtils;
 import com.crfchina.csf.task.TaskWorkerManager;
@@ -106,8 +106,10 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 		ApiType apiType = ApiType.valueOf(result.getServiceName());
 		if (ApiType.PERSONAL_REGISTER_EXPAND.equals(apiType)) {
 			dealPersonOpenAccount(result.getRespData());
-		}else if(ApiType.RECHARGE.equals(apiType)){
+		}else if (ApiType.RECHARGE.equals(apiType)) {
 			dealRecharge(result.getRespData());
+		}else if (ApiType.WITHDRAW.equals(apiType)) {
+			dealWithDraw(result.getRespData());
 		}else if (ApiType.ENTERPRISE_REGISTER.equals(apiType)) {
 			dealEnterpriseOpenAccount(result.getRespData());
 		}else if (ApiType.PERSONAL_BIND_BANKCARD_EXPAND.equals(apiType)) {
@@ -449,7 +451,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, TransferTaskWorker.class);
 					} else {
 						flow.setResult(ResultCode.FAIL.getCode());
 						flow.setFailCode(respData.getString("errorCode"));
@@ -481,7 +483,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnLogMapper.updateByPrimaryKey(log);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, TransferTaskWorker.class);
 					}
 				} else {
 					logger.info("transferDetail订单异常-->{}", fcpTrxNo);
@@ -523,7 +525,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				if (txnDtlList != null ) {
 					txnDtl = txnDtlList.get(0);
 					//如果返回字段中有佣金字段，则获取第二条dtl记录
-					if (!StringUtils.isEmpty(respData.getString("commission"))){
+					if (!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 						txnDtl2 = txnDtlList.get(1);
 					}
 					if (SystemBackCode.SUCCESS.getCode().equals(code) && ResultCode.SUCCESS.getCode().equals(status)) {
@@ -583,7 +585,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, TransferTaskWorker.class);
 					} else {
 						flow.setResult(ResultCode.FAIL.getCode());
 						flow.setFailCode(respData.getString("errorCode"));
@@ -603,7 +605,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnDtl.setUpdateTime(now);
 						txnDtl.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 
-						if(!StringUtils.isEmpty(respData.getString("commission"))){
+						if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 							txnDtl2.setResult(ResultCode.FAIL.getCode());
 							txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 							txnDtl2.setUpdateTime(now);
@@ -616,7 +618,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 						txnInfoMapper.updateByPrimaryKey(flow);
 						txnDetailMapper.updateByPrimaryKey(txnDtl);
 						//返回业务平台信息
-						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, RechargeTaskWorker.class);
+						taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, TransferTaskWorker.class);
 					}
 				} else {
 					logger.info("transferDetail订单异常-->{}", fcpTrxNo);

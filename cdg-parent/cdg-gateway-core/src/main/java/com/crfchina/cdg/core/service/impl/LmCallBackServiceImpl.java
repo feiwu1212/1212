@@ -476,7 +476,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				}
 
 
-				if(!StringUtils.isEmpty(respData.getString("commission"))){
+				if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 					if (ResultCode.UNKNOWN.equals(txnDtl2.getResult())) {
 						txnDtl2.setResult(ResultCode.ACCEPTED.getCode());
 						txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
@@ -503,7 +503,9 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				data.put("fcptrxNo", fcpTrxNo);
 				data.put("platformUserNo", respData.getString("platformUserNo"));
 				data.put("amount", respData.getString("amount"));
-				data.put("commission", MoneyUtils.toCent(respData.getString("commission")));
+				if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
+					data.put("commission", MoneyUtils.toCent(respData.getString("commission")));
+				}
 				data.put("withdrawWay", respData.getString("withdrawWay"));
 				data.put("withdrawForm", respData.getString("withdrawForm"));
 				data.put("bankcardNo", respData.getString("bankcardNo"));
@@ -528,7 +530,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				txnDtl.setUpdateTime(now);
 				txnDetailMapper.updateByPrimaryKey(txnDtl);
 
-				if(!StringUtils.isEmpty(respData.getString("commission"))){
+				if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 					txnDtl2.setResult(ResultCode.FAIL.getCode());
 					txnDtl2.setFinishDate(DateUtils.parseStringToDate(respData.getString("transactionTime"), "yyyyMMddHHmmss"));
 					txnDtl2.setUpdateTime(now);

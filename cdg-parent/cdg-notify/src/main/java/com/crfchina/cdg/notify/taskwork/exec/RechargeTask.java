@@ -68,7 +68,7 @@ public class RechargeTask extends NodeTask {
 
 				JSONObject data = new JSONObject();
 				data.put("fcpTrxNo", param.getFcpTrxNo());
-				data.put("platformUserNo ", param.getInExternalAccount());
+				data.put("platformUserNo", param.getInExternalAccount());
 				data.put("amount", param.getTransferAmount());
 				data.put("transactionTime", param.getFinishDate());
 //				data.put("commission", param.get);

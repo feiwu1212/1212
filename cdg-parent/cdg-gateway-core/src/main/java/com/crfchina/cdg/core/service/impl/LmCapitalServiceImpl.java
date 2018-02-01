@@ -29,6 +29,7 @@ import com.crfchina.cdg.core.dto.param.LmUserPreTransactionParamDTO;
 import com.crfchina.cdg.core.dto.param.LmVerifyDeductParamDTO;
 import com.crfchina.cdg.core.dto.param.LmWithdrawParamDTO;
 import com.crfchina.cdg.core.service.LmCapitalService;
+import com.crfchina.csf.enums.SystemNo;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -215,7 +216,12 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		reqDataMap.put("platformUserNo", paramDto.getPlatformUserNo());
 		reqDataMap.put("requestNo", trxNo);
 		reqDataMap.put("amount", MoneyUtils.toDollar(paramDto.getAmount()));
-		reqDataMap.put("withdrawType", WithdrawalType.URGENT.getCode());
+		//FIXME 提现方式需后续配置形式
+		if (paramDto.getSystemNo().equals(SystemNo.lmms)) {
+			reqDataMap.put("withdrawType", WithdrawalType.NORMAL_URGENT.getCode());
+		} else {
+			reqDataMap.put("withdrawType", WithdrawalType.URGENT.getCode());
+		}
 		reqDataMap.put("withdrawForm", WithdrawForm.IMMEDIATE.getCode());
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
 		reqDataMap.put("expired", paramDto.getExpired());

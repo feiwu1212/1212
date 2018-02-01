@@ -160,14 +160,16 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				lmBindCardList.setCreateTime(now);
 				lmBindCardList.setUpdateTime(now);
 				lmBindCardListMapper.insert(lmBindCardList);
+				taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
 				flow.setFailReason(respData.getString("errorMessage"));
 				flow.setUpdateTime(now);
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(flow);
+				taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
+
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}
@@ -202,14 +204,15 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 				lmBindCardList.setCreateTime(now);
 				lmBindCardList.setUpdateTime(now);
 				lmBindCardListMapper.insert(lmBindCardList);
+				taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
 				flow.setFailReason(respData.getString("errorMessage"));
 				flow.setUpdateTime(now);
 				lmBindCardFlowinfoMapper.updateByPrimaryKey(flow);
+				taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 			}
-			taskWorkerManager.addTask(fcpTrxNo, fcpTrxNo, 30, BindCardTaskWorker.class);
 		} else {
 			logger.error("订单异常-->{}", fcpTrxNo);
 		}

@@ -119,7 +119,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnDetailMapper.insert(txnDetail);
 
 		LmVaccountTransferLog txnLog = new LmVaccountTransferLog();
-		BeanUtils.copyProperties(txnInfo, txnLog);
+		BeanUtils.copyProperties(txnInfo, txnLog, "id");
 
 		if(null != lmrpDto.getCommissionAmount()){
 			LmVaccountTransferDetail txnDetail2 = txnDetail;
@@ -188,7 +188,8 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		txnInfo.setTransferAmount(String.valueOf(paramDto.getAmount()));
 		txnInfo.setTransferType(crfBizType);
 		txnInfo.setUpdateTime(now);//异步通知时候更新
-      		
+		txnInfoMapper.insert(txnInfo);
+
 		//txnDetail封装
 		LmVaccountTransferDetail txnDetail = new LmVaccountTransferDetail();
 		txnDetail.setAccountDate(now);
@@ -218,7 +219,7 @@ public class LmCapitalServiceImpl implements LmCapitalService {
 		reqDataMap.put("withdrawForm", WithdrawForm.IMMEDIATE.getCode());
 		reqDataMap.put("redirectUrl", AppConfig.getConfig().getCallBackUrl());//需要配置
 		reqDataMap.put("expired", paramDto.getExpired());
-		txnInfoMapper.insert(txnInfo);
+
 		//赋值detail中主表主键字段
 		txnDetail.setTransferInfoId(String.valueOf(txnInfo.getId()));
 	   //判断佣金是否存在，存在新增佣金明细记录表

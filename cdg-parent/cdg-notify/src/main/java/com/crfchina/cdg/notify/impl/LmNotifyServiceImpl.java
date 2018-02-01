@@ -141,8 +141,7 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 		if (flowInfoList != null && flowInfoList.size() == 1) {
 			LmBindCardFlowinfo flow = flowInfoList.get(0);
 			if (SystemBackCode.SUCCESS.getCode().equals(code)
-					&& ResultCode.SUCCESS.getCode().equals(status)
-					&& AuditStatus.PASSED.getCode().equals(respData.getString("auditStatus"))) {
+					&& ResultCode.SUCCESS.getCode().equals(status)) {
 				flow.setUserRealName(respData.getString("realName"));
 				flow.setIdType(EnumsDBMap.ID_CARD_TYPE_MAP.get(respData.getString("idCardType"))); // idCardType
 				flow.setUserRole(respData.getString("userRole"));
@@ -187,11 +186,10 @@ public class LmNotifyServiceImpl implements LmNotifyService {
 		LmBindCardFlowinfoExample example = new LmBindCardFlowinfoExample();
 		example.createCriteria().andFcpTrxNoEqualTo(fcpTrxNo);
 		List<LmBindCardFlowinfo> flowInfoList = lmBindCardFlowinfoMapper.selectByExample(example);
-		if (flowInfoList != null || flowInfoList.size() == 1) {
+		if (flowInfoList != null && flowInfoList.size() == 1) {
 			LmBindCardFlowinfo flow = flowInfoList.get(0);
 			if (SystemBackCode.SUCCESS.getCode().equals(code)
-					&& ResultCode.SUCCESS.getCode().equals(status)
-					&& AuditStatus.PASSED.getCode().equals(respData.getString("auditStatus"))) {
+					&& ResultCode.SUCCESS.getCode().equals(status)) {
 				flow.setBankcardNo(respData.getString("bankcardNo"));
 				flow.setBankCode(lmCacheService.getBankCode(respData.getString("bankcode")));
 				flow.setAuditStatus(EnumsDBMap.AUDIT_STATUS_MAP.get(respData.getString("auditStatus"))); // AuditStatus

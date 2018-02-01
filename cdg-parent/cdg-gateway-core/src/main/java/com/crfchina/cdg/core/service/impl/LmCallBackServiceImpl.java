@@ -238,8 +238,8 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				data.put("auditStatus", respData.getString("auditStatus"));
 				data.put("failTime", respData.getString("failTime"));
 				data.put("authAmount", respData.getString("amount"));
-				callBackParam.setData(respData.toJSONString());
 
+				callBackParam.setData(data.toJSONString());
 			} else {
 				flow.setResult(ResultCode.FAIL.getCode());
 				flow.setFailCode(respData.getString("errorCode"));
@@ -506,6 +506,7 @@ public class LmCallBackServiceImpl implements LmCallBackService {
 				if(!StringUtils.isEmpty(respData.getString("commission")) && !Integer.valueOf(respData.getString("commission")).equals(0)){
 					data.put("commission", MoneyUtils.toCent(respData.getString("commission")));
 				}
+
 				data.put("withdrawWay", respData.getString("withdrawWay"));
 				data.put("withdrawForm", respData.getString("withdrawForm"));
 				data.put("bankcardNo", respData.getString("bankcardNo"));

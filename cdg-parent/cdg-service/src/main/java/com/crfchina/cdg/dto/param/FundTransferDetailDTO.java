@@ -7,6 +7,8 @@
  */
 package com.crfchina.cdg.dto.param;
 
+import java.io.Serializable;
+
 /**
  * 
  * @ProjectName：cdg-service
@@ -18,7 +20,7 @@ package com.crfchina.cdg.dto.param;
  * @updateDate：2018年1月6日 上午11:08:10
  * @remarks：
  */
-public class FundTransferDetailDTO {
+public class FundTransferDetailDTO implements Serializable{
 	
 	protected String accountSubjectCode;//交易科目
 	protected String originFcpTrxNo;//原交易冻结流水号(通常是投资申请时预冻结流水号/还款时冻结流水号)

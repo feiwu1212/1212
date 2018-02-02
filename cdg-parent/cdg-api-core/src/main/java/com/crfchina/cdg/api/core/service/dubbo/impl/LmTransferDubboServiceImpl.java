@@ -1160,8 +1160,8 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 
 	@Override
 	public LmFundTransferResultDTO batchTransfer(LmFundTransferParamDTO paramDTO) {
+		logger.info("批量交易开始【begin】paramDTO-->{}", JSONObject.toJSONString(paramDTO));
 		LmFundTransferResultDTO rsp = new LmFundTransferResultDTO();
-
 		Date now = new Date();
 		String fcpTrxNo = TrxNoUtils.getTrxNo(Constants.BATCH_TRANSFER);
 		String batchNo = TrxNoUtils.getBatchNo();
@@ -1197,7 +1197,9 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		List<FundTransferDetailDTO> subTransferDetailList = paramDTO.getSubTransferDetailList();
 		List<FundTransferDetailDTO> allTransferDetail = new LinkedList<>();
 		allTransferDetail.addAll(mainTransferList);
-		allTransferDetail.addAll(subTransferDetailList);
+		if (subTransferDetailList != null) {
+			allTransferDetail.addAll(subTransferDetailList);
+		}
 
 		List<LmVaccountTransferDetail> transferDetailList = new LinkedList<>();
 		List<Detail> details = new ArrayList<>();
@@ -1218,19 +1220,23 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 //			detail.setLmBizType(o.get);
 			transferDetail.setCrfBizType(item.getAccountSubjectCode());
 			transferDetail.setOriginFcpTrxno(item.getOriginFcpTrxNo());
-			transferDetail.setRightShare(item.getShare().toString());
+			if (item.getShare() != null) {
+				transferDetail.setRightShare(item.getShare().toString());
+			}
 			transferDetail.setRemark(item.getRemark());
 			transferDetail.setPartitionDate(Integer.valueOf(DateUtils.dateToString(new Date(), "yyyyMM")));
 			transferDetailList.add(transferDetail);
 			//懒猫detail
 			Detail detail = new Detail();
 			//FIXME 科目类型转换
-			detail.setBizType("TENDER");
-			detail.setTargetPlatformUser(item.getFromPlatformUserNo());
-			detail.setSourcePlatformUser(item.getToPlatformUserNo());
+			detail.setBizType("FUNDS_TRANSFER");
+			detail.setTargetPlatformUserNo(item.getToPlatformUserNo());
+			detail.setSourcePlatformUserNo(item.getFromPlatformUserNo());
 			detail.setFreezeRequestNo(item.getOriginFcpTrxNo());
 			detail.setAmount(MoneyUtils.toDollar(item.getAmount()));
-			detail.setShare(MoneyUtils.toDollar(item.getShare()));
+			if (item.getShare() != null) {
+				detail.setShare(MoneyUtils.toDollar(item.getShare()));
+			}
 			detail.setRemark(item.getRemark());
 			details.add(detail);
 		}
@@ -1259,7 +1265,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 		JSONObject result = null;
 
 		try {
-			postParam = AppUtil.createServicePostParam(ApiType.AUTO_PRE_TRANSACTION.getCode(), reqDataMap);
+			postParam = AppUtil.createServicePostParam(ApiType.ASYNC_TRANSACTION.getCode(), reqDataMap);
 			result = LmHttpUtils.postServiceResult(postParam);
 		} catch (CdgException e) {
 			logger.error("调用懒猫接口异常", e);
@@ -1308,7 +1314,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			temp.setResult(ResultCode.ACCEPTED.getCode());
 			temp.setUpdateTime(now);
 
-			transferLog.setResult(ResultCode.SUCCESS.getCode());
+			transferLog.setResult(ResultCode.ACCEPTED.getCode());
 			transferLog.setUpdateTime(now);
 
 			lmVaccountTransferInfoMapper.updateByPrimaryKey(transferInfo);
@@ -1316,11 +1322,11 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			lmVaccountTransferLogMapper.updateByPrimaryKey(transferLog);
 
 			//返回成功结果
-			rsp.setResult(ResultCode.SUCCESS);
+			rsp.setResult(ResultCode.ACCEPTED);
 
 		} else {
 			String failCode = sysCodeSrv.getResCodeByLm(result.getString("errorCode"));
-			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode"));
+			String failReason = sysCodeSrv.getExplainByLm(result.getString("errorCode")) + "[" + result.getString("errorMessage") + "]";
 			transferInfo.setResult(ResultCode.FAIL.getCode());
 			transferInfo.setFailCode(failCode);
 			transferInfo.setFailReason(failReason);
@@ -1346,6 +1352,7 @@ public class LmTransferDubboServiceImpl implements LmTransferDubboService {
 			rsp.setFailReason(failReason);
 			rsp.setFailCode(failCode);
 		}
+		logger.info("批量交易结束【end】rsp-->{}", JSONObject.toJSONString(rsp));
 		return rsp;
 	}
 

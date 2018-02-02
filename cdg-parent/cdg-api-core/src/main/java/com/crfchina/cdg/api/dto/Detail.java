@@ -22,9 +22,9 @@ public class Detail {
 
 	String freezeRequestNo;
 
-	String sourcePlatformUser;
+	String sourcePlatformUserNo;
 
-	String targetPlatformUser;
+	String targetPlatformUserNo;
 
 	String amount;
 
@@ -50,22 +50,6 @@ public class Detail {
 
 	public void setFreezeRequestNo(String freezeRequestNo) {
 		this.freezeRequestNo = freezeRequestNo;
-	}
-
-	public String getSourcePlatformUser() {
-		return sourcePlatformUser;
-	}
-
-	public void setSourcePlatformUser(String sourcePlatformUser) {
-		this.sourcePlatformUser = sourcePlatformUser;
-	}
-
-	public String getTargetPlatformUser() {
-		return targetPlatformUser;
-	}
-
-	public void setTargetPlatformUser(String targetPlatformUser) {
-		this.targetPlatformUser = targetPlatformUser;
 	}
 
 	public String getAmount() {
@@ -106,5 +90,21 @@ public class Detail {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getSourcePlatformUserNo() {
+		return sourcePlatformUserNo;
+	}
+
+	public void setSourcePlatformUserNo(String sourcePlatformUserNo) {
+		this.sourcePlatformUserNo = sourcePlatformUserNo;
+	}
+
+	public String getTargetPlatformUserNo() {
+		return targetPlatformUserNo;
+	}
+
+	public void setTargetPlatformUserNo(String targetPlatformUserNo) {
+		this.targetPlatformUserNo = targetPlatformUserNo;
 	}
 }

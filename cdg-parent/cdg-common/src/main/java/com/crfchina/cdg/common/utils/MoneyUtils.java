@@ -28,6 +28,9 @@ public class MoneyUtils {
 		StringTokenizer st = new StringTokenizer(money, ".");
 		return st.nextToken() + st.nextToken();
 	}
+	public static void main(String[] args) {
+		
+	}
 
 	/**
 	 * 转变元金额字符串为分单位.

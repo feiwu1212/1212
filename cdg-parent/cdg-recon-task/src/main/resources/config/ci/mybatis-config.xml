@@ -5,4 +5,7 @@
     <typeAliases>
         <package name="com.crfchina.cdg.basedb.entity"/>
     </typeAliases>
+    <mappers>
+    <mapper/>
+    </mappers>
 </configuration>
